@@ -7,6 +7,8 @@
 
 A comprehensive environmental monitoring and computer vision platform that combines terrestrial imaging analysis with geospatial data processing. Revamp provides sophisticated tools for cloud detection, terrain visualization, camera calibration, and environmental data management.
 
+![Image recognition thumbnail](thumbnail.png)
+
 ## 🌟 Key Features
 
 ### 🔬 Advanced Computer Vision
