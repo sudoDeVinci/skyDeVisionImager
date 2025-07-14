@@ -8,25 +8,22 @@ from .entities import (
     Entity,
     DeviceType,
     CameraModel,
-    UserRole
+    UserRole,
 )
-from .services import (
-    Service,
-    UserService
-)
+from .services import Service, UserService
 
 
 __all__ = (
-    'Manager',
-    'User',
-    'Station',
-    'StationStatus',
-    'Reading',
-    'Location',
-    'Entity',
-    'DeviceType',
-    'CameraModel',
-    'UserRole',
-    'Service',
-    'UserService'
+    "Manager",
+    "User",
+    "Station",
+    "StationStatus",
+    "Reading",
+    "Location",
+    "Entity",
+    "DeviceType",
+    "CameraModel",
+    "UserRole",
+    "Service",
+    "UserService",
 )

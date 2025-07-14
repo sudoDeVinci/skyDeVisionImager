@@ -7,6 +7,7 @@ from typing import (
     Generic,
     List,
     Mapping,
+    Self,
     Sequence,
 )
 from datetime import datetime
@@ -86,8 +87,58 @@ class EbanqResponse(TypedDict, Generic[AnyDict], total=False):
 
 
 class CameraModel(Enum):
+    """
+    Enum representing the camera models supported by the system.
+    Each camera model is represented by a string value.
+    Additional methods are provided to match camera strings, check for membership,
+    and retrieve the names and members of the enum.
+    """
+
     UNKNOWN = "UNKNOWN"
     OV5640 = "OV5640"
+
+    @classmethod
+    @lru_cache(maxsize=50)
+    def match(cls, camera: str):
+        """
+        Match input string to camera model.
+        """
+        camera = camera.lower()
+        for _, camtype in cls.__members__.items():
+            if camera == camtype.value:
+                return camtype
+        return cls.UNKNOWN
+
+    @classmethod
+    @lru_cache(maxsize=50)
+    def __contains__(cls, camera: str) -> bool:
+        """
+        Check if a camera model is supported.
+        """
+        return cls.match(camera) != cls.UNKNOWN
+
+    @classmethod
+    def _missing_(cls, value: Any):
+        """
+        Handle missing camera models.
+        """
+        return cls.UNKNOWN
+
+    @classmethod
+    @lru_cache(maxsize=1)
+    def members(cls) -> tuple[Self, ...]:
+        """
+        Return an iterable of camera models.
+        """
+        return tuple(ctype for _, ctype in cls.__members__.items())
+
+    @classmethod
+    @lru_cache(maxsize=1)
+    def names(cls) -> tuple[str, ...]:
+        """
+        Return a tuple of camera model names.
+        """
+        return tuple(names for names, _ in cls.__members__.items())
 
 
 class DeviceType(Enum):
