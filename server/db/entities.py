@@ -7,7 +7,7 @@ from typing import (
     Generic,
     List,
     Mapping,
-    Sequence
+    Sequence,
 )
 from datetime import datetime
 from decimal import Decimal
@@ -22,10 +22,32 @@ from functools import lru_cache
 def dt2str(dt: datetime) -> str:
     return dt.strftime("%Y-%m-%d %H:%M:%S.%f")
 
+
 def str2dt(s: str) -> datetime:
     return datetime.strptime(s, "%Y-%m-%d %H:%M:%S.%f")
 
-AnyDict = TypeVar('AnyDict', bound=dict[str,  bytes | bytearray | str | int | Decimal | bool | set[int] | set[Decimal] | set[str] | set[bytes] | set[bytearray] | Sequence[Any] | Mapping[str, Any] | None])
+
+AnyDict = TypeVar(
+    "AnyDict",
+    bound=dict[
+        str,
+        bytes
+        | bytearray
+        | str
+        | int
+        | Decimal
+        | bool
+        | set[int]
+        | set[Decimal]
+        | set[str]
+        | set[bytes]
+        | set[bytearray]
+        | Sequence[Any]
+        | Mapping[str, Any]
+        | None,
+    ],
+)
+
 
 class ErrorDict(TypedDict, total=False):
     """
@@ -35,6 +57,7 @@ class ErrorDict(TypedDict, total=False):
     This is mostly intended to mirror the structure
     of the error responses returned by the Ebanq API.
     """
+
     title: str
     details: str
     code: str
@@ -51,6 +74,7 @@ class ErrorResponse(TypedDict, total=False):
     It contains a list of errors and warnings encountered during the request.
     The `timestamp` field is used to indicate when the response was generated.
     """
+
     errors: List[ErrorDict]
     warnings: List[ErrorDict]
     timestamp: str
@@ -65,6 +89,7 @@ class CameraModel(Enum):
     UNKNOWN = "UNKNOWN"
     OV5640 = "OV5640"
 
+
 class DeviceType(Enum):
     UNKNOWN = "UNKNOWN"
     ESP32S3 = "ESP32S3"
@@ -74,6 +99,7 @@ class EntityJSON(TypedDict, total=False):
     uid: str
     created: str
     edited: str
+
 
 class UserRole(Enum):
     ADMIN = "admin"
@@ -97,6 +123,7 @@ class UserRole(Enum):
         Check if a role is present in the enum.
         """
         return role.lower() in cls.__members__.values()
+
 
 class Entity(BaseModel, ABC):
     """
@@ -123,15 +150,18 @@ class StationStatus(Entity):
         cam (bool): Status of the camera.
         wifi (bool): Status of the WiFi connection.
     """
+
     SHT: bool
     BMP: bool
     CAM: bool
     WIFI: bool
 
+
 class Station(Entity):
     """
     Represents a station in the database.
     """
+
     name: str
     device_model: str
     device_type: DeviceType
@@ -142,32 +172,37 @@ class Station(Entity):
     longitude: Longitude
     sensors: Optional[list[StationStatus]] = None
 
+
 class Reading(Entity):
     """
     Represents a reading from a device in the database.
     """
+
     temperature: float
     humidity: float
     pressure: float
     dewpoint: float
     filepath: Optional[str] = None
 
+
 class Location(BaseModel):
     """
     Represents a location in the database.
     """
+
     country: str
     region: str
     city: str
     latitude: Latitude
     longitude: Longitude
 
+
 class User(BaseModel):
     """
     Represents a user in the database.
     """
+
     ID: str
     name: str
     email: EmailStr
     role: UserRole = UserRole.VISITOR
-

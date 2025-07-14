@@ -7,7 +7,7 @@ from .entities import (
     Entity,
     DeviceType,
     CameraModel,
-    UserRole
+    UserRole,
 )
 from .DBManager import Manager
 from pydantic import BaseModel, EmailStr
@@ -20,10 +20,11 @@ from uuid import uuid4
 from bcrypt import hashpw, gensalt, checkpw
 from logging import getLogger, ERROR
 
-T = TypeVar('T', bound=BaseModel)
+T = TypeVar("T", bound=BaseModel)
 
 
 logcursorfailure = lambda: Manager.log("Failed to get cursor.", level=ERROR)
+
 
 def hash_password(password: str, secret: str) -> str:
     """
@@ -64,9 +65,8 @@ def password_match(stored_hash: str, provided_password: str, secret: str) -> boo
         return checkpw(peppered.encode("utf-8"), stored_hash.encode("utf-8"))
     except Exception as err:
         getLogger(__name__).exception(f"Error checking password::: {err}")
-        return checkpw(
-            provided_password.encode("utf-8"), stored_hash.encode("utf-8")
-        )
+        return checkpw(provided_password.encode("utf-8"), stored_hash.encode("utf-8"))
+
 
 class Service(ABC, Generic[T]):
     """
@@ -88,7 +88,7 @@ class Service(ABC, Generic[T]):
         Get all entities from the database.
         """
         pass
-    
+
     @staticmethod
     @abstractmethod
     def list(**kwargs) -> list[T]:
@@ -96,7 +96,7 @@ class Service(ABC, Generic[T]):
         Get a slice of Entities from the database.
         """
         pass
-    
+
     @staticmethod
     @abstractmethod
     def insert(**kwargs) -> Optional[T]:
@@ -129,11 +129,12 @@ class Service(ABC, Generic[T]):
         """
         pass
 
+
 class UserService(Service[User]):
     """
     Service class for user-related operations.
     """
-    
+
     @staticmethod
     def get(**kwargs) -> Optional[User]:
         """
@@ -144,17 +145,14 @@ class UserService(Service[User]):
         email: Optional[EmailStr] = kwargs.get("email", None)
         ID: Optional[str] = kwargs.get("ID", None)
 
-        errors: str = [] 
+        errors: list[str] = []
 
         if not email:
             if not ID:
                 errors.append("email or ID is required to get a user.")
 
         if errors:
-            Manager.log(
-                f"Error retrieving user: "
-                f"400 | {', '.join(errors)}"
-            )
+            Manager.log(f"Error retrieving user: " f"400 | {', '.join(errors)}")
             return None
 
         querybase = f"SELECT * FROM users WHERE "
@@ -178,10 +176,10 @@ class UserService(Service[User]):
                     result = User(**data)
                 else:
                     Manager.log(f"User not found: {email or ID}", level=ERROR)
-        
+
         except SQLError as err:
             Manager.log(f"Error retrieving user: {err}", level=ERROR)
-            
+
         finally:
             if cursor:
                 cursor.close()
@@ -206,12 +204,12 @@ class UserService(Service[User]):
                 data = cursor.fetchall()
                 for row in data:
                     result.append(User(**row))
-        
+
         except SQLError as err:
             Manager.log(f"Error listing users: {err}", level=ERROR)
-        
+
         finally:
             if cursor:
                 cursor.close()
-        
+
         return result
