@@ -1,6 +1,17 @@
+from typing import (
+    TypeVar,
+    TypedDict,
+    Optional,
+    Final,
+    Any,
+    Generic,
+    List,
+    Mapping,
+    Sequence
+)
 from datetime import datetime
+from decimal import Decimal
 from abc import ABC, abstractmethod
-from typing import TypedDict, Optional, Final
 from pydantic import BaseModel, EmailStr
 from pydantic_extra_types.mac_address import MacAddress
 from pydantic_extra_types.coordinate import Latitude, Longitude
@@ -13,6 +24,41 @@ def dt2str(dt: datetime) -> str:
 
 def str2dt(s: str) -> datetime:
     return datetime.strptime(s, "%Y-%m-%d %H:%M:%S.%f")
+
+AnyDict = TypeVar('AnyDict', bound=dict[str,  bytes | bytearray | str | int | Decimal | bool | set[int] | set[Decimal] | set[str] | set[bytes] | set[bytearray] | Sequence[Any] | Mapping[str, Any] | None])
+
+class ErrorDict(TypedDict, total=False):
+    """
+    Schema for error responses.
+    The exct meaning for each field are loose
+    and are not strictly defined.
+    This is mostly intended to mirror the structure
+    of the error responses returned by the Ebanq API.
+    """
+    title: str
+    details: str
+    code: str
+    source: str
+    target: str
+    meta: dict[str, Any]
+
+
+class ErrorResponse(TypedDict, total=False):
+    """
+    Errors and warning response schema.
+    This mirrors the structure of the error responses
+    returned by the Ebanq API.
+    It contains a list of errors and warnings encountered during the request.
+    The `timestamp` field is used to indicate when the response was generated.
+    """
+    errors: List[ErrorDict]
+    warnings: List[ErrorDict]
+    timestamp: str
+
+
+class EbanqResponse(TypedDict, Generic[AnyDict], total=False):
+    data: AnyDict
+    timestamp: str
 
 
 class CameraModel(Enum):
@@ -62,7 +108,7 @@ class Entity(BaseModel, ABC):
         timestamp (str): The timestamp of the object data.
     """
 
-    MAC: Final[MacAddress]
+    MAC: MacAddress
     timestamp: datetime
 
 
@@ -117,6 +163,9 @@ class Location(BaseModel):
     longitude: Longitude
 
 class User(BaseModel):
+    """
+    Represents a user in the database.
+    """
     ID: str
     name: str
     email: EmailStr
