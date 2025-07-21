@@ -17,6 +17,27 @@ class Camera(Generic[ModelType]):
     Camera configuration class that manages paths and operations for different camera models.
     """
 
+    __slots__ = (
+        "model",
+        "image_folder",
+        "blocked_images",
+        "reference_images",
+        "cloud_images",
+        "sky_images",
+        "cloud_masks",
+        "graphing_folder",
+        "histograms",
+        "pca",
+        "roc",
+        "cache",
+        "calibration_folder",
+        "camera_matrices",
+        "training_images",
+        "undistorted_images",
+        "distorted_images",
+        "calibration_configs",
+    )
+
     def __init__(self, model: CameraModel) -> None:
         self.model: Final[CameraModel] = model
         self._setup_paths()

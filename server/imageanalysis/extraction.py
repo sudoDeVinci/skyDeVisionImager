@@ -14,7 +14,6 @@ from numpy import (
     unique,
     save as npsave,
 )
-from numpy.typing import NDArray
 from pathlib import Path
 from cv2 import (
     COLOR_BGR2RGB,
@@ -26,17 +25,56 @@ from cv2 import (
 
 from cv2.typing import MatLike
 
-from typing import Tuple, Union, Final, Optional, Any, cast
+from typing import Tuple, Union, Final, Optional, Any, cast, Annotated
+from nptyping import NDArray, Shape, UInt8
 
-from .configuration import CameraModel, Camera
+
+type ColorImage = Annotated[
+    NDArray[Shape["Height, Width, PixelTriplet"], UInt8],
+    "Represents a 3-channel image (H, W, 3)",
+]
+"""
+Represents a 3-channel image (H, W, 3)"]
+"""
+
+type GrayScaleImage = Annotated[
+    NDArray[Shape["Height, Width"], UInt8],
+    "Represents a single-channel grayscale image (H, W)",
+]
+"""
+Represents a single-channel grayscale image (H, W)"]
+"""
+
+type PixelData = Annotated[
+    NDArray[Shape["*, 3"], UInt8],
+    "Represents a list of pixels, each with 3 channels (N, 3)",
+]
+"""
+Represents a list of pixels, each with 3 channels (N, 3)"]
+"""
+
+type ComponentData = Annotated[
+    NDArray[Shape["*"], UInt8], "Represents a single channel of pixel data (N,)"
+]
+"""
+Represents a single channel of pixel data (N,)"]
+"""
+
+type FrequencyTable = Annotated[
+    NDArray[Shape["*, 2"], UInt8], "Represents a frequency table (UniqueValues, 2)"
+]
+"""
+Represents a frequency table (UniqueValues, 2)"]
+"""
+
+type DecomposedData = Annotated[
+    NDArray[Shape["*"], Any], "Represents an array of frequency tables"
+]
+"""
+Represents an array of frequency tables"]
+"""
 
 IMG_EXTENSIONS: Final[tuple[str, ...]] = ("jpg", "png", "jpeg", "bmp", "svg")
-
-GenericImage = NDArray[uint8]
-"""
-A generic image type, typically a 2D or 3D array of pixel values.
-It can represent grayscale or color images.
-"""
 
 
 class ColourSpaceInfo(NamedTuple):
@@ -45,7 +83,7 @@ class ColourSpaceInfo(NamedTuple):
     components: tuple[str, ...]
     tag: str
     cv2alias: int
-    callback: Callable[[MatLike], MatLike]
+    callback: Callable[[ColorImage], PixelData]
 
 
 def _is_img(filename: str) -> bool:
@@ -53,7 +91,7 @@ def _is_img(filename: str) -> bool:
     return filename.lower().endswith(IMG_EXTENSIONS)
 
 
-def extract_nonblack_RGB(image: MatLike) -> MatLike:
+def extract_nonblack_RGB(image: ColorImage) -> PixelData:
     """
     Extract the non-black pixels from a colour-masked image in RGB format.
     Non-black is defined as any pixel where at least one channel is > 0.
@@ -66,7 +104,7 @@ def extract_nonblack_RGB(image: MatLike) -> MatLike:
     return non_black_data
 
 
-def extract_nonblack_HSV(image: MatLike) -> MatLike:
+def extract_nonblack_HSV(image: ColorImage) -> PixelData:
     """
     Extract the non-black pixels from a colour-masked image in HSV format.
     In HSV, black is defined as Value (brightness) = 0, regardless of Hue and Saturation.
@@ -80,7 +118,7 @@ def extract_nonblack_HSV(image: MatLike) -> MatLike:
     return non_black_data
 
 
-def extract_nonblack_YBR(image: MatLike) -> MatLike:
+def extract_nonblack_YBR(image: ColorImage) -> PixelData:
     """
     Extract the non-black pixels from a colour-masked image in YCrCb format.
     In YCrCb, black is primarily defined by Y (luminance) = 0.
@@ -138,48 +176,48 @@ class ColourTag(Enum):
         return self.value.cv2alias
 
     @property
-    def callback(self) -> Callable[[MatLike], MatLike]:
+    def callback(self) -> Callable[[ColorImage], PixelData]:
         """Get the processing callback for this color space."""
         return self.value.callback
 
 
-def get_nonblack_pixels(image: Optional[MatLike], ctag: ColourTag) -> MatLike:
+def get_nonblack_pixels(image: Optional[ColorImage], ctag: ColourTag) -> PixelData:
     """
     Extract non-black pixels from an image file based on the specified color tag.
 
     Args:
-        img (GenericImage | None): The image data to process.
+        img (ColorImage | None): The image data to process.
         ctag (ColourTag): The color tag specifying the color space.
 
     Returns:
-        GenericImage: Array of non-black pixel data in the specified color space.
+        PixelData: Array of non-black pixel data in the specified color space.
 
     Raises:
         ValueError: If the file is not a valid image, or if it cannot be read as an image.
     """
     if image is None:
         raise ValueError(
-            f"Image data is None. Cannot extract non-black pixels for tag '{ctag.tag}'."
+            f"ColorImage data is None. Cannot extract non-black pixels for tag '{ctag.tag}'."
         )
 
-    image = cvtColor(image, ctag.cv2alias)
+    converted = cvtColor(cast(MatLike, image), ctag.cv2alias)
 
-    nonblack = ctag.callback(image)
+    nonblack = ctag.callback(cast(ColorImage, converted))
 
     return nonblack
 
 
-def remove_outliers_iqr(data: GenericImage) -> GenericImage:
+def remove_outliers_iqr(data: PixelData) -> PixelData:
     """
     Remove outliers from data using IQR.
     Data points that fall below Q1 - 1.5 IQR or above the third quartile
     Q3 + 1.5 IQR are outliers.
 
     Args:
-        data (GenericImage): The input data array, expected to be 2D.
+        data (PixelData): The input data array, expected to be 2D.
 
     Returns:
-        GenericImage: The data array with outliers removed, preserving the 2D structure.
+        PixelData: The data array with outliers removed, preserving the 2D structure.
     """
     Q1 = percentile(data, 25, axis=0)  # Calculate Q1 along columns (axis=0)
     Q3 = percentile(data, 75, axis=0)  # Calculate Q3 along columns (axis=0)
@@ -190,15 +228,15 @@ def remove_outliers_iqr(data: GenericImage) -> GenericImage:
     return data[((data >= lower_bound) & (data <= upper_bound)).all(axis=1)]
 
 
-def count(xyz_sk: GenericImage) -> GenericImage:
+def count(xyz_sk: ComponentData) -> FrequencyTable:
     """
     Return a frequency table of the integers in an input array
 
     Args:
-        xyz_sk (GenericImage): Input array of integers.
+        xyz_sk (ComponentData): Input array of integers.
 
     Returns:
-        GenericImage: A 2D array where the first column contains unique integers
+        FrequencyTable: A 2D array where the first column contains unique integers
                         and the second column contains their corresponding counts.
     """
     uni, counts = unique(xyz_sk, return_counts=True)
@@ -206,20 +244,20 @@ def count(xyz_sk: GenericImage) -> GenericImage:
     return freq
 
 
-def decompose(data: GenericImage, n_components: int):
+def decompose(data: PixelData, n_components: int) -> DecomposedData:
     """
     Decompose the data into n component frequency tables.
     Args:
-        data (GenericImage): Input data array.
+        data (PixelData): Input data array.
         n_components (int): Number of components to decompose into.
 
     Returns:
-        NDArray[object]: A 3D array where each element is a frequency table for the corresponding component.
+        DecomposedData: A 1D array where each element is a frequency table for the corresponding component.
     """
     out = [count(array(data[:, i], dtype=uint8)) for i in range(n_components)]
     return array(out, dtype=object)
 
 
-def frequency_distribution(image: MatLike, ctag: ColourTag) -> NDArray:
-    data = remove_outliers_iqr(cast(GenericImage, get_nonblack_pixels(image, ctag)))
+def frequency_distribution(image: ColorImage, ctag: ColourTag) -> DecomposedData:
+    data = remove_outliers_iqr(get_nonblack_pixels(image, ctag))
     return decompose(data, len(ctag.components))

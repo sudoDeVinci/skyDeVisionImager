@@ -2,7 +2,8 @@
 
 ![Linting](https://github.com/sudoDeVinci/skyDeVisionImager/actions/workflows/linting.yml/badge.svg)
 ![Type Check](https://github.com/sudoDeVinci/skyDeVisionImager/actions/workflows/typecheck.yml/badge.svg)
-![Python](https://img.shields.io/badge/python-3.9+-blue.svg)
+![Python](https://img.shields.io/badge/python-3.12+-blue.svg)
+<a href="https://lnu.diva-portal.org/smash/record.jsf?pid=diva2%3A1874520&dswid=4867"><img src="https://img.shields.io/badge/DiVA.org:lnu-130812-Green"></a>
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 
 A comprehensive environmental monitoring and computer vision platform that combines terrestrial imaging analysis with geospatial data processing. Revamp provides sophisticated tools for cloud detection, terrain visualization, camera calibration, and environmental data management.
