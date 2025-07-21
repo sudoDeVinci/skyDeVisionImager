@@ -1,0 +1,57 @@
+{
+ "type": "FeatureCollection",
+ "features": [
+  {
+   "type": "Feature",
+   "properties": {
+    "insamlingsdatum": "2019-11-29",
+    "ursprung": "Lantmäteriet",
+    "matmetod": 1,
+    "lagesosakerhetPlan": 0.3,
+    "lagesosakerhetHojd": 0.1,
+    "klassificeringsniva": 3
+   },
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       315000.0,
+       6398900.0
+      ],
+      [
+       315000.0,
+       6400000.0
+      ],
+      [
+       317500.0,
+       6400000.0
+      ],
+      [
+       317500.0,
+       6398900.0
+      ],
+      [
+       317500.0,
+       6397500.0
+      ],
+      [
+       315000.0,
+       6397500.0
+      ],
+      [
+       315000.0,
+       6398900.0
+      ]
+     ]
+    ]
+   }
+  }
+ ],
+ "crs": {
+  "type": "name",
+  "properties": {
+   "name": "urn:ogc:def:crs:EPSG::3006"
+  }
+ }
+}

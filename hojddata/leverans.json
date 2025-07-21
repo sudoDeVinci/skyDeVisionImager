@@ -1,0 +1,61 @@
+{
+ "type": "FeatureCollection",
+ "features": [
+  {
+   "type": "Feature",
+   "properties": {
+    "title": "639_31_7550",
+    "assets": [
+     {
+      "title": "639_31_7550_2019.tif",
+      "rel": "describes",
+      "href": "63_3/639_31_7550_2019.tif"
+     },
+     {
+      "title": "639_31_7550_density_2019.tif",
+      "rel": "related",
+      "href": "63_3/metadata/639_31_7550_density_2019.tif"
+     },
+     {
+      "title": "639_31_7550_2019.json",
+      "rel": "related",
+      "href": "63_3/metadata/639_31_7550_2019.json"
+     }
+    ]
+   },
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       315000.0,
+       6400000.0
+      ],
+      [
+       315000.0,
+       6397500.0
+      ],
+      [
+       317500.0,
+       6397500.0
+      ],
+      [
+       317500.0,
+       6400000.0
+      ],
+      [
+       315000.0,
+       6400000.0
+      ]
+     ]
+    ]
+   }
+  }
+ ],
+ "crs": {
+  "type": "name",
+  "properties": {
+   "name": "urn:ogc:def:crs:EPSG::3006"
+  }
+ }
+}
