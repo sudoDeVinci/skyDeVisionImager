@@ -9,6 +9,7 @@ from typing import Final, Generic, TypeVar, Sequence, Optional
 
 current_dir = Path(__file__).parent.resolve()
 
+
 ModelType = TypeVar("ModelType", bound=CameraModel)
 
 
@@ -25,6 +26,7 @@ class Camera(Generic[ModelType]):
         "cloud_images",
         "sky_images",
         "cloud_masks",
+        "sky_masks",
         "graphing_folder",
         "histograms",
         "pca",
@@ -51,6 +53,7 @@ class Camera(Generic[ModelType]):
         self.cloud_images: Path = self.image_folder / "cloud"
         self.sky_images: Path = self.image_folder / "sky"
         self.cloud_masks: Path = self.image_folder / "cloud_masks"
+        self.sky_masks: Path = self.image_folder / "sky_masks"
 
         # graphing folders - Weather data graph related paths
         self.graphing_folder: Path = current_dir.parent / "graphs" / self.model.value
@@ -139,8 +142,8 @@ class Camera(Generic[ModelType]):
     def sky_masks_paths(self) -> tuple[Path, ...]:
         return tuple(
             sorted(
-                self.sky_images / name
-                for name in self.sky_images.iterdir()
+                self.sky_masks / name
+                for name in self.sky_masks.iterdir()
                 if name.is_file()
             )
         )

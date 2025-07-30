@@ -18,15 +18,13 @@ from numpy import (
 )
 
 from typing import Optional
-from plotly.graph_objects import Surface, Figure  # type: ignore
-from numba import njit, types, prange  # type: ignore
-from scipy.interpolate import griddata  # type: ignore
-from scipy.ndimage import median_filter, gaussian_filter  # type: ignore
+from plotly.graph_objects import Surface, Figure            # type: ignore
+from numba import njit, types                               # type: ignore
+from scipy.interpolate import griddata                      # type: ignore
+from scipy.ndimage import median_filter, gaussian_filter    # type: ignore
 from pathlib import Path
-
-from nptyping import NDArray, Shape, Float32, Bool
-
-from rasterio import open as rio_open, io  # type: ignore
+from nptyping import NDArray, Shape, Float32, Bool          # type: ignore
+from rasterio import open as rio_open, io                   # type: ignore
 
 import pickle
 from hashlib import md5

@@ -6,6 +6,7 @@ from numpy import (
     percentile,
     asarray,
     uint8,
+    bool_,
     array,
     empty,
     column_stack,
@@ -22,9 +23,9 @@ from cv2 import (
     cvtColor,
     imread,
 )
+from .configuration import Camera
 
 from cv2.typing import MatLike
-
 from typing import Tuple, Union, Final, Optional, Any, cast, Annotated
 from nptyping import NDArray, Shape, UInt8
 
@@ -37,12 +38,28 @@ type ColorImage = Annotated[
 Represents a 3-channel image (H, W, 3)"]
 """
 
+type ColorImageArray = Annotated[
+    NDArray[Shape["*, Height, Width, PixelTriplet"], UInt8],
+    "Represents a batch of 3-channel images (N, H, W, 3)",
+]
+"""
+Represents a batch of 3-channel images (N, H, W, 3)"]
+"""
+
 type GrayScaleImage = Annotated[
     NDArray[Shape["Height, Width"], UInt8],
     "Represents a single-channel grayscale image (H, W)",
 ]
 """
 Represents a single-channel grayscale image (H, W)"]
+"""
+
+type BitMapImage = Annotated[
+    NDArray[Shape["Height, Width"], bool_],
+    "Represents a single-channel bitmap image (H, W)",
+]
+"""
+Represents a single-channel bitmap image (H, W)"]
 """
 
 type PixelData = Annotated[
@@ -68,10 +85,19 @@ Represents a frequency table (UniqueValues, 2)"]
 """
 
 type DecomposedData = Annotated[
-    NDArray[Shape["*"], Any], "Represents an array of frequency tables"
+    NDArray[Shape["*"], Any],
+    "Represents an array of frequency tables"
 ]
 """
 Represents an array of frequency tables"]
+"""
+
+type ChannelData = Annotated[
+    NDArray[Shape["*"], UInt8],
+    "Represents a single channel of pixel data (N,)"
+]
+"""
+Represents a single channel of pixel data (N,)"]
 """
 
 IMG_EXTENSIONS: Final[tuple[str, ...]] = ("jpg", "png", "jpeg", "bmp", "svg")
@@ -240,7 +266,7 @@ def count(xyz_sk: ComponentData) -> FrequencyTable:
                         and the second column contains their corresponding counts.
     """
     uni, counts = unique(xyz_sk, return_counts=True)
-    freq = asarray((uni, counts), dtype=uint8).T
+    freq = asarray((uni, counts), dtype=uint8, order="C").T
     return freq
 
 
@@ -261,3 +287,63 @@ def decompose(data: PixelData, n_components: int) -> DecomposedData:
 def frequency_distribution(image: ColorImage, ctag: ColourTag) -> DecomposedData:
     data = remove_outliers_iqr(get_nonblack_pixels(image, ctag))
     return decompose(data, len(ctag.components))
+
+
+def get_datasets_vstack(
+    camera: Camera,
+) -> tuple[ColorImage, ColorImage]:
+    """
+    Get the sky and cloud ground truth datasets for a camera.
+    The images are stitched together from the camera's sky and cloud directories.
+    Args:
+        camera (Camera): The camera instance to get datasets for.
+    Returns:
+        tuple[ColorImage, ColorImage]: A tuple containing the cloud images and sky images - stitched together vertically.
+    """
+
+    cloudset = array([imread(file) for file in camera.cloud_images_paths()], dtype=uint8, order="C")
+    skyset = array([imread(file) for file in camera.sky_images_paths()], dtype=uint8, order="C")
+
+    if cloudset.size == 0 or skyset.size == 0:
+        raise ValueError(
+            "No images found in the cloud or sky directories for the camera."
+        )
+    if cloudset.ndim != 4 or skyset.ndim != 4:
+        raise ValueError(
+            "Images in the cloud or sky directories must be 3-channel RGB images."
+        )
+    
+    clouds = vstack(cloudset)
+    skies = vstack(skyset)
+
+    return clouds, skies
+
+
+def get_masks_vstack(
+    camera: Camera,
+) -> tuple[BitMapImage, BitMapImage]:
+    """
+    Get the sky and cloud masks for a camera.
+    The masks are stitched together from the camera's sky and cloud mask directories.
+    Args:
+        camera (Camera): The camera instance to get masks for.
+    Returns:
+        tuple[ColorImage, ColorImage]: A tuple containing the cloud masks and sky masks - stitched together vertically.
+    """
+
+    cloud_masks = array([imread(file) for file in camera.cloud_masks_paths()], dtype=bool_, order="C")
+    sky_masks = array([imread(file) for file in camera.sky_masks_paths()], dtype=bool_, order="C")
+
+    if cloud_masks.size == 0 or sky_masks.size == 0:
+        raise ValueError(
+            "No masks found in the cloud or sky mask directories for the camera."
+        )
+    
+    clouds = vstack(cloud_masks)
+    skies = vstack(sky_masks)
+
+    return clouds, skies
+
+
+
+

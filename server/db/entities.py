@@ -96,6 +96,7 @@ class CameraModel(Enum):
 
     UNKNOWN = "UNKNOWN"
     OV5640 = "OV5640"
+    DSLR = "DSLR"
 
     @classmethod
     @lru_cache(maxsize=50)
@@ -144,6 +145,8 @@ class CameraModel(Enum):
 class DeviceType(Enum):
     UNKNOWN = "UNKNOWN"
     ESP32S3 = "ESP32S3"
+    ESP32 = "ESP32"
+    ESP8266 = "ESP8266"
 
 
 class EntityJSON(TypedDict, total=False):
@@ -186,8 +189,8 @@ class Entity(BaseModel, ABC):
         timestamp (str): The timestamp of the object data.
     """
 
-    MAC: MacAddress
-    timestamp: datetime
+    MAC: Optional[MacAddress] = None
+    timestamp: Optional[datetime] = None
 
 
 class StationStatus(Entity):
@@ -202,10 +205,10 @@ class StationStatus(Entity):
         wifi (bool): Status of the WiFi connection.
     """
 
-    SHT: bool
-    BMP: bool
-    CAM: bool
-    WIFI: bool
+    SHT: bool = False
+    BMP: bool = False
+    CAM: bool = False
+    WIFI: bool = False
 
 
 class Station(Entity):

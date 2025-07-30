@@ -19,12 +19,17 @@ class SQLiteConnectionPool:
         database (str): Path to the SQLite database file
     """
 
-    def __init__(self, database: str, size: int = 5, timeout: float = 30.0):
+    def __init__(self,
+                 database: str,
+                 size: int = 5,
+                 timeout: float = 30.0,
+                 uri: bool = False) -> None:
         self.database = database
         self.size = size
         self.timeout = timeout
         self._pool: Queue[Connection] = Queue(maxsize=size)
         self._lock = Lock()
+        self.uri = uri
         self._initialize_pool()
 
     def _initialize_pool(self) -> None:
@@ -34,6 +39,7 @@ class SQLiteConnectionPool:
                 database=self.database,
                 timeout=self.timeout,
                 check_same_thread=False,  # Required for multi-threaded access
+                uri=self.uri
             )
             # Enable foreign keys
             conn.execute("PRAGMA foreign_keys = ON")
@@ -70,9 +76,33 @@ class Manager:
 
     _pool: Optional[SQLiteConnectionPool] = None
     _configfile: Path = Path("configs") / "config.json"
-    _dbfile: Path = Path(__file__) / "database.db"
+    _dbfile: Optional[Path] = None
+    _default_dbfile: Path = Path("database.db")
     _logfile: Path = Path("logs") / "server.db.log"
     logger: Logger
+
+    @classmethod
+    def set_database_file(cls, db_path: str | Path) -> None:
+        """
+        Set the database file path to use.
+        
+        Args:
+            db_path: Path to the database file (string or Path object)
+        """
+        cls._dbfile = Path(db_path)
+        cls.log(f"Database file set to: {cls._dbfile}")
+
+    @classmethod
+    def get_database_file(cls) -> Path:
+        """
+        Get the current database file path.
+        
+        Returns:
+            Path: Current database file path
+        """
+        if cls._dbfile is None:
+            cls._dbfile = cls._default_dbfile
+        return cls._dbfile
 
     @classmethod
     def log(cls, message: str, level: int = INFO) -> None:
@@ -97,6 +127,8 @@ class Manager:
             ],
         )
         cls.logger = getLogger(__name__)
+        cls.logger.setLevel(INFO)
+        
 
         try:
             with open(cls._configfile, "r") as file:
@@ -115,14 +147,28 @@ class Manager:
         return cls._pool is not None
 
     @classmethod
-    def connect(cls) -> None:
-        """Connect to the SQLite database using the connection pool."""
+    def connect(cls, db_path: Optional[str | Path] = None, uri: bool = False) -> None:
+        """
+        Connect to the SQLite database using the connection pool.
+        
+        Args:
+            db_path: Optional path to the database file. If not provided, uses the default or previously set path.
+        """
         cls.load()
+        
+        # Set database file if provided
+        if db_path is not None:
+            cls.set_database_file(db_path)
+        
         try:
+            current_db_path = cls.get_database_file()
+            cls.log(f"Connecting to database: {current_db_path}")
+            
             cls._pool = SQLiteConnectionPool(
-                database=str(cls._dbfile),
+                database=str(current_db_path),
                 size=5,  # Adjust pool size as needed
                 timeout=10.0,
+                uri=uri
             )
 
             with cls.cursor() as cursor:
