@@ -1,0 +1,9 @@
+2025-07-30 23:59:47,505 - imanalysis - DEBUG - >> Running similarity analysis with 2 workers for 1 color tags.
+2025-07-30 23:59:47,805 - imanalysis - DEBUG - Starting analysis for 1 color tags with 2 workers.
+2025-07-30 23:59:47,805 - imanalysis - DEBUG - Cloud dataset size: (18000, 400, 3), Sky dataset size: (18000, 400, 3)
+2025-07-30 23:59:48,035 - imanalysis - DEBUG - >> Analyzing color channel: HSV
+2025-07-30 23:59:49,351 - imanalysis - DEBUG - >> Cloud distribution: (3,), Sky distribution: (3,)
+2025-07-30 23:59:49,353 - imanalysis - DEBUG - >> Jaccard scores: [('hue', 0.06818182, 0) ('saturation', 0.        , 1)
+ ('value', 0.50857145, 2)]
+2025-07-30 23:59:49,353 - imanalysis - DEBUG - >> Sorted Jaccard scores: [('saturation', 0.        , 1) ('hue', 0.06818182, 0)
+ ('value', 0.50857145, 2)]

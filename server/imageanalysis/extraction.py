@@ -55,7 +55,7 @@ Represents a single-channel grayscale image (H, W)"]
 """
 
 type BitMapImage = Annotated[
-    NDArray[Shape["Height, Width"], bool_],
+    NDArray[Shape["*, *"], bool],
     "Represents a single-channel bitmap image (H, W)",
 ]
 """
@@ -85,16 +85,14 @@ Represents a frequency table (UniqueValues, 2)"]
 """
 
 type DecomposedData = Annotated[
-    NDArray[Shape["*"], Any],
-    "Represents an array of frequency tables"
+    NDArray[Shape["*"], Any], "Represents an array of frequency tables"
 ]
 """
 Represents an array of frequency tables"]
 """
 
 type ChannelData = Annotated[
-    NDArray[Shape["*"], UInt8],
-    "Represents a single channel of pixel data (N,)"
+    NDArray[Shape["*"], UInt8], "Represents a single channel of pixel data (N,)"
 ]
 """
 Represents a single channel of pixel data (N,)"]
@@ -184,6 +182,13 @@ class ColourTag(Enum):
         tag="YCrCb",
         cv2alias=COLOR_BGR2YCrCb,
         callback=extract_nonblack_YBR,
+    )
+
+    UNKNOWN = ColourSpaceInfo(
+        components=(),
+        tag="UNKNOWN",
+        cv2alias=None,
+        callback=lambda image: empty((0, 3), dtype=uint8),
     )
 
     @property
@@ -301,8 +306,12 @@ def get_datasets_vstack(
         tuple[ColorImage, ColorImage]: A tuple containing the cloud images and sky images - stitched together vertically.
     """
 
-    cloudset = array([imread(file) for file in camera.cloud_images_paths()], dtype=uint8, order="C")
-    skyset = array([imread(file) for file in camera.sky_images_paths()], dtype=uint8, order="C")
+    cloudset = asarray(
+        [imread(file) for file in camera.cloud_images_paths()], dtype=uint8, order="C"
+    )
+    skyset = asarray(
+        [imread(file) for file in camera.sky_images_paths()], dtype=uint8, order="C"
+    )
 
     if cloudset.size == 0 or skyset.size == 0:
         raise ValueError(
@@ -312,7 +321,7 @@ def get_datasets_vstack(
         raise ValueError(
             "Images in the cloud or sky directories must be 3-channel RGB images."
         )
-    
+
     clouds = vstack(cloudset)
     skies = vstack(skyset)
 
@@ -331,19 +340,19 @@ def get_masks_vstack(
         tuple[ColorImage, ColorImage]: A tuple containing the cloud masks and sky masks - stitched together vertically.
     """
 
-    cloud_masks = array([imread(file) for file in camera.cloud_masks_paths()], dtype=bool_, order="C")
-    sky_masks = array([imread(file) for file in camera.sky_masks_paths()], dtype=bool_, order="C")
+    cloud_masks = array(
+        [imread(file) for file in camera.cloud_masks_paths()], dtype=bool_, order="C"
+    )
+    sky_masks = array(
+        [imread(file) for file in camera.sky_masks_paths()], dtype=bool_, order="C"
+    )
 
     if cloud_masks.size == 0 or sky_masks.size == 0:
         raise ValueError(
             "No masks found in the cloud or sky mask directories for the camera."
         )
-    
+
     clouds = vstack(cloud_masks)
     skies = vstack(sky_masks)
 
     return clouds, skies
-
-
-
-

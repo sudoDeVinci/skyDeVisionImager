@@ -16,20 +16,15 @@ from .extraction import (
     decompose,
     frequency_distribution,
     get_datasets_vstack,
-    get_masks_vstack
+    get_masks_vstack,
 )
 
 
 from .configuration import (
-    Camera,   
+    Camera,
 )
 
-from .roccurve import (
-    ColorSpaceAnalyzer,
-    ROCAnalyzer,
-    BoundaryArray,
-    BoundaryRange
-)
+from .roccurve import ROCAnalyzer, BoundaryArray, BoundaryRange
 
 
 __all__ = (
@@ -52,8 +47,7 @@ __all__ = (
     "get_datasets_vstack",
     "get_masks_vstack",
     "Camera",
-    "ColorSpaceAnalyzer",
     "ROCAnalyzer",
     "BoundaryArray",
-    "BoundaryRange"
+    "BoundaryRange",
 )

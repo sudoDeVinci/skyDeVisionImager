@@ -11,9 +11,9 @@ start_time = time.time()
 figure = graph_plotly(
     tfwfile=TFWFILE,
     tifffile=TIFFFILE,
-    points=200,             # type: ignore
-    use_cache=True,         # Enable caching
-    downsample_factor=1,    # No downsampling
+    points=200,  # type: ignore
+    use_cache=True,  # Enable caching
+    downsample_factor=1,  # No downsampling
 )
 
 processing_time = time.time() - start_time

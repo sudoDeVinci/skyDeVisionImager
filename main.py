@@ -2,38 +2,28 @@ from server.imageanalysis import (
     get_datasets_vstack,
     Camera,
     ColourTag,
-    ColorSpaceAnalyzer,
     ROCAnalyzer,
-    BoundaryRange
+    BoundaryRange,
 )
-from cv2 import (
-    imread,
-    imshow,
-    imwrite,
-    waitKey
-)
+from cv2 import imread, imshow, imwrite, waitKey
 from numpy import array, uint8
 from server.db import CameraModel
+from typing import no_type_check
 
-model = CameraModel.DSLR
-ctag = ColourTag.HSV
-camera = Camera(model)
+@no_type_check
+def main():
+    model = CameraModel.DSLR
+    ctag = ColourTag.HSV
+    camera = Camera(model)
 
-redbound1 = BoundaryRange(10, 0)        #type: ignore
-redbound2 = BoundaryRange(180, 170)     #type: ignore
-img = imread(camera.blocked_images_paths()[0])
+    analyzer = ROCAnalyzer(camera=camera, config=None)
+    analyzer.run_similarity_analysis(
+        camera=camera,
+        ctags=[ctag]
+    )
 
-analyzer = ROCAnalyzer(
-    config=None,
-    camera=camera
-)
+if __name__ == "__main__":
+    main()
 
-threshed = analyzer.threshold(
-    image=img,
-    channelindex=0,
-    boundary=redbound1  
-)
 
-threshed = array(threshed, dtype=uint8) * 255
 
-imwrite("Thresholded.png", threshed)

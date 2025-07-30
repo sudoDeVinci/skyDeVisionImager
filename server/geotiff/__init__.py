@@ -5,7 +5,7 @@ from .topography import (
     plotly_surface,
     downsample_xyz,
     preprocess_data,
-    graph_plotly
+    graph_plotly,
 )
 
 __all__ = (
@@ -15,5 +15,5 @@ __all__ = (
     "plotly_surface",
     "downsample_xyz",
     "preprocess_data",
-    "graph_plotly"
+    "graph_plotly",
 )
