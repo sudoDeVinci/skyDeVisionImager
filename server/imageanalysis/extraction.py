@@ -27,7 +27,7 @@ from .configuration import Camera
 
 from cv2.typing import MatLike
 from typing import Tuple, Union, Final, Optional, Any, cast, Annotated
-from nptyping import NDArray, Shape, UInt8
+from nptyping import NDArray, Shape, UInt8, Bool
 
 
 type ColorImage = Annotated[
@@ -55,7 +55,7 @@ Represents a single-channel grayscale image (H, W)"]
 """
 
 type BitMapImage = Annotated[
-    NDArray[Shape["*, *"], bool],
+    NDArray[Shape["*, *"], Bool],
     "Represents a single-channel bitmap image (H, W)",
 ]
 """
@@ -187,7 +187,7 @@ class ColourTag(Enum):
     UNKNOWN = ColourSpaceInfo(
         components=(),
         tag="UNKNOWN",
-        cv2alias=None,
+        cv2alias=-1,
         callback=lambda image: empty((0, 3), dtype=uint8),
     )
 
@@ -306,24 +306,11 @@ def get_datasets_vstack(
         tuple[ColorImage, ColorImage]: A tuple containing the cloud images and sky images - stitched together vertically.
     """
 
-    cloudset = asarray(
-        [imread(file) for file in camera.cloud_images_paths()], dtype=uint8, order="C"
-    )
-    skyset = asarray(
-        [imread(file) for file in camera.sky_images_paths()], dtype=uint8, order="C"
-    )
+    cloudset = [imread(str(file)) for file in camera.cloud_images_paths()]
+    skyset = [imread(str(file)) for file in camera.sky_images_paths()]
 
-    if cloudset.size == 0 or skyset.size == 0:
-        raise ValueError(
-            "No images found in the cloud or sky directories for the camera."
-        )
-    if cloudset.ndim != 4 or skyset.ndim != 4:
-        raise ValueError(
-            "Images in the cloud or sky directories must be 3-channel RGB images."
-        )
-
-    clouds = vstack(cloudset)
-    skies = vstack(skyset)
+    clouds = vstack(cloudset, dtype=uint8)
+    skies = vstack(skyset, dtype=uint8)
 
     return clouds, skies
 
@@ -340,19 +327,10 @@ def get_masks_vstack(
         tuple[ColorImage, ColorImage]: A tuple containing the cloud masks and sky masks - stitched together vertically.
     """
 
-    cloud_masks = array(
-        [imread(file) for file in camera.cloud_masks_paths()], dtype=bool_, order="C"
-    )
-    sky_masks = array(
-        [imread(file) for file in camera.sky_masks_paths()], dtype=bool_, order="C"
-    )
+    cloud_masks = [imread(str(file)) for file in camera.cloud_masks_paths()]
+    sky_masks = [imread(str(file)) for file in camera.sky_masks_paths()]
 
-    if cloud_masks.size == 0 or sky_masks.size == 0:
-        raise ValueError(
-            "No masks found in the cloud or sky mask directories for the camera."
-        )
-
-    clouds = vstack(cloud_masks)
-    skies = vstack(sky_masks)
+    clouds = vstack(cloud_masks, dtype=bool_)
+    skies = vstack(sky_masks, dtype=bool_)
 
     return clouds, skies

@@ -98,7 +98,6 @@ class Camera(Generic[ModelType]):
             )
         )
 
-    @lru_cache(maxsize=1)
     def blocked_images_paths(self) -> tuple[Path, ...]:
         return tuple(
             sorted(
@@ -108,7 +107,6 @@ class Camera(Generic[ModelType]):
             )
         )
 
-    @lru_cache(maxsize=1)
     def cloud_images_paths(self) -> tuple[Path, ...]:
         return tuple(
             sorted(
@@ -118,7 +116,6 @@ class Camera(Generic[ModelType]):
             )
         )
 
-    @lru_cache(maxsize=1)
     def sky_images_paths(self) -> tuple[Path, ...]:
         return tuple(
             sorted(
@@ -128,7 +125,6 @@ class Camera(Generic[ModelType]):
             )
         )
 
-    @lru_cache(maxsize=1)
     def cloud_masks_paths(self) -> tuple[Path, ...]:
         return tuple(
             sorted(
@@ -138,7 +134,6 @@ class Camera(Generic[ModelType]):
             )
         )
 
-    @lru_cache(maxsize=1)
     def sky_masks_paths(self) -> tuple[Path, ...]:
         return tuple(
             sorted(
@@ -149,7 +144,6 @@ class Camera(Generic[ModelType]):
         )
 
     @staticmethod
-    @lru_cache(maxsize=None)
     def patchcheck(
         lista: Sequence[Path], listb: Sequence[Path]
     ) -> tuple[bool, Optional[str]]:
