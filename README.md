@@ -47,7 +47,7 @@ GDAL/Rasterio for geospatial processing
 
 ### Installation
 ```bash
-git clone https://github.com/sudoDeVinci/revamp.git
+git clone https://github.com/sudoDeVinci/skyDeVisionImager.git
 cd revamp
 pip install -r requirements.txt
 ```
