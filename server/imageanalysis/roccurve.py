@@ -74,6 +74,11 @@ type BitMapArray = Annotated[
     "Represents a 3D array of boolean values (H, W, C)",
 ]
 
+type ColorImageArray = Annotated[
+    NDArray[Shape["*, *, 3"], uint8],
+    "Represents a 3D array of color images (H, W, 3) with uint8 values",
+]
+
 JaccardRecord = npdtype([("component", "U15"), ("score", float32), ("index", uint8)])
 """
 Represents a record for Jaccard similarity scores.
@@ -433,6 +438,3 @@ class ROCAnalyzer:
                     LOGGER.error(f"Error analyzing {ctag.tag}: {e}")
 
         return results
-
-
-
