@@ -25,7 +25,10 @@ from .configuration import (
 )
 
 from .roccurve import (
-    ColorSpaceAnalyzer
+    ColorSpaceAnalyzer,
+    ROCAnalyzer,
+    BoundaryArray,
+    BoundaryRange
 )
 
 
@@ -49,5 +52,8 @@ __all__ = (
     "get_datasets_vstack",
     "get_masks_vstack",
     "Camera",
-    "ColorSpaceAnalyzer"
+    "ColorSpaceAnalyzer",
+    "ROCAnalyzer",
+    "BoundaryArray",
+    "BoundaryRange"
 )

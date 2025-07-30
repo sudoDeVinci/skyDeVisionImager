@@ -33,7 +33,9 @@ from .extraction import (
     ChannelData,
     ColourTag,
     get_datasets_vstack,
-    frequency_distribution
+    frequency_distribution,
+    BitMapImage,
+    ColorImage
 )
 
 
@@ -106,8 +108,8 @@ class BoundaryRange:
             raise ValueError("lower boundary must be between 0 and 255")
         if not (0 <= self.upper <= 255):
             raise ValueError("upper boundary must be between 0 and 255")
-        if not (self.upper - self.lower) < BOUNDARY_WIDTH:
-            raise ValueError("upper and lower boundaries must be within 5 units of each other")
+        if (self.upper - self.lower) < BOUNDARY_WIDTH:
+            raise ValueError(f"upper and lower boundaries must be within {BOUNDARY_WIDTH} units of each other")
     
 
 @dataclass(slots=True)
@@ -217,8 +219,8 @@ def compute_jaccard_similarity(
     )
 )
 def compute_confusion_matrix(
-    ground_truth_masks: BitMapArray,
-    predicted_masks: BitMapArray,
+    ground_truth_masks: BitMapImage,
+    predicted_masks: BitMapImage,
 ) -> tuple[float32, float32, float32, float32]:
     """
     Compute confusion matrix metrics for ROC analysis.
@@ -320,5 +322,34 @@ class ColorSpaceAnalyzer:
             raise ValueError(f"Failed to analyze '{ctag.tag} colorspace': {err}")
 
 
+class ROCAnalyzer:
 
+    __slots__ = (
+        "config",
+        "camera",
+        "_cache"
+    )
+
+    def __init__(self, config: Optional[AnalysisConfiguration] = None, camera: Optional[Camera] = None):
+        self.config = config
+        self._cache: dict[str, Any] = {}
+        self.camera = camera
+
+    def generate_cache_key(self, ctag: ColourTag) -> str:
+        """
+        Generate a cache key based on the camera model and color tag.
+        """
+        return f"{self.camera.model.value}_{ctag.tag}_{self.config.strata_count}_{self.config.strata_size}_{self.config.chunk_size}"
+    
+    def threshold(
+        self,
+        image: ColorImage,
+        channelindex: int,
+        boundary: BoundaryRange
+    ) -> BitMapImage:
+        """
+        Apply a threshold to the image channel based on the boundary range.
+        """
+        channel = image[:, :, channelindex]
+        return (channel >= boundary.lower) & (channel <= boundary.upper)
 
