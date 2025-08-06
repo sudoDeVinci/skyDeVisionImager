@@ -19,7 +19,7 @@ from .extraction import (
     get_masks_vstack,
     get_datasets_vstacks_sparse,
     get_masks_vstacks_sparse,
-    get_reference_vstacks_sparse
+    get_reference_vstacks_sparse,
 )
 
 
@@ -27,7 +27,7 @@ from .configuration import (
     Camera,
 )
 
-from .roccurve import ROCAnalyzer, BoundaryArray, BoundaryRange
+from .roccurve import ROCAnalyzer, BoundaryArray, BoundaryRange, compute_confusion_matrix
 
 
 __all__ = (
@@ -55,5 +55,6 @@ __all__ = (
     "BoundaryRange",
     "get_datasets_vstacks_sparse",
     "get_masks_vstacks_sparse",
-    "get_reference_vstacks_sparse"
+    "get_reference_vstacks_sparse",
+    "compute_confusion_matrix",
 )

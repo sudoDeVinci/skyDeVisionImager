@@ -195,6 +195,17 @@ class ColourTag(Enum):
         callback=lambda image: empty((0, 3), dtype=uint8),
     )
 
+    @classmethod
+    def match(cls, tag: str) -> ColourTag:
+        """
+        Get the ColourTag enum member from a string.
+        If the string does not match any tag, return UNKNOWN.
+        """
+        for member in cls:
+            if member.value.tag.lower() == tag.lower():
+                return member
+        return cls.UNKNOWN
+
     @property
     def components(self) -> tuple[str, ...]:
         """Get the color components for this color space."""
@@ -416,6 +427,7 @@ def get_masks_vstacks_sparse(
 
 def get_reference_vstacks_sparse(
     camera: Camera,
+    ctag: ColourTag,
     indices: NDArray[Shape["*"], UInt16]
 ) -> ColorImage:
     """
@@ -438,4 +450,7 @@ def get_reference_vstacks_sparse(
             img = imread(refpaths[idx])
             refimgs[i*h:(i+1)*h] = img
     
+    # Convert to the specified color space
+    refimgs = cvtColor(cast(MatLike, refimgs), ctag.cv2alias)
+
     return refimgs

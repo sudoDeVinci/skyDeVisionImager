@@ -50,7 +50,7 @@ LOGGER: Logger = getLogger("imanalysis")
 
 # Constants
 DEFAULT_KERNEL_SIZE: Final[uint8] = uint8(5)
-DEFAULT_EPSILON: Final[float32] = float32(1e-10)
+DEFAULT_EPSILON: Final[float32] = float32(1e-32)
 DEFAULT_CHUNK_SIZE: Final[uint16] = uint16(1024)
 BOUNDARY_WIDTH: Final[uint8] = uint8(5)
 
@@ -110,13 +110,13 @@ class ConfusionMatrix:
 
     def __post_init__(self):
         if not (0 <= self.true_positive_rate <= 1):
-            raise ValueError("true_positive_rate must be between 0 and 1")
+            raise ValueError(f"TPR must be between 0 and 1, got {self.true_positive_rate}")
         if not (0 <= self.false_positive_rate <= 1):
-            raise ValueError("false_positive_rate must be between 0 and 1")
+            raise ValueError(f"FPR must be between 0 and 1, got {self.false_positive_rate}")
         if not (0 <= self.precision <= 1):
-            raise ValueError("precision must be between 0 and 1")
+            raise ValueError(f"Precision must be between 0 and 1, got {self.precision}")
         if not (0 <= self.accuracy <= 1):
-            raise ValueError("accuracy must be between 0 and 1")
+            raise ValueError(f"Accuracy must be between 0 and 1, got {self.accuracy}")
 
 
 @dataclass(frozen=True, slots=True)
@@ -191,18 +191,15 @@ def generate_boundary_permutations(
 
     for lower in range(0, 256, step_size):
         for upper in range(lower + min_width, 256, step_size):
-            if lower >= upper:
-                continue
-            boundaries[count, 0] = lower
-            boundaries[count, 1] = upper
+            boundaries[count] = [lower, upper]
             count += 1
-    # Ensure we return only the filled part of the array
+            
     return boundaries[:count]
 
 
 def compute_jaccard_similarity(array1: ChannelData, array2: ChannelData) -> float32:
     """
-    Compute Jaccard similarity coefficient between two arrays using Numba-compatible operations.
+Compute Jaccard similarity coe between two arrays using Numba-compatible operations.
     This replaces the problematic set-based implementation.
 
     Args:
@@ -211,18 +208,25 @@ def compute_jaccard_similarity(array1: ChannelData, array2: ChannelData) -> floa
 
     Returns:
         Jaccard similarity coefficient [0, 1]
-    """
+ficient between two arrays using Numba-compatible operations.
+    This replaces the problematic set-based implementation.
+
+    Args:
+        array1: First comparison array
+        array2: Second comparison array
+
+    Returns:
+        Jaccard similarity coefficient [0, 1]
+"""
     if len(array1) == 0 and len(array2) == 0:
         return float32(1.0)
 
     if len(array1) == 0 or len(array2) == 0:
         return float32(0.0)
 
-    # Get sorted unique values (unique() returns sorted array)
     unique1 = unique(array1)
     unique2 = unique(array2)
 
-    # Two-pointer technique for intersection
     i, j = 0, 0
     intersection_count = 0
     union_count = 0
@@ -240,7 +244,6 @@ def compute_jaccard_similarity(array1: ChannelData, array2: ChannelData) -> floa
             union_count += 1
             j += 1
 
-    # Add remaining elements to union
     union_count += (len(unique1) - i) + (len(unique2) - j)
 
     if union_count == 0:
@@ -264,10 +267,10 @@ def compute_confusion_matrix(
         ConfusionMatrix: A tuple containing true positive rate, false positive rate,
                          precision, and accuracy.
     """
-    tp = npsum(ground_truth_masks & predicted_masks)
-    fn = npsum(ground_truth_masks & ~predicted_masks)
-    fp = npsum(~ground_truth_masks & predicted_masks)
-    tn = npsum(~ground_truth_masks & ~predicted_masks)
+    tp = (ground_truth_masks & predicted_masks).sum(dtype=float32)
+    fn = (ground_truth_masks & ~predicted_masks).sum(dtype=float32)
+    fp = (~ground_truth_masks & predicted_masks).sum(dtype=float32)
+    tn = (~ground_truth_masks & ~predicted_masks).sum(dtype=float32)
 
     tpr = tp / (tp + fn + DEFAULT_EPSILON)
     fpr = fp / (fp + tn + DEFAULT_EPSILON)
@@ -283,7 +286,7 @@ def bootstrap_indexes(
     strata_count: uint8 = uint8(100),
 ) -> NDArray[Shape["*, *"], UInt16]:
     """
-    Split the dataset indexes into testing strata using bootstrapping.
+Split the dataset indexes into testing strata using bootstrapping.
     Args:
         - indexes (List[uint16]): List of indexes to the dataset of images.
         - stratum_size (uint16, optional): Number of items in each stratum. If None, the size is set to the total number of samples in the dataset.
@@ -295,20 +298,14 @@ def bootstrap_indexes(
     n_population = len(indexes) - 1
 
     if stratum_size is None:
-        stratum_size = uint8(n_population / 2)
+        stratum_size = uint8(n_population)
     if stratum_size > n_population:
-        stratum_size = uint8(n_population / 2)
-    # Initialize an empty array to store the bootstrap samples
-    testing_strata = npzeros(
-        (
-            strata_count,
-            stratum_size,
-        ),
-        dtype=uint16,
-    )
-    for i in range(strata_count):  # type: ignore
-        test_indices = choice(n_population, size=stratum_size, replace=True)
-        testing_strata[i] = indexes[test_indices]
+        stratum_size = uint8(n_population)
+
+    testing_strata = npzeros((strata_count, stratum_size), dtype=uint16)
+    
+    for i in range(strata_count):
+        testing_strata[i] = choice(indexes, size=stratum_size, replace=True)
 
     return testing_strata
 
@@ -361,10 +358,10 @@ class ROCAnalyzer:
             config
             if config is not None
             else AnalysisConfiguration(
-                strata_count=uint16(10),
-                strata_size=uint16(10),
+                strata_count=uint16(30),
+                strata_size=uint16(30),
                 chunk_size=DEFAULT_CHUNK_SIZE,
-                boundary_width=20,
+                boundary_width=10,
                 jaccard_threshold=float32(0.15),
                 max_workers=uint8(4),
                 enable_caching=False,
@@ -455,35 +452,56 @@ class ROCAnalyzer:
     def _analyze_stratum_roc(
         self: Self,
         camera: Camera,
+        tag: ColourTag,
         index: uint8,
         strata: NDArray[Shape["*"], UInt16],     
         boundaries: BoundaryArray,
     ) -> NDArray[Shape["*, 6"], float32]:
-        
+        """
+        Ananlyze the boundary thresholds for a single stratum from our population of images
+        in colourspace `tag` for the channel `index` for camera `camera`.
+
+        Args:
+            camera (Camera): Camera instance to use for analysis.
+            tag (ColourTag): Color space tag to analyze.
+            index (uint8): Index of the channel to analyze (0-2).
+            strata (NDArray[Shape["*"], UInt16]): Array of indices for the stratum.
+            boundaries (BoundaryArray): Array of boundary ranges to test.
+
+        Returns:
+            NDArray[Shape["*, 6"], float32]: Array of results for each boundary
+            with shape (N, 6) where N is the number of boundaries.
+            Each row contains:
+                - lower boundary (float32)
+                - upper boundary (float32)
+                - true positive rate (float32)
+                - false positive rate (float32)
+                - precision (float32)
+                - accuracy (float32)
+        """
+    
         n_boundaries = boundaries.shape[0]
         results = npzeros((n_boundaries, 6), dtype=float32)
 
         gt_cloud_mask, _ = get_masks_vstacks_sparse(camera=camera, indices=strata)
-        gt_cloud_img = get_reference_vstacks_sparse(camera=camera, indices=strata)
+        gt_cloud_img = get_reference_vstacks_sparse(camera=camera, ctag  = tag, indices=strata)
 
         for boundary_index, boundary in enumerate(boundaries):
             # Apply threshold to the ground truth masks
-            #print(f"Analyzing boundary {boundary_index + 1}/{n_boundaries} :: {boundary}")
             thresholded_mask = self.threshold(gt_cloud_img, index, BoundaryRange(upper=boundary[1], lower=boundary[0]))
 
             # Compute confusion matrix metrics
-            tpr, fpr, precision, accuracy = compute_confusion_matrix(
-                gt_cloud_mask, thresholded_mask
-            )
-
-            results[boundary_index] = (
-                float32(boundary[0]),
-                float32(boundary[1]),
-                tpr,
-                fpr,
-                precision,
-                accuracy,
-            )
+            tpr, fpr, precision, accuracy = compute_confusion_matrix(gt_cloud_mask, thresholded_mask)
+            
+            # Store results: [lower, upper, tpr, fpr, precision, accuracy]
+            results[boundary_index] = [
+                float32(boundary[0]), 
+                float32(boundary[1]), 
+                tpr, 
+                fpr, 
+                precision, 
+                accuracy
+            ]
 
         return results
 
@@ -491,27 +509,23 @@ class ROCAnalyzer:
     def _analyze_channel_roc(
         self: Self,
         camera: Camera,
+        tag: ColourTag,
         index: uint8,
         bootstrap_samples: NDArray[Shape["*, *"], UInt16],
         boundaries: BoundaryArray
-    )-> NDArray["6", float64]:
+    ) -> NDArray[Shape["*, 6"], float64]:
         
         n_strata = bootstrap_samples.shape[0]
-        n_boudnaries = boundaries.shape[0]
-        results = npzeros((n_boudnaries, 6), dtype=float64)
+        accumulated_results = npzeros((boundaries.shape[0], 6), dtype=float64)
 
         for stratum in bootstrap_samples:
-            stratum_results = self._analyze_stratum_roc(
-                camera=camera,
-                index=index,
-                strata=stratum,
-                boundaries=boundaries
-            )
-            results += stratum_results
+            stratum_results = self._analyze_stratum_roc(camera, tag, index, stratum, boundaries)
+            accumulated_results += stratum_results.astype(float64)
 
         # Average results across all strata
-        avg = results/ n_strata
-        print(f"Average results for channel {index}: {avg}")
+        avg_results = accumulated_results / n_strata
+        # Return mean metrics across all boundaries
+        return avg_results
 
     def analyze_roc(
         self: Self,
@@ -524,7 +538,7 @@ class ROCAnalyzer:
 
         similarityresults = self.run_similarity_analysis(camera, colortags)
         if not similarityresults.size:
-            LOGGER.warning("No valid color tags found for analysis.")
+            LOGGER.warning("No similarity results found")
             return {}
         
         bootstrap_samples = bootstrap_indexes(
@@ -533,50 +547,47 @@ class ROCAnalyzer:
             strata_count=self.config.strata_count
         )
 
-        LOGGER.debug(f"Generated {bootstrap_samples.shape[0]} bootstrap samples :: Sample | {bootstrap_samples[0:10]}")
-
         boundaries = generate_boundary_permutations(
             min_width=self.config.boundary_width,
             step_size=self.config.boundary_width
         )
 
-        LOGGER.debug(f"Generated {boundaries.shape[0]} boundary permutations :: Sample | {boundaries[0:10]}")
-
-
         results = {}
 
-        with ProcessPoolExecutor(max_workers=self.config.max_workers) as executor:
-            jobs = {}
-
-            for tagname, components in similarityresults:
-                for component, score, index in components:
-                    if score > self.config.jaccard_threshold:
-                        LOGGER.debug(
-                            f"Skipping {tagname} :: component {component} with score {score:.4f}"
-                        )
-                        continue
-                    
-                    LOGGER.debug(
-                        f"Analyzing {tagname} :: component {component} with score {score:.4f} at index {index}"
-                    )
-
-                    future = executor.submit(
-                        self._analyze_channel_roc,
-                        camera=camera,
-                        index=index,
-                        bootstrap_samples=bootstrap_samples,
-                        boundaries=boundaries
-                    )
-
-                    jobs[future] = f"{tagname}_{component}_{index}"
-
-            for future in as_completed(jobs):
-                tagname = jobs[future]
+        # Process each color tag that passed similarity analysis
+        for similarity_result in similarityresults:
+            ctag_name = similarity_result['tag']
+            
+            # Find the best channel (lowest Jaccard score = most discriminative)
+            best_channel = similarity_result['components'][0]  # Already sorted by score
+            
+            if best_channel['score'] > self.config.jaccard_threshold:
+                LOGGER.info(f"Skipping {ctag_name} - similarity too high: {best_channel['score']}")
+                continue
+                
+            channel_index = best_channel['index']
+            tag = ColourTag.match(ctag_name)
+            if tag is ColourTag.UNKNOWN:
+                LOGGER.warning(f"Unknown color tag: {ctag_name}, skipping analysis")
+                continue
+            
+            with ProcessPoolExecutor(max_workers=self.config.max_workers) as executor:
+                future = executor.submit(
+                    self._analyze_channel_roc,
+                    camera,
+                    tag,
+                    channel_index,
+                    bootstrap_samples,
+                    boundaries
+                )
+                
                 try:
-                    results[tagname] = future.result()
-                    LOGGER.debug(f"Completed analysis for {tagname}")
+                    channel_results = future.result(timeout=300)  # 5 minute timeout
+                    results[f"{ctag_name}_{best_channel['component']}"] = channel_results
+                    LOGGER.info(f"Completed analysis for {ctag_name} channel {best_channel['component']}")
+                    
                 except Exception as e:
-                    LOGGER.error(f"Error analyzing {tagname}: {e}")
+                    LOGGER.error(f"Failed to analyze {ctag_name}: {e}")
 
         LOGGER.info(f"ROC analysis completed for camera {camera.model.value}")
         return results
