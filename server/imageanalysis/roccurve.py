@@ -16,6 +16,7 @@ from numpy import (
     array,
 )
 from numpy.random import choice
+from numba import njit, prange, types as nbtypes
 from typing import Annotated, Final, Optional, Any, cast
 
 from .configuration import Camera
@@ -39,6 +40,10 @@ from concurrent.futures import (
     as_completed,
 )
 
+import cv2
+
+cv2.ocl.setUseOpenCL(True)
+
 basicConfig(
     level="DEBUG",
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
@@ -46,7 +51,12 @@ basicConfig(
 )
 
 LOGGER: Logger = getLogger("imanalysis")
-
+numbassalog = getLogger("numba.core.ssa")
+numbassalog.setLevel("WARNING")
+numbabyteflow = getLogger("numba.core.byteflow")
+numbabyteflow.setLevel("WARNING")
+numbainterpreter = getLogger("numba.core.interpreter")
+numbainterpreter.setLevel("WARNING")
 
 # Constants
 DEFAULT_KERNEL_SIZE: Final[uint8] = uint8(5)
@@ -149,7 +159,6 @@ class AnalysisConfiguration:
 
     strata_count: uint16
     strata_size: uint16
-    chunk_size: uint16 = DEFAULT_CHUNK_SIZE
     boundary_width: uint8 = BOUNDARY_WIDTH
     jaccard_threshold: float32 = float32(0.25)
     max_workers: Optional[uint8] = uint8(2)
@@ -160,8 +169,6 @@ class AnalysisConfiguration:
             raise ValueError("strata_count must be at least 1")
         if self.strata_size < 1:
             raise ValueError("strata_size must be at least 1")
-        if self.chunk_size < 1:
-            raise ValueError("chunk_size must be at least 1")
         if self.boundary_width < 1:
             raise ValueError("boundary_width must be at least 1")
         if not (0 <= self.jaccard_threshold <= 1):
@@ -197,6 +204,13 @@ def generate_boundary_permutations(
     return boundaries[:count]
 
 
+@njit(
+    nbtypes.float32(
+        nbtypes.Array(nbtypes.uint8, 1, "C"),
+        nbtypes.Array(nbtypes.uint8, 1, "C"),
+    ),
+    fastmath=True
+)
 def compute_jaccard_similarity(array1: ChannelData, array2: ChannelData) -> float32:
     """
 Compute Jaccard similarity coe between two arrays using Numba-compatible operations.
@@ -251,7 +265,13 @@ ficient between two arrays using Numba-compatible operations.
 
     return float32(intersection_count / (union_count + DEFAULT_EPSILON))
 
-
+@njit(
+    nbtypes.UniTuple(nbtypes.float32, 4)(
+        nbtypes.Array(nbtypes.bool_, 2, "C"),
+        nbtypes.Array(nbtypes.bool_, 2, "C"),
+    ),
+    fastmath=True
+)
 def compute_confusion_matrix(
     ground_truth_masks: BitMapImage,
     predicted_masks: BitMapImage,
@@ -272,6 +292,41 @@ def compute_confusion_matrix(
     fp = (~ground_truth_masks & predicted_masks).sum(dtype=float32)
     tn = (~ground_truth_masks & ~predicted_masks).sum(dtype=float32)
 
+    tpr = tp / (tp + fn + DEFAULT_EPSILON)
+    fpr = fp / (fp + tn + DEFAULT_EPSILON)
+    precision = tp / (tp + fp + DEFAULT_EPSILON)
+    accuracy = (tp + tn) / (tp + tn + fp + fn + DEFAULT_EPSILON)
+
+    return (tpr, fpr, precision, accuracy)
+
+
+def gpu_compute_confusion_matrix(
+    ground_truth_masks: cv2.UMat,
+    predicted_masks: cv2.UMat,
+) -> tuple[float32, float32, float32, float32]:
+    
+    # Create binary masks for different combinations on GPU
+    # True Positive: gt=255 AND pred=255
+    tp_mask_gpu = cv2.bitwise_and(ground_truth_masks, predicted_masks)
+    
+    # False Negative: gt=255 AND pred=0 (gt AND NOT pred)
+    pred_inv_gpu = cv2.bitwise_not(predicted_masks)
+    fn_mask_gpu = cv2.bitwise_and(ground_truth_masks, pred_inv_gpu)
+    
+    # False Positive: gt=0 AND pred=255 (NOT gt AND pred)
+    gt_inv_gpu = cv2.bitwise_not(ground_truth_masks)
+    fp_mask_gpu = cv2.bitwise_and(gt_inv_gpu, predicted_masks)
+    
+    # True Negative: gt=0 AND pred=0 (NOT gt AND NOT pred)
+    tn_mask_gpu = cv2.bitwise_and(gt_inv_gpu, pred_inv_gpu)
+    
+    # Count non-zero pixels (GPU operations)
+    tp = float32(cv2.countNonZero(tp_mask_gpu))
+    fn = float32(cv2.countNonZero(fn_mask_gpu))
+    fp = float32(cv2.countNonZero(fp_mask_gpu))
+    tn = float32(cv2.countNonZero(tn_mask_gpu))
+    
+    # Calculate metrics with epsilon to avoid division by zero
     tpr = tp / (tp + fn + DEFAULT_EPSILON)
     fpr = fp / (fp + tn + DEFAULT_EPSILON)
     precision = tp / (tp + fp + DEFAULT_EPSILON)
@@ -344,6 +399,23 @@ def analyze_channel(
     except ValueError as err:
         raise ValueError(f"Failed to analyze '{ctag.tag} colorspace': {err}")
 
+@njit
+def cpu_threshold(
+    image: ColorImage, channelindex: int, bounds: NDArray[Shape["2"], UInt8]
+) -> BitMapImage:
+    """
+    Apply a threshold to the image channel based on the boundary range.
+    """
+    channel = image[:, :, channelindex]
+    return (channel >= bounds[0]) & (channel <= bounds[1])
+
+
+def gpu_threshold(image: cv2.UMat, channel_idx: int, bounds: NDArray[Shape["2"], UInt8]) -> cv2.UMat:
+    """Use OpenCV's OpenCL backend"""
+    channel = cv2.split(image)[channel_idx]
+    lbl = cv2.UMat(array([bounds[0]], dtype=uint8))
+    ub = cv2.UMat(array([bounds[1]], dtype=uint8))
+    return cv2.inRange(channel, lbl, ub)
 
 class ROCAnalyzer:
 
@@ -360,7 +432,6 @@ class ROCAnalyzer:
             else AnalysisConfiguration(
                 strata_count=uint16(30),
                 strata_size=uint16(30),
-                chunk_size=DEFAULT_CHUNK_SIZE,
                 boundary_width=10,
                 jaccard_threshold=float32(0.15),
                 max_workers=uint8(4),
@@ -383,17 +454,6 @@ class ROCAnalyzer:
                 "Camera and configuration must be set before generating cache key"
             )
         return f"{self.camera.model.value}_{ctag.tag}_{self.config.strata_count}_{self.config.strata_size}_{self.config.chunk_size}"
-
-    def threshold(
-        self, image: ColorImage, channelindex: int, boundary: BoundaryRange
-    ) -> BitMapImage:
-        """
-        Apply a threshold to the image channel based on the boundary range.
-        """
-        channel = image[:, :, channelindex]
-        return cast(
-            BitMapImage, (channel >= boundary.lower) & (channel <= boundary.upper)
-        )
 
     def run_similarity_analysis(
         self, camera: Camera, ctags: list[ColourTag]
@@ -449,59 +509,21 @@ class ROCAnalyzer:
         return results
 
 
-    def _analyze_stratum_roc(
+    def run_boundaries(
         self: Self,
-        camera: Camera,
-        tag: ColourTag,
         index: uint8,
-        strata: NDArray[Shape["*"], UInt16],     
-        boundaries: BoundaryArray,
+        boundaries: NDArray[Shape["*, 2"], UInt8],
+        groundtruth_masks: cv2.UMat,
+        reference_image: cv2.UMat
     ) -> NDArray[Shape["*, 6"], float32]:
-        """
-        Ananlyze the boundary thresholds for a single stratum from our population of images
-        in colourspace `tag` for the channel `index` for camera `camera`.
-
-        Args:
-            camera (Camera): Camera instance to use for analysis.
-            tag (ColourTag): Color space tag to analyze.
-            index (uint8): Index of the channel to analyze (0-2).
-            strata (NDArray[Shape["*"], UInt16]): Array of indices for the stratum.
-            boundaries (BoundaryArray): Array of boundary ranges to test.
-
-        Returns:
-            NDArray[Shape["*, 6"], float32]: Array of results for each boundary
-            with shape (N, 6) where N is the number of boundaries.
-            Each row contains:
-                - lower boundary (float32)
-                - upper boundary (float32)
-                - true positive rate (float32)
-                - false positive rate (float32)
-                - precision (float32)
-                - accuracy (float32)
-        """
-    
-        n_boundaries = boundaries.shape[0]
-        results = npzeros((n_boundaries, 6), dtype=float32)
-
-        gt_cloud_mask, _ = get_masks_vstacks_sparse(camera=camera, indices=strata)
-        gt_cloud_img = get_reference_vstacks_sparse(camera=camera, ctag  = tag, indices=strata)
-
-        for boundary_index, boundary in enumerate(boundaries):
-            # Apply threshold to the ground truth masks
-            thresholded_mask = self.threshold(gt_cloud_img, index, BoundaryRange(upper=boundary[1], lower=boundary[0]))
-
-            # Compute confusion matrix metrics
-            tpr, fpr, precision, accuracy = compute_confusion_matrix(gt_cloud_mask, thresholded_mask)
+        
+        results = npzeros((boundaries.shape[0], 6), dtype=float32)
+        for i in range(boundaries.shape[0]):
+            thresholded_masks = gpu_threshold(reference_image, int(index), boundaries[i])
+            tpr, fpr, precision, accuracy = gpu_compute_confusion_matrix(groundtruth_masks, thresholded_masks)
+            lower, upper = boundaries[i]
+            results[i] = [float32(lower), float32(upper), tpr, fpr, precision, accuracy]
             
-            # Store results: [lower, upper, tpr, fpr, precision, accuracy]
-            results[boundary_index] = [
-                float32(boundary[0]), 
-                float32(boundary[1]), 
-                tpr, 
-                fpr, 
-                precision, 
-                accuracy
-            ]
 
         return results
 
@@ -516,16 +538,55 @@ class ROCAnalyzer:
     ) -> NDArray[Shape["*, 6"], float64]:
         
         n_strata = bootstrap_samples.shape[0]
-        accumulated_results = npzeros((boundaries.shape[0], 6), dtype=float64)
 
-        for stratum in bootstrap_samples:
-            stratum_results = self._analyze_stratum_roc(camera, tag, index, stratum, boundaries)
-            accumulated_results += stratum_results.astype(float64)
+        LOGGER.debug(f"Analyzing channel {tag.tag} index {index} for camera {camera.model.value}")
 
-        # Average results across all strata
-        avg_results = accumulated_results / n_strata
-        # Return mean metrics across all boundaries
-        return avg_results
+        # Build the massive concatenated image on GPU
+        gt_mask_umats = []
+        ref_img_umats = []
+        
+        for stratum_index in range(n_strata):
+            sample_indices = bootstrap_samples[stratum_index]
+
+            # Get CPU data first
+            gt_masks, _ = get_masks_vstacks_sparse(camera, sample_indices)
+            ref_imgs = get_reference_vstacks_sparse(camera, tag, sample_indices)
+
+            if gt_masks is None or ref_imgs is None:
+                LOGGER.error(f"Failed to load data for stratum {stratum_index}")
+                continue
+            
+            # Convert and move to GPU immediately
+            gt_masks_uint8 = (gt_masks * 255).astype(uint8)
+            gt_umat = cv2.UMat(gt_masks_uint8)
+            ref_umat = cv2.UMat(ref_imgs)
+            
+            gt_mask_umats.append(gt_umat)
+            ref_img_umats.append(ref_umat)
+
+        # Horizontal concatenation on GPU
+        if len(gt_mask_umats) > 1:
+            big_gt_umat = cv2.hconcat(gt_mask_umats)
+            big_ref_umat = cv2.hconcat(ref_img_umats)
+        else:
+            big_gt_umat = gt_mask_umats[0]
+            big_ref_umat = ref_img_umats[0]
+        
+        #LOGGER.debug(f"Created massive GPU image: {big_ref_umat.shape}, GT masks: {big_gt_umat.shape}")
+
+        # Convert UMats back to numpy for run_boundaries compatibility
+        #big_gt_numpy = (big_gt_umat.get() > 0).astype(bool)  # Convert uint8 back to bool
+        #big_ref_numpy = big_ref_umat.get()
+        
+        results = self.run_boundaries(
+            index=index,
+            boundaries=boundaries, 
+            groundtruth_masks=big_gt_umat,
+            reference_image=big_ref_umat
+        )
+
+        LOGGER.debug(f"Completed channel analysis for {tag.tag} index {index}")
+        return results.astype(float64)  # Convert to expected return type
 
     def analyze_roc(
         self: Self,
@@ -581,13 +642,13 @@ class ROCAnalyzer:
                     boundaries
                 )
                 
-                try:
-                    channel_results = future.result(timeout=300)  # 5 minute timeout
-                    results[f"{ctag_name}_{best_channel['component']}"] = channel_results
-                    LOGGER.info(f"Completed analysis for {ctag_name} channel {best_channel['component']}")
-                    
-                except Exception as e:
-                    LOGGER.error(f"Failed to analyze {ctag_name}: {e}")
+        try:
+            channel_results = future.result(timeout=300)  # 5 minute timeout
+            results[f"{ctag_name}_{best_channel['component']}"] = channel_results
+            LOGGER.info(f"Completed analysis for {ctag_name} channel {best_channel['component']}")
+            
+        except Exception as e:
+            LOGGER.error(f"Failed to analyze {ctag_name}: {e}")
 
         LOGGER.info(f"ROC analysis completed for camera {camera.model.value}")
         return results

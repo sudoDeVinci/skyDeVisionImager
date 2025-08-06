@@ -32,6 +32,7 @@ from .configuration import Camera
 from cv2.typing import MatLike
 from typing import Tuple, Union, Final, Optional, Any, cast, Annotated
 from nptyping import NDArray, Shape, UInt8, Bool, UInt16
+from numba import njit
 
 
 type ColorImage = Annotated[

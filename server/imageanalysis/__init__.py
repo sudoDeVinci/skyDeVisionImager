@@ -27,7 +27,14 @@ from .configuration import (
     Camera,
 )
 
-from .roccurve import ROCAnalyzer, BoundaryArray, BoundaryRange, compute_confusion_matrix
+from .roccurve import (
+    ROCAnalyzer,
+    BoundaryArray,
+    BoundaryRange,
+    compute_confusion_matrix,
+    gpu_compute_confusion_matrix,
+    gpu_threshold,
+)
 
 
 __all__ = (
@@ -57,4 +64,6 @@ __all__ = (
     "get_masks_vstacks_sparse",
     "get_reference_vstacks_sparse",
     "compute_confusion_matrix",
+    "gpu_compute_confusion_matrix",
+    "gpu_threshold",
 )
