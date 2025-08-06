@@ -13,6 +13,9 @@ from numpy import (
     ndarray,
     where,
     unique,
+    sum as npsum,
+    max as npmax,
+    zeros as npzeros,
     save as npsave,
 )
 from pathlib import Path
@@ -20,6 +23,7 @@ from cv2 import (
     COLOR_BGR2RGB,
     COLOR_BGR2HSV,
     COLOR_BGR2YCrCb,
+    IMREAD_GRAYSCALE,
     cvtColor,
     imread,
 )
@@ -27,7 +31,7 @@ from .configuration import Camera
 
 from cv2.typing import MatLike
 from typing import Tuple, Union, Final, Optional, Any, cast, Annotated
-from nptyping import NDArray, Shape, UInt8, Bool
+from nptyping import NDArray, Shape, UInt8, Bool, UInt16
 
 
 type ColorImage = Annotated[
@@ -306,14 +310,57 @@ def get_datasets_vstack(
         tuple[ColorImage, ColorImage]: A tuple containing the cloud images and sky images - stitched together vertically.
     """
 
-    cloudset = [imread(str(file)) for file in camera.cloud_images_paths()]
-    skyset = [imread(str(file)) for file in camera.sky_images_paths()]
-
-    clouds = vstack(cloudset, dtype=uint8)
-    skies = vstack(skyset, dtype=uint8)
-
+    cloud_paths = list(camera.cloud_images_paths())
+    sky_paths = list(camera.sky_images_paths())
+    
+    # Read first image to get dimensions
+    sample = imread(str(cloud_paths[0]))
+    h, w, c = sample.shape
+    
+    # Pre-allocate final arrays
+    clouds = empty((h * len(cloud_paths), w, c), dtype=uint8)
+    skies = empty((h * len(sky_paths), w, c), dtype=uint8)
+    
+    # Fill arrays directly (no intermediate list)
+    for i, path in enumerate(cloud_paths):
+        img = imread(str(path))
+        clouds[i*h:(i+1)*h] = img
+        
+    for i, path in enumerate(sky_paths):
+        img = imread(str(path))
+        skies[i*h:(i+1)*h] = img
+    
     return clouds, skies
 
+def get_datasets_vstacks_sparse(
+    camera: Camera,
+    indices: NDArray[Shape["*"], UInt16]
+) -> tuple[ColorImage, ColorImage]:
+    """
+    Create sparse stacked images where output position matches index value.
+    """
+    cloud_paths = list(camera.cloud_images_paths())
+    sky_paths = list(camera.sky_images_paths())
+    
+    # Use first valid index for dimensions
+    sample_idx = int(indices[0])
+    sample = imread(cloud_paths[sample_idx])
+    h, w, c = sample.shape
+    
+    # Pre-allocate for actual number of images
+    clouds = npzeros((h * len(indices), w, c), dtype=uint8)
+    skies = npzeros((h * len(indices), w, c), dtype=uint8)
+    
+    # Fill arrays sequentially
+    for i, idx in enumerate(indices):
+        idx = int(idx)
+        if idx < len(cloud_paths) and idx < len(sky_paths):
+            img_cloud = imread(cloud_paths[idx])
+            img_sky = imread(sky_paths[idx])
+            clouds[i*h:(i+1)*h] = img_cloud
+            skies[i*h:(i+1)*h] = img_sky
+    
+    return clouds, skies
 
 def get_masks_vstack(
     camera: Camera,
@@ -334,3 +381,61 @@ def get_masks_vstack(
     skies = vstack(sky_masks, dtype=bool_)
 
     return clouds, skies
+
+def get_masks_vstacks_sparse(
+    camera: Camera,
+    indices: NDArray[Shape["*"], UInt16]
+) -> tuple[BitMapImage, BitMapImage]:
+    from cv2 import imshow, waitKey
+    """
+    Create sparse stacked masks where output position matches index value.
+    """
+    cloud_mask_paths = list(camera.cloud_masks_paths())
+    sky_mask_paths = list(camera.sky_masks_paths())
+    
+    # Use first valid index for dimensions
+    sample_idx = int(indices[0])
+    sample = imread(cloud_mask_paths[sample_idx], IMREAD_GRAYSCALE)
+    h, w = sample.shape
+    
+    # Pre-allocate for actual number of images
+    clouds = npzeros((h * len(indices), w), dtype=bool_)
+    skies = npzeros((h * len(indices), w), dtype=bool_)
+    
+    # Fill arrays sequentially
+    for i, idx in enumerate(indices):
+        idx = int(idx)
+        if idx < len(cloud_mask_paths) and idx < len(sky_mask_paths):
+            img_cloud = imread(cloud_mask_paths[idx], IMREAD_GRAYSCALE)
+            img_sky = imread(sky_mask_paths[idx], IMREAD_GRAYSCALE)
+            clouds[i*h:(i+1)*h] = img_cloud > 0
+            skies[i*h:(i+1)*h] = img_sky > 0
+    
+    return clouds, skies
+
+
+def get_reference_vstacks_sparse(
+    camera: Camera,
+    indices: NDArray[Shape["*"], UInt16]
+) -> ColorImage:
+    """
+    Get sparse stacked images for reference datasets.
+    """
+    refpaths = list(camera.reference_images_paths())
+    
+    # Use first valid index for dimensions
+    sample_idx = int(indices[0])
+    sample = imread(refpaths[sample_idx])
+    h, w, c = sample.shape
+    
+    # Pre-allocate for actual number of images
+    refimgs = npzeros((h * len(indices), w, c), dtype=uint8)
+    
+    # Fill arrays sequentially
+    for i, idx in enumerate(indices):
+        idx = int(idx)
+        if idx < len(refpaths):
+            img = imread(refpaths[idx])
+            refimgs[i*h:(i+1)*h] = img
+    
+    return refimgs

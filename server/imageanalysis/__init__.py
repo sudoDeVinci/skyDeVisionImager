@@ -17,6 +17,9 @@ from .extraction import (
     frequency_distribution,
     get_datasets_vstack,
     get_masks_vstack,
+    get_datasets_vstacks_sparse,
+    get_masks_vstacks_sparse,
+    get_reference_vstacks_sparse
 )
 
 
@@ -50,4 +53,7 @@ __all__ = (
     "ROCAnalyzer",
     "BoundaryArray",
     "BoundaryRange",
+    "get_datasets_vstacks_sparse",
+    "get_masks_vstacks_sparse",
+    "get_reference_vstacks_sparse"
 )

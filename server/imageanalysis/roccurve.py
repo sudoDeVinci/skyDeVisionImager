@@ -1,15 +1,19 @@
 from __future__ import annotations
 from nptyping import NDArray, Shape, UInt8, Bool, UInt16, Object, Void
+from typing_extensions import Self
 from dataclasses import dataclass
 from numpy import (
     uint8,
     uint16,
     float32,
+    float64,
     empty,
+    nan,
     zeros as npzeros,
     sum as npsum,
     dtype as npdtype,
     unique,
+    array,
 )
 from numpy.random import choice
 from typing import Annotated, Final, Optional, Any, cast
@@ -25,6 +29,9 @@ from .extraction import (
     frequency_distribution,
     BitMapImage,
     ColorImage,
+    get_masks_vstacks_sparse,
+    get_datasets_vstacks_sparse,
+    get_reference_vstacks_sparse
 )
 
 from concurrent.futures import (
@@ -122,7 +129,7 @@ class BoundaryRange:
     def __post_init__(self):
         if self.upper < self.lower:
             raise ValueError(
-                "upper boundary must be greater than or equal to lower boundary"
+                f"upper boundary must be greater than or equal to lower boundary :: {self.lower} & {self.upper}"
             )
         if not (0 <= self.lower <= 255):
             raise ValueError("lower boundary must be between 0 and 255")
@@ -167,8 +174,6 @@ def generate_boundary_permutations(
     min_width: uint8 = BOUNDARY_WIDTH, step_size: uint8 = BOUNDARY_WIDTH
 ) -> BoundaryArray:
     """
-    JIT-compiled boundary generation for performance.
-    Internal function called by generate_boundary_permutations.
     Args:
         min_width (int): Minimum width of the boundary.
         step_size (int): Step size for generating boundaries.
@@ -186,6 +191,8 @@ def generate_boundary_permutations(
 
     for lower in range(0, 256, step_size):
         for upper in range(lower + min_width, 256, step_size):
+            if lower >= upper:
+                continue
             boundaries[count, 0] = lower
             boundaries[count, 1] = upper
             count += 1
@@ -274,7 +281,7 @@ def bootstrap_indexes(
     indexes: NDArray[Shape["*"], UInt16],
     stratum_size: Optional[uint8] = None,
     strata_count: uint8 = uint8(100),
-) -> NDArray[Shape["*, 2"], UInt16]:
+) -> NDArray[Shape["*, *"], UInt16]:
     """
     Split the dataset indexes into testing strata using bootstrapping.
     Args:
@@ -285,7 +292,7 @@ def bootstrap_indexes(
         NDArray[(uint8, 2)]: 2D array where each row is a bootstrap sample of indices.
     """
 
-    n_population = indexes.shape[0]
+    n_population = len(indexes) - 1
 
     if stratum_size is None:
         stratum_size = uint8(n_population / 2)
@@ -354,13 +361,13 @@ class ROCAnalyzer:
             config
             if config is not None
             else AnalysisConfiguration(
-                strata_count=uint16(30),
-                strata_size=uint16(30),
+                strata_count=uint16(10),
+                strata_size=uint16(10),
                 chunk_size=DEFAULT_CHUNK_SIZE,
-                boundary_width=BOUNDARY_WIDTH,
-                jaccard_threshold=float32(0.3),
-                max_workers=uint8(2),
-                enable_caching=True,
+                boundary_width=20,
+                jaccard_threshold=float32(0.15),
+                max_workers=uint8(4),
+                enable_caching=False,
             )
         )
         self._cache: dict[str, Any] = {}
@@ -442,4 +449,134 @@ class ROCAnalyzer:
                 except Exception as e:
                     LOGGER.error(f"Error analyzing {ctag.tag}: {e}")
 
+        return results
+
+
+    def _analyze_stratum_roc(
+        self: Self,
+        camera: Camera,
+        index: uint8,
+        strata: NDArray[Shape["*"], UInt16],     
+        boundaries: BoundaryArray,
+    ) -> NDArray[Shape["*, 6"], float32]:
+        
+        n_boundaries = boundaries.shape[0]
+        results = npzeros((n_boundaries, 6), dtype=float32)
+
+        gt_cloud_mask, _ = get_masks_vstacks_sparse(camera=camera, indices=strata)
+        gt_cloud_img = get_reference_vstacks_sparse(camera=camera, indices=strata)
+
+        for boundary_index, boundary in enumerate(boundaries):
+            # Apply threshold to the ground truth masks
+            #print(f"Analyzing boundary {boundary_index + 1}/{n_boundaries} :: {boundary}")
+            thresholded_mask = self.threshold(gt_cloud_img, index, BoundaryRange(upper=boundary[1], lower=boundary[0]))
+
+            # Compute confusion matrix metrics
+            tpr, fpr, precision, accuracy = compute_confusion_matrix(
+                gt_cloud_mask, thresholded_mask
+            )
+
+            results[boundary_index] = (
+                float32(boundary[0]),
+                float32(boundary[1]),
+                tpr,
+                fpr,
+                precision,
+                accuracy,
+            )
+
+        return results
+
+
+    def _analyze_channel_roc(
+        self: Self,
+        camera: Camera,
+        index: uint8,
+        bootstrap_samples: NDArray[Shape["*, *"], UInt16],
+        boundaries: BoundaryArray
+    )-> NDArray["6", float64]:
+        
+        n_strata = bootstrap_samples.shape[0]
+        n_boudnaries = boundaries.shape[0]
+        results = npzeros((n_boudnaries, 6), dtype=float64)
+
+        for stratum in bootstrap_samples:
+            stratum_results = self._analyze_stratum_roc(
+                camera=camera,
+                index=index,
+                strata=stratum,
+                boundaries=boundaries
+            )
+            results += stratum_results
+
+        # Average results across all strata
+        avg = results/ n_strata
+        print(f"Average results for channel {index}: {avg}")
+
+    def analyze_roc(
+        self: Self,
+        camera: Camera,
+        colortags: list[ColourTag],
+        overwrite: bool = False
+    ) -> dict[str, NDArray[Shape["6"], float64]]:
+        
+        LOGGER.info(f"Starting ROC analysis for camera {camera.model.value}")
+
+        similarityresults = self.run_similarity_analysis(camera, colortags)
+        if not similarityresults.size:
+            LOGGER.warning("No valid color tags found for analysis.")
+            return {}
+        
+        bootstrap_samples = bootstrap_indexes(
+            array([i for i in range(len(camera.cloud_images_paths()))]),
+            stratum_size=self.config.strata_size,
+            strata_count=self.config.strata_count
+        )
+
+        LOGGER.debug(f"Generated {bootstrap_samples.shape[0]} bootstrap samples :: Sample | {bootstrap_samples[0:10]}")
+
+        boundaries = generate_boundary_permutations(
+            min_width=self.config.boundary_width,
+            step_size=self.config.boundary_width
+        )
+
+        LOGGER.debug(f"Generated {boundaries.shape[0]} boundary permutations :: Sample | {boundaries[0:10]}")
+
+
+        results = {}
+
+        with ProcessPoolExecutor(max_workers=self.config.max_workers) as executor:
+            jobs = {}
+
+            for tagname, components in similarityresults:
+                for component, score, index in components:
+                    if score > self.config.jaccard_threshold:
+                        LOGGER.debug(
+                            f"Skipping {tagname} :: component {component} with score {score:.4f}"
+                        )
+                        continue
+                    
+                    LOGGER.debug(
+                        f"Analyzing {tagname} :: component {component} with score {score:.4f} at index {index}"
+                    )
+
+                    future = executor.submit(
+                        self._analyze_channel_roc,
+                        camera=camera,
+                        index=index,
+                        bootstrap_samples=bootstrap_samples,
+                        boundaries=boundaries
+                    )
+
+                    jobs[future] = f"{tagname}_{component}_{index}"
+
+            for future in as_completed(jobs):
+                tagname = jobs[future]
+                try:
+                    results[tagname] = future.result()
+                    LOGGER.debug(f"Completed analysis for {tagname}")
+                except Exception as e:
+                    LOGGER.error(f"Error analyzing {tagname}: {e}")
+
+        LOGGER.info(f"ROC analysis completed for camera {camera.model.value}")
         return results
