@@ -49,42 +49,6 @@ AnyDict = TypeVar(
 )
 
 
-class ErrorDict(TypedDict, total=False):
-    """
-    Schema for error responses.
-    The exct meaning for each field are loose
-    and are not strictly defined.
-    This is mostly intended to mirror the structure
-    of the error responses returned by the Ebanq API.
-    """
-
-    title: str
-    details: str
-    code: str
-    source: str
-    target: str
-    meta: dict[str, Any]
-
-
-class ErrorResponse(TypedDict, total=False):
-    """
-    Errors and warning response schema.
-    This mirrors the structure of the error responses
-    returned by the Ebanq API.
-    It contains a list of errors and warnings encountered during the request.
-    The `timestamp` field is used to indicate when the response was generated.
-    """
-
-    errors: List[ErrorDict]
-    warnings: List[ErrorDict]
-    timestamp: str
-
-
-class EbanqResponse(TypedDict, Generic[AnyDict], total=False):
-    data: AnyDict
-    timestamp: str
-
-
 class CameraModel(Enum):
     """
     Enum representing the camera models supported by the system.
@@ -139,6 +103,10 @@ class CameraModel(Enum):
 
 
 class DeviceType(Enum):
+    """
+    Enum representing the device types supported by the system.
+    Each device type is represented by a string value.
+    """
     UNKNOWN = "UNKNOWN"
     ESP32S3 = "ESP32S3"
     ESP32 = "ESP32"
@@ -149,12 +117,6 @@ class DeviceType(Enum):
     def match(cls, device: str):
         device = device.upper()
         return cls[device] if device in cls.__members__.items() else cls.UNKNOWN
-
-
-class EntityJSON(TypedDict, total=False):
-    uid: str
-    created: str
-    edited: str
 
 
 class UserRole(Enum):
@@ -181,43 +143,70 @@ class UserRole(Enum):
         return role.lower() in cls.__members__.values()
 
 
-class Entity(BaseModel, ABC):
-    """
-    Abstract Parent class representing a given row in a db table, either devices, sensors or readings.
-
-    Attributes:
-
-        MAC (str): The MAC address of the device.
-        timestamp (str): The timestamp of the object data.
-    """
-
-    MAC: Optional[MacAddress] = None
-    timestamp: Optional[datetime] = None
 
 
-class StationStatus(Entity):
+class StationStatus(BaseModel):
     """
     A representation of the state of the sensor onboard a given weather station
     at a given timestamp. Equivalent to a single row in the sensor table.
 
     Attributes:
-        sht (bool): Status of the SHT31-D.
-        bmp (bool): Status of the BMP280.
-        cam (bool): Status of the camera.
-        wifi (bool): Status of the WiFi connection.
+        MAC (MacAddress): The MAC address of the station.
+        timestamp (datetime): The timestamp of the status.
+        SHT (bool): Status of the SHT sensor.
+        BMP (bool): Status of the BMP sensor.
+        CAM (bool): Status of the camera.
+        WIFI (bool): Status of the WiFi connection.
     """
 
+    MAC: MacAddress
+    timestamp: Optional[datetime] = None
     SHT: bool = False
     BMP: bool = False
     CAM: bool = False
     WIFI: bool = False
 
+class StationStatusJSON(TypedDict, total=False):
+    """
+    JSON representation of the StationStatus.
+    This is used to serialize the StationStatus for API responses or storage.
 
-class Station(Entity):
+    Attributes:
+        MAC (MacAddress): The MAC address of the station.
+        timestamp (str): The timestamp of the status in string format.
+        SHT (bool): Status of the SHT sensor.
+        BMP (bool): Status of the BMP sensor.
+        CAM (bool): Status of the camera.
+        WIFI (bool): Status of the WiFi connection.
+    """
+
+    MAC: MacAddress
+    timestamp: Optional[str] = None
+    SHT: bool
+    BMP: bool
+    CAM: bool
+    WIFI: bool
+
+
+
+
+class Station(BaseModel):
     """
     Represents a station in the database.
+
+    Attributes:
+        MAC (MacAddress): The MAC address of the station.
+        name (str): The name of the station.
+        device_model (DeviceType): The type of device used for the station.
+        camera_model (CameraModel): The model of the camera used in the station.
+        firmware_version (str): The version of the firmware running on the station.
+        altitude (float): The altitude of the station in meters.
+        latitude (Latitude): The latitude of the station.
+        longitude (Longitude): The longitude of the station.
+        sensors (Optional[StationStatus]): The status of the sensors onboard the station.
     """
 
+    MAC: MacAddress
     name: str
     device_model: DeviceType
     camera_model: CameraModel
@@ -227,12 +216,79 @@ class Station(Entity):
     longitude: Longitude
     sensors: Optional[StationStatus] = None
 
+class StationJSON(TypedDict, total=False):
+    """
+    JSON representation of the Station.
 
-class Reading(Entity):
+    This is used to serialize the Station for API responses or storage.
+    It mirrors the structure of the Station model but uses TypedDict for JSON compatibility.    
+
+    Attributes:
+        MAC (MacAddress): The MAC address of the station.
+        name (str): The name of the station.
+        device_model (DeviceType): The type of device used for the station.
+        camera_model (CameraModel): The model of the camera used in the station.
+        firmware_version (str): The version of the firmware running on the station.
+        altitude (float): The altitude of the station in meters.
+        latitude (Latitude): The latitude of the station.
+        longitude (Longitude): The longitude of the station.
+        sensors (Optional[StationStatusJSON]): The status of the sensors onboard the station.
+    """
+
+    MAC: MacAddress
+    name: str
+    device_model: DeviceType
+    camera_model: CameraModel
+    firmware_version: str
+    altitude: float
+    latitude: Latitude
+    longitude: Longitude
+    sensors: Optional[StationStatusJSON] = None
+
+
+
+
+class Reading(BaseModel):
     """
     Represents a reading from a device in the database.
+
+    Attributes:
+        MAC (MacAddress): The MAC address of the station.
+        timestamp (datetime): The timestamp of the reading.
+        temperature (float): The temperature reading in degrees Celsius.
+        humidity (float): The humidity reading in percentage.
+        pressure (float): The pressure reading in hPa.
+        dewpoint (float): The dew point reading in degrees Celsius.
+        filepath (Optional[str]): The file path to the reading data, if applicable.
     """
 
+    MAC: MacAddress
+    timestamp: datetime
+    temperature: float
+    humidity: float
+    pressure: float
+    dewpoint: float
+    filepath: Optional[str] = None
+
+class ReadingJSON(TypedDict, total=False):
+    """
+    JSON representation of the Reading.
+
+    This is used to serialize the Reading for API responses or storage.
+    It mirrors the structure of the Reading model but uses TypedDict for JSON compatibility.
+
+    Attributes:
+        MAC (MacAddress): The MAC address of the station.
+        timestamp (str): The timestamp of the reading in string format.
+        temperature (float): The temperature reading in degrees Celsius.
+        humidity (float): The humidity reading in percentage.
+        pressure (float): The pressure reading in hPa.
+        dewpoint (float): The dew point reading in degrees Celsius.
+        filepath (Optional[str]): The file path to the reading data, if applicable.
+    """
+
+    MAC: MacAddress
+    timestamp: str
     temperature: float
     humidity: float
     pressure: float
@@ -240,9 +296,18 @@ class Reading(Entity):
     filepath: Optional[str] = None
 
 
+
+
 class Location(BaseModel):
     """
     Represents a location in the database.
+
+    Attributes:
+        country (str): The country of the location.
+        region (str): The region of the location.
+        city (str): The city of the location.
+        latitude (Latitude): The latitude of the location.
+        longitude (Longitude): The longitude of the location.
     """
 
     country: str
@@ -250,6 +315,29 @@ class Location(BaseModel):
     city: str
     latitude: Latitude
     longitude: Longitude
+
+class LocationJSON(TypedDict, total=False):
+    """
+    JSON representation of the Location.
+
+    This is used to serialize the Location for API responses or storage.
+    It mirrors the structure of the Location model but uses TypedDict for JSON compatibility.
+
+    Attributes:
+        country (str): The country of the location.
+        region (str): The region of the location.
+        city (str): The city of the location.
+        latitude (Latitude): The latitude of the location.
+        longitude (Longitude): The longitude of the location.
+    """
+
+    country: str
+    region: str
+    city: str
+    latitude: Latitude
+    longitude: Longitude
+
+
 
 
 class User(BaseModel):
@@ -263,7 +351,7 @@ class User(BaseModel):
     password: SecretStr
     role: UserRole = UserRole.VISITOR
 
-class UserJson(TypedDict, total=False):
+class UserJSON(TypedDict, total=False):
     """
     Represents a user in JSON format.
     """
@@ -273,3 +361,4 @@ class UserJson(TypedDict, total=False):
     email: EmailStr
     password: SecretStr
     role: UserRole = UserRole.VISITOR
+

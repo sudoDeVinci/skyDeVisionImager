@@ -1,11 +1,12 @@
 from .entities import (
     User,
-    UserJson,
+    UserJSON,
     Station,
+    StationJSON,
     StationStatus,
+    StationStatusJSON,
     Reading,
     Location,
-    Entity,
     DeviceType,
     CameraModel,
     UserRole,
@@ -24,6 +25,20 @@ T = TypeVar("T", bound=BaseModel)
 
 
 logcursorfailure = lambda: Manager.log("Failed to get cursor.", level=ERROR)
+
+class DatabaseError(Exception):
+    """
+    Custom exception for database-related errors.
+    """
+    def __init__(self, message: str):
+        super().__init__(message)
+        Manager.log(message, level=ERROR)
+
+class NotFoundError(DatabaseError): ...
+class AlreadyExistsError(DatabaseError): ...
+class InvalidInputError(DatabaseError): ...
+class InternalDBError(DatabaseError): ...
+class UnauthorizedError(DatabaseError): ...
 
 
 class Service(ABC, Generic[T]):
@@ -102,7 +117,9 @@ class UserService(Service[User]):
             - Optional[User]: The user object if found, None otherwise.
 
         Raises:
-            - ValueError: If neither email nor id is provided | if there is an error retrieving the user.
+            InvalidInputError: If neither email nor id is provided.
+            InternalDBError: If there is an error getting the cursor for user retrieval.
+            SQLError: If there is an error executing the SQL query.
         """
 
         result: Optional[User] = None
@@ -110,8 +127,7 @@ class UserService(Service[User]):
         id: Optional[str] = kwargs.get("id", None)
 
         if not email and not id:
-            Manager.log(f"Either 'email' or 'id' must be provided to retrieve a user.", level=ERROR)
-            raise ValueError(f"Either 'email' or 'id' must be provided to retrieve a user.")    
+            raise InvalidInputError(f"Either 'email' or 'id' must be provided to retrieve a user.")    
 
         if email:
             queryparam = "email = ?;"
@@ -123,20 +139,14 @@ class UserService(Service[User]):
 
         query = f"SELECT * FROM users WHERE {queryparam}"
 
-        try:
-            with Manager.cursor() as cursor:
-                if not cursor:
-                    logcursorfailure()
-                    raise ValueError("Failed to get cursor for user retrieval.")
+        with Manager.cursor() as cursor:
+            if not cursor:
+                raise InternalDBError("Failed to get cursor for user retrieval.")
 
-                cursor.execute(query, params)
-                data = cursor.fetchone()
-                if data:
-                    result = User(**data)
-
-        except SQLError as err:
-            Manager.log(f"Error retrieving user :: {err}", level=ERROR)
-            raise ValueError(f"Error retrieving user :: {err}")
+            cursor.execute(query, params)
+            data = cursor.fetchone()
+            if data:
+                result = User(**data)
 
         return result
 
@@ -149,6 +159,9 @@ class UserService(Service[User]):
             page (int): The page number to retrieve (0-indexed).
         Returns:
             list[User]: A list of user objects.
+        Raises:
+            InternalDBError: If there is an error getting the cursor for user listing.
+            SQLError: If there is an error executing the SQL query.
         """
         results: list[User] = []
         limit: int = kwargs.get("limit", 20)
@@ -156,81 +169,85 @@ class UserService(Service[User]):
         offset = page * limit
         query = "SELECT * FROM users ORDER BY name LIMIT ? OFFSET ?;"
 
-        try:
-            with Manager.cursor() as cursor:
-                if not cursor:
-                    logcursorfailure()
-                    raise ValueError("Failed to get cursor for user listing.")
+        with Manager.cursor() as cursor:
+            if not cursor:
+                logcursorfailure()
+                raise InternalDBError("Failed to get cursor for user listing.")
 
-                cursor.execute(query, (limit, offset))
-                data = cursor.fetchall()
-                for row in data:
-                    results.append(User(
-                        ID=row[0],
-                        name=row[1],
-                        email=row[2],
-                        password=row[3],
-                        role=UserRole.match(row[4]),
-                    ))
-
-        except SQLError as err:
-            Manager.log(f"Error listing users: {err}", level=ERROR)
-            raise ValueError(f"Error listing users: {err}")
+            cursor.execute(query, (limit, offset))
+            data = cursor.fetchall()
+            for row in data:
+                results.append(User(
+                    ID=row[0],
+                    name=row[1],
+                    email=row[2],
+                    password=row[3],
+                    role=UserRole.match(row[4]),
+                ))
 
         return results
 
     @staticmethod
     def insert(**kwargs) -> None:
+        """
+        Insert a user into the database.
+        Args:
+            user (User): The user to insert.
+        Raises:
+            InvalidInputError: If no user is provided | if the provided user is not an instance of User.
+            InternalDBError: If there is an error getting the cursor for user insertion.
+            SQLError: If there is an error executing the SQL query.
+        """
         user: Optional[User] = kwargs.get("user", None)
         if not user:
             Manager.log("No user provided for insertion.", level=ERROR)
-            raise ValueError("No user provided for insertion.")
+            raise InvalidInputError("No user provided for insertion.")
         
         if not isinstance(user, User):
             Manager.log("Provided user is not an instance of User.", level=ERROR)
-            raise ValueError("Provided user is not an instance of User.")
+            raise InvalidInputError("Provided user is not an instance of User.")
         
         query = "INSERT INTO Users VALUES (?, ?, ?, ?, ?);"
         Manager.log(f"Inserting user :: {user}", level=DEBUG)
 
-        try:
-            with Manager.cursor() as cursor:
-                if not cursor:
-                    logcursorfailure()
-                    raise ValueError("Failed to get cursor for user insertion.")
+        with Manager.cursor() as cursor:
+            if not cursor:
+                raise InternalDBError("Failed to get cursor for user insertion.")
 
-                cursor.execute(query, (
-                    user.ID,
-                    user.name,
-                    user.email,
-                    Manager.hash_password(user.password),
-                    user.role.value,
-                ))
+            cursor.execute(query, (
+                user.ID,
+                user.name,
+                user.email,
+                Manager.hash_password(user.password),
+                user.role.value,
+            ))
             
-        except SQLError as err:
-            Manager.log(f"Error inserting user: {err}", level=ERROR)
-            raise ValueError(f"Error inserting user: {err}")
-
     @staticmethod
     def update(**kwargs) -> None:
+        """
+        Update a user in the database.
+        Args:
+            id (str): The ID of the user to update.
+            email (EmailStr): The email of the user to update.
+            user (UserJSON): The user data to update.
+        Raises:
+            InvalidInputError: If neither id nor email is provided | if no user data is provided
+            InternalDBError: If there is an error getting the cursor for user update.
+            SQLError: If there is an error executing the SQL query.
+            NotFoundError: If no user is found to update.
+        """
         id: Optional[str] = kwargs.get("id", None)
         email: Optional[EmailStr] = kwargs.get("email", None)
-        user: Optional[UserJson] = kwargs.get("user", None)
+        user: Optional[UserJSON] = kwargs.get("user", None)
 
         if not id and not email:
-            Manager.log("Either 'id' or 'email' must be provided to update a user.", level=ERROR)
-            raise ValueError("Either 'id' or 'email' must be provided to update a user.")
+            raise InvalidInputError("Either 'id' or 'email' must be provided to update a user.")
 
         if not user:
-            Manager.log("No user provided for update.", level=ERROR)
-            raise ValueError("No user provided for update.")
-        
-        if not isinstance(user, UserJson):
-            Manager.log("Provided user is not an instance of User.", level=ERROR)
-            raise ValueError("Provided user is not an instance of User.")
+            raise InvalidInputError("No user provided for update.")
         
         params = []
-        
+
         userparam = ""
         for key, value in user.items():
             if value is not None:
@@ -244,41 +261,43 @@ class UserService(Service[User]):
         if id:
             queryparam = "ID = ?"
             params = [id]
-        
+    
         if not userparam:
-            Manager.log("No fields to update in user.", level=ERROR)
-            raise ValueError("No fields to update in user.")
+            raise InvalidInputError("No fields to update in user.")
         
         userparam = userparam.rstrip(", ")
         
         query = f"UPDATE Users SET {userparam} WHERE {queryparam};"
 
-        try:
-            with Manager.cursor() as cursor:
-                if not cursor:
-                    logcursorfailure()
-                    raise ValueError("Failed to get cursor for user update.")
+        with Manager.cursor() as cursor:
+            if not cursor:
+                raise InternalDBError("Failed to get cursor for user update.")
 
-                params = tuple(params)
+            params = tuple(params)
 
-                cursor.execute(query, params)
+            cursor.execute(query, params)
 
-                if cursor.rowcount == 0:
-                    Manager.log("No user found to update.", level=ERROR)
-                    raise ValueError("No user found to update.")
+            if cursor.rowcount == 0:
+                raise NotFoundError("No user found to update.")
                 
-        except SQLError as err:
-            Manager.log(f"Error updating user: {err}", level=ERROR)
-            raise ValueError(f"Error updating user: {err}")
-
     @staticmethod
     def delete(**kwargs) -> None:
+        """
+        Delete a user from the database.
+        Args:
+            id (str): The ID of the user to delete.
+            email (EmailStr): The email of the user to delete.
+        Raises:
+            InvalidInputError: If neither id nor email is provided.
+            InternalDBError: If there is an error getting the cursor for user deletion.
+            SQLError: If there is an error executing the SQL query.
+            NotFoundError: If no user is found to delete.
+        """
         id: Optional[str] = kwargs.get("id", None)
         email: Optional[EmailStr] = kwargs.get("email", None)
 
         if not id and not email:
-            Manager.log("Either 'id' or 'email' must be provided to delete a user.", level=ERROR)
-            raise ValueError("Either 'id' or 'email' must be provided to delete a user.")
+            raise InvalidInputError("Either 'id' or 'email' must be provided to delete a user.")
 
         if email:
             queryparam = "email = ?"
@@ -290,21 +309,15 @@ class UserService(Service[User]):
 
         query = f"DELETE FROM Users WHERE {queryparam};"
 
-        try:
-            with Manager.cursor() as cursor:
-                if not cursor:
-                    logcursorfailure()
-                    raise ValueError("Failed to get cursor for user deletion.")
+        with Manager.cursor() as cursor:
+            if not cursor:
+                raise InternalDBError("Failed to get cursor for user deletion.")
 
-                cursor.execute(query, params)
+            cursor.execute(query, params)
 
-                if cursor.rowcount == 0:
-                    Manager.log("No user found to delete.", level=ERROR)
-                    raise ValueError("No user found to delete.")
-                
-        except SQLError as err:
-            Manager.log(f"Error deleting user: {err}", level=ERROR)
-            raise ValueError(f"Error deleting user: {err}")
+            if cursor.rowcount == 0:
+                raise NotFoundError("No user found to delete.") 
+
 
 class StatusService(Service[StationStatus]):
     """
@@ -316,44 +329,40 @@ class StatusService(Service[StationStatus]):
         """
         Get a station status from the database.
         Args:
-            - MAC (MacAddress): The MAC address of the station to retrieve.
+            MAC (MacAddress): The MAC address of the station to retrieve.
 
         Returns:
-            - Optional[StationStatus]: The station status object if found, None otherwise.
+            Optional[StationStatus]: The station status object if found, None otherwise.
 
         Raises:
-            - ValueError: If MAC is not provided | if there is an error retrieving the station status.
+            InvalidInputError: If MAC is not provided | if there is an error retrieving the station status.
+            InternalDBError: If there is an error getting the cursor for station status retrieval.
+            SQLError: If there is an error executing the SQL query.
         """
         result: Optional[StationStatus] = None
         mac: Optional[MacAddress] = kwargs.get("MAC", None)
 
         if not mac:
             Manager.log(f"MAC must be provided to retrieve a station status.", level=ERROR)
-            raise ValueError(f"MAC must be provided to retrieve a station status.")    
+            raise InvalidInputError(f"MAC must be provided to retrieve a station status.")    
 
         query = "SELECT * FROM Status WHERE MAC = ?;"
 
-        try:
-            with Manager.cursor() as cursor:
-                if not cursor:
-                    logcursorfailure()
-                    raise ValueError("Failed to get cursor for station status retrieval.")
+        with Manager.cursor() as cursor:
+            if not cursor:
+                raise InternalDBError("Failed to get cursor for station status retrieval.")
 
-                cursor.execute(query, (mac,))
-                data = cursor.fetchone()
-                if data:
-                    result = StationStatus(
-                        MAC=data[0],
-                        timestamp=data[1],
-                        SHT=data[2],
-                        BMP=data[3],
-                        CAM=data[4],
-                        WIFI=data[5]
-                    )
-
-        except SQLError as err:
-            Manager.log(f"Error retrieving station status :: {err}", level=ERROR)
-            raise ValueError(f"Error retrieving station status :: {err}")
+            cursor.execute(query, (mac,))
+            data = cursor.fetchone()
+            if data:
+                result = StationStatus(
+                    MAC=data[0],
+                    timestamp=data[1],
+                    SHT=data[2],
+                    BMP=data[3],
+                    CAM=data[4],
+                    WIFI=data[5]
+                )
 
         return result
 
@@ -364,38 +373,150 @@ class StatusService(Service[StationStatus]):
         Args:
             status (StationStatus): The station status to insert.
         Raises:
-            ValueError: If no station status is provided | if the provided station status is not an
+            InvalidInputError: If no station status is provided | if the provided station status is not an instance of StationStatus.
+            InternalDBError: If there is an error getting the cursor for station status insertion.
+            SQLError: If there is an error executing the SQL query.
         """
         status: Optional[StationStatus] = kwargs.get("status", None)
         if not status:
-            Manager.log("No station status provided for insertion.", level=ERROR)
-            raise ValueError("No station status provided for insertion.")
+            raise InvalidInputError("No station status provided for insertion.")
         
         if not isinstance(status, StationStatus):
-            Manager.log("Provided station status is not an instance of StationStatus.", level=ERROR)
-            raise ValueError("Provided station status is not an instance of StationStatus.")
+            raise InvalidInputError("Provided station status is not an instance of StationStatus.")
         
         query = "INSERT INTO Status VALUES (?, ?, ?, ?, ?, ?);"
         Manager.log(f"Inserting station status :: {status}", level=DEBUG)
 
-        try:
-            with Manager.cursor() as cursor:
-                if not cursor:
-                    logcursorfailure()
-                    raise ValueError("Failed to get cursor for station status insertion.")
+        with Manager.cursor() as cursor:
+            if not cursor:
+                raise InternalDBError("Failed to get cursor for station status insertion.")
 
-                cursor.execute(query, (
-                    status.MAC,
-                    status.timestamp,
-                    int(status.SHT),
-                    int(status.BMP),
-                    int(status.CAM),
-                    int(status.WIFI),
-                ))
+            cursor.execute(query, (
+                status.MAC,
+                status.timestamp,
+                int(status.SHT),
+                int(status.BMP),
+                int(status.CAM),
+                int(status.WIFI),
+            ))
             
-        except SQLError as err:
-            Manager.log(f"Error inserting station status: {err}", level=ERROR)
-            raise ValueError(f"Error inserting station status: {err}")
+    @staticmethod
+    def list(**kwargs) -> list[StationStatus]:
+        """
+        List all station statuses from the database.
+        Args:
+            limit (int): The maximum number of station statuses to retrieve.
+            page (int): The page number to retrieve (0-indexed).
+        Returns:
+            list[StationStatus]: A list of station status objects.
+        Raises:
+            InternalDBError: If there is an error getting the cursor for station status listing.
+            SQLError: If there is an error executing the SQL query.
+        """
+        results: list[StationStatus] = []
+        limit: int = kwargs.get("limit", 20)
+        page: int = kwargs.get("page", 0)
+        offset = page * limit
+        query = "SELECT * FROM Status ORDER BY timestamp LIMIT ? OFFSET ?;"
+
+        with Manager.cursor() as cursor:
+            if not cursor:
+                logcursorfailure()
+                raise InternalDBError("Failed to get cursor for station status listing.")
+
+            cursor.execute(query, (limit, offset))
+            data = cursor.fetchall()
+            for row in data:
+                results.append(StationStatus(
+                    MAC=row[0],
+                    timestamp=row[1],
+                    SHT=bool(row[2]),
+                    BMP=bool(row[3]),
+                    CAM=bool(row[4]),
+                    WIFI=bool(row[5])
+                ))
+
+        return results
+
+    @staticmethod
+    def update(**kwargs) -> None:
+        """
+        Update a station status in the database.
+        Args:
+            MAC (MacAddress): The MAC address of the station to update.
+            status (StationStatusJSON): The station status data to update.
+        Raises:
+            InvalidInputError: If MAC is not provided | if no station status data is provided | if the provided station status data is not an instance of StationStatusJSON.
+            InternalDBError: If there is an error getting the cursor for station status update.
+            SQLError: If there is an error executing the SQL query.
+            NotFoundError: If no station status is found to update.
+        """
+        mac: Optional[MacAddress] = kwargs.get("MAC", None)
+        status: Optional[StationStatusJSON] = kwargs.get("status", None)
+
+        if not mac:
+            raise InvalidInputError("MAC must be provided to update a station status.")
+
+        if not status:
+            raise InvalidInputError("No station status provided for update.")
+        
+        params = []
+        
+        statusparam = ""
+        for key, value in status.items():
+            if value is not None:
+                statusparam += f"{key} = ?, "
+                params.append(value)
+
+        if not statusparam:
+            raise InvalidInputError("No fields to update in station status.")
+        
+        statusparam = statusparam.rstrip(", ")
+        
+        query = f"UPDATE Status SET {statusparam} WHERE MAC = ?;"
+        params.append(mac)
+
+        with Manager.cursor() as cursor:
+            if not cursor:
+                raise InternalDBError("Failed to get cursor for station status update.")
+
+            params = tuple(params)
+
+            cursor.execute(query, params)
+
+            if cursor.rowcount == 0:
+                raise NotFoundError("No station status found to update.")
+
+    @staticmethod
+    def delete(**kwargs) -> None:
+        """
+        Delete a station status from the database.
+        Args:
+            MAC (MacAddress): The MAC address of the station status to delete.
+        Raises:
+            InvalidInputError: If MAC is not provided.
+            InternalDBError: If there is an error getting the cursor for station status deletion.
+            SQLError: If there is an error executing the SQL query.
+            NotFoundError: If no station status is found to delete.
+        """
+        mac: Optional[MacAddress] = kwargs.get("MAC", None)
+
+        if not mac:
+            raise InvalidInputError("MAC must be provided to delete a station status.")
+
+        query = "DELETE FROM Status WHERE MAC = ?;"
+
+        with Manager.cursor() as cursor:
+            if not cursor:
+                logcursorfailure()
+                raise InternalDBError("Failed to get cursor for station status deletion.")
+
+            cursor.execute(query, (mac,))
+
+            if cursor.rowcount == 0:
+                Manager.log("No station status found to delete.", level=ERROR)
+                raise NotFoundError("No station status found to delete.")
+                   
 
 
 class StationService(Service[Station]):
@@ -414,44 +535,39 @@ class StationService(Service[Station]):
             - Optional[Station]: The station object if found, None otherwise.
 
         Raises:
-            - ValueError: If neither mac nor id is provided | if there is an error retrieving the station.
+            InvalidInputError: If MAC is not provided | if there is an error retrieving the station.
+            InternalDBError: If there is an error getting the cursor for station retrieval.
+            SQLError: If there is an error executing the SQL query.
         """
         result: Optional[Station] = None
         mac: Optional[MacAddress] = kwargs.get("MAC", None)
 
         if not mac:
-            Manager.log(f"MAC must be provided to retrieve a station.", level=ERROR)
-            raise ValueError(f"Either MAC or must be provided to retrieve a station.")    
+            raise InvalidInputError(f"Either MAC or must be provided to retrieve a station.")    
 
         query = f"SELECT * FROM Stations WHERE MAC = ? LIMIT 1;"
 
-        try:
-            with Manager.cursor() as cursor:
-                if not cursor:
-                    logcursorfailure()
-                    raise ValueError("Failed to get cursor for station retrieval.")
+        with Manager.cursor() as cursor:
+            if not cursor:
+                raise InternalDBError("Failed to get cursor for station retrieval.")
 
-                cursor.execute(query, (mac,))
-                data = cursor.fetchone()
-                if data:
-                    
-                    status = StatusService.get(MAC=mac)
+            cursor.execute(query, (mac,))
+            data = cursor.fetchone()
+            if data:
+                
+                status = StatusService.get(MAC=mac)
 
-                    result = Station(
-                        MAC=mac,
-                        name=data[1],
-                        device_model=DeviceType.match(data[2]),
-                        camera_model=CameraModel.match(data[3]),
-                        firmware_version=data[4],
-                        altitude=data[5],
-                        latitude=Latitude(data[6]),
-                        longitude=Longitude(data[7]),
-                        sensors=status
-                    )
-
-        except SQLError as err:
-            Manager.log(f"Error retrieving station :: {err}", level=ERROR)
-            raise ValueError(f"Error retrieving station :: {err}")
+                result = Station(
+                    MAC=mac,
+                    name=data[1],
+                    device_model=DeviceType.match(data[2]),
+                    camera_model=CameraModel.match(data[3]),
+                    firmware_version=data[4],
+                    altitude=data[5],
+                    latitude=Latitude(data[6]),
+                    longitude=Longitude(data[7]),
+                    sensors=status
+                )
         
         return result
 
@@ -464,6 +580,9 @@ class StationService(Service[Station]):
             page (int): The page number to retrieve (0-indexed).
         Returns:
             list[Station]: A list of station objects.
+        Raises:
+            InternalDBError: If there is an error getting the cursor for station listing.
+            SQLError: If there is an error executing the SQL query.
         """
         results: list[Station] = []
         limit: int = kwargs.get("limit", 20)
@@ -471,75 +590,154 @@ class StationService(Service[Station]):
         offset = page * limit
         query = "SELECT * FROM Stations ORDER BY name LIMIT ? OFFSET ?;"
 
-        try:
-            with Manager.cursor() as cursor:
-                if not cursor:
-                    logcursorfailure()
-                    raise ValueError("Failed to get cursor for station listing.")
+        with Manager.cursor() as cursor:
+            if not cursor:
+                raise InternalDBError("Failed to get cursor for station listing.")
 
-                cursor.execute(query, (limit, offset))
-                data = cursor.fetchall()
-                for row in data:
-                    mac = row[0]
-                    status = StatusService.get(MAC=mac)
-                    results.append(Station(
-                        MAC=mac,
-                        name=row[1],
-                        device_model=DeviceType.match(row[2]),
-                        camera_model=CameraModel.match(row[3]),
-                        firmware_version=row[4],
-                        altitude=row[5],
-                        latitude=Latitude(row[6]),
-                        longitude=Longitude(row[7]),
-                        sensors=status
-                    ))
-
-        except SQLError as err:
-            Manager.log(f"Error listing stations: {err}", level=ERROR)
-            raise ValueError(f"Error listing stations: {err}")
+            cursor.execute(query, (limit, offset))
+            data = cursor.fetchall()
+            for row in data:
+                mac = row[0]
+                status = StatusService.get(MAC=mac)
+                results.append(Station(
+                    MAC=mac,
+                    name=row[1],
+                    device_model=DeviceType.match(row[2]),
+                    camera_model=CameraModel.match(row[3]),
+                    firmware_version=row[4],
+                    altitude=row[5],
+                    latitude=Latitude(row[6]),
+                    longitude=Longitude(row[7]),
+                    sensors=status
+                ))
 
         return results
 
     @staticmethod
-    def insert(**kwargs) -> None:
+    def insert(**kwargs) -> None: 
+        """
+        Insert a station into the database.
+        Args:
+            station (Station): The station to insert.
+        Raises:
+            InvalidInputError: If no station is provided | if the provided station is not an instance of Station.
+            InternalDBError: If there is an error getting the cursor for station insertion.
+            SQLError: If there is an error executing the SQL query.
+        """
         station: Optional[Station] = kwargs.get("station", None)
         if not station:
-            Manager.log("No station provided for insertion.", level=ERROR)
-            raise ValueError("No station provided for insertion.")
+            raise InvalidInputError("No station provided for insertion.")
         
         if not isinstance(station, Station):
-            Manager.log("Provided station is not an instance of Station.", level=ERROR)
-            raise ValueError("Provided station is not an instance of Station.")
+            raise InvalidInputError("Provided station is not an instance of Station.")
         
         query = "INSERT INTO Stations VALUES (?, ?, ?, ?, ?, ?, ?, ?);"
         Manager.log(f"Inserting station :: {station}", level=DEBUG)
 
-        try:
-            with Manager.cursor() as cursor:
-                if not cursor:
-                    logcursorfailure()
-                    raise ValueError("Failed to get cursor for station insertion.")
+        with Manager.cursor() as cursor:
+            if not cursor:
+                raise InternalDBError("Failed to get cursor for station insertion.")
 
-                cursor.execute(query, (
-                    station.MAC,
-                    station.name,
-                    station.device_model.value,
-                    station.camera_model.value,
-                    station.firmware_version,
-                    station.altitude,
-                    float(station.latitude),
-                    float(station.longitude),
-                ))
+            cursor.execute(query, (
+                station.MAC,
+                station.name,
+                station.device_model.value,
+                station.camera_model.value,
+                station.firmware_version,
+                station.altitude,
+                float(station.latitude),
+                float(station.longitude),
+            ))
 
-            if station.sensors:
-                StatusService.insert(status=station.sensors)
+            station.sensors = StationStatus(
+                MAC=station.MAC,
+                timestamp=None,
+                SHT=False,
+                BMP=False,
+                CAM=False,
+                WIFI=False
+            )
+        StatusService.insert(status=station.sensors)
+
+    @staticmethod
+    def update(**kwargs) -> None:
+        """
+        Update a station in the database.
+        Args:
+            MAC (MacAddress): The MAC address of the station to update.
+            station (StationJSON): The station data to update.
+        Raises:
+            InvalidInputError: If MAC is not provided | if no station data is provided | if the provided station data is not an instance of StationJSON.
+            InternalDBError: If there is an error getting the cursor for station update.
+            SQLError: If there is an error executing the SQL query.
+            NotFoundError: If no station is found to update.
+        """
+        mac: Optional[MacAddress] = kwargs.get("MAC", None)
+        station: Optional[StationJSON] = kwargs.get("station", None)
+
+        if not mac:
+            raise InvalidInputError("MAC must be provided to update a station.")
+
+        if not station:
+            raise InvalidInputError("No station provided for update.")
+        
+        station.pop("sensors", None)
+        params = []
+        stationparam = ""
+
+        for key, value in station.items():
+            if value is not None:
+                stationparam += f"{key} = ?, "
+                params.append(value)
+
+
+        if not stationparam:
+            raise InvalidInputError("No fields to update in station.")
+        
+        stationparam = stationparam.rstrip(", ")
+        params.append(mac)
+        query = f"UPDATE Stations SET {stationparam} WHERE MAC = ?;"
+
+        with Manager.cursor() as cursor:
+            if not cursor:
+                raise InternalDBError("Failed to get cursor for station update.")
+
+            params = tuple(params)
+            cursor.execute(query, params)
+
+            if cursor.rowcount == 0:
+                raise NotFoundError("No station found to update.")
+
+    @staticmethod
+    def delete(**kwargs) -> None:
+        """
+        Delete a station from the database.
+        Args:
+            MAC (MacAddress): The MAC address of the station to delete.
+        Raises:
+            InvalidInputError: If MAC is not provided.
+            InternalDBError: If there is an error getting the cursor for station deletion.
+            SQLError: If there is an error executing the SQL query.
+            NotFoundError: If no station is found to delete.
+        """
+        mac: Optional[MacAddress] = kwargs.get("MAC", None)
+
+        if not mac:
+            raise InvalidInputError("MAC must be provided to delete a station.")
+
+        query = "DELETE FROM Stations WHERE MAC = ?;"
+
+
+        with Manager.cursor() as cursor:
+            if not cursor:
+                raise InternalDBError("Failed to get cursor for station deletion.")
+
+            cursor.execute(query, (mac,))
+
+            if cursor.rowcount == 0:
+                raise NotFoundError("No station found to delete.")
             
-        except SQLError as err:
-            Manager.log(f"Error inserting station: {err}", level=ERROR)
-            raise ValueError(f"Error inserting station: {err}")
-
-
-
-
+        StatusService.delete(MAC=mac)
+            
 
 
