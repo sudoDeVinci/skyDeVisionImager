@@ -30,10 +30,9 @@ from .configuration import (
 from .roccurve import (
     ROCAnalyzer,
     BoundaryArray,
-    BoundaryRange,
-    compute_confusion_matrix,
+    cpu_compute_confusion_matrix,
     gpu_compute_confusion_matrix,
-    gpu_threshold,
+    verify_gpu_setup
 )
 
 
@@ -59,11 +58,10 @@ __all__ = (
     "Camera",
     "ROCAnalyzer",
     "BoundaryArray",
-    "BoundaryRange",
     "get_datasets_vstacks_sparse",
     "get_masks_vstacks_sparse",
     "get_reference_vstacks_sparse",
-    "compute_confusion_matrix",
+    "cpu_compute_confusion_matrix",
     "gpu_compute_confusion_matrix",
-    "gpu_threshold",
+    "verify_gpu_setup",
 )

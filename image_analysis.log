@@ -1,0 +1,176 @@
+2025-08-07 04:42:38,272 - imanalysis - INFO - === GPU Setup Verification ===
+2025-08-07 04:42:38,643 - imanalysis - INFO - OpenCL available: True
+2025-08-07 04:42:38,643 - imanalysis - INFO - OpenCL enabled: True
+2025-08-07 04:42:38,644 - imanalysis - INFO - 
+
+Device Name: gfx1030
+Device Type: 4
+Max Compute Units: 30
+Global Memory: 16368 MB
+Local Memory: 64 KB
+Max Work Group Size: 256
+
+2025-08-07 04:42:38,645 - imanalysis - INFO - GPU operations working correctly
+2025-08-07 04:42:38,645 - imanalysis - INFO - Starting ROC analysis for camera DSLR
+2025-08-07 04:42:38,645 - imanalysis - DEBUG - >> Running similarity analysis with 6 workers for 3 color tags.
+2025-08-07 04:42:38,814 - imanalysis - DEBUG - Starting analysis for 3 color tags with 6 workers.
+2025-08-07 04:42:38,814 - imanalysis - DEBUG - Cloud dataset size: (18000, 400, 3), Sky dataset size: (18000, 400, 3)
+2025-08-07 04:42:38,917 - imanalysis - DEBUG - >> Analyzing color channel: HSV
+2025-08-07 04:42:38,998 - imanalysis - DEBUG - >> Analyzing color channel: RGB
+2025-08-07 04:42:39,070 - imanalysis - DEBUG - >> Analyzing color channel: YCrCb
+2025-08-07 04:42:39,857 - imanalysis - DEBUG - >> Cloud distribution: (3,), Sky distribution: (3,)
+2025-08-07 04:42:39,858 - imanalysis - DEBUG - >> Jaccard scores: [('hue', 0.06818182, 0) ('saturation', 0.        , 1)
+ ('value', 0.50857145, 2)]
+2025-08-07 04:42:39,858 - imanalysis - DEBUG - >> Sorted Jaccard scores: [('saturation', 0.        , 1) ('hue', 0.06818182, 0)
+ ('value', 0.50857145, 2)]
+2025-08-07 04:42:39,978 - imanalysis - DEBUG - >> Cloud distribution: (3,), Sky distribution: (3,)
+2025-08-07 04:42:39,979 - imanalysis - DEBUG - >> Jaccard scores: [('Y', 0.425     , 0) ('Cr', 0.16393442, 1) ('Cb', 0.16438356, 2)]
+2025-08-07 04:42:39,979 - imanalysis - DEBUG - >> Sorted Jaccard scores: [('Cr', 0.16393442, 1) ('Cb', 0.16438356, 2) ('Y', 0.425     , 0)]
+2025-08-07 04:42:39,986 - imanalysis - DEBUG - >> Cloud distribution: (3,), Sky distribution: (3,)
+2025-08-07 04:42:39,987 - imanalysis - DEBUG - >> Jaccard scores: [('red', 0.21276596, 0) ('green', 0.5343915 , 1) ('blue', 0.50857145, 2)]
+2025-08-07 04:42:39,988 - imanalysis - DEBUG - >> Sorted Jaccard scores: [('red', 0.21276596, 0) ('blue', 0.50857145, 2) ('green', 0.5343915 , 1)]
+2025-08-07 04:42:39,999 - imanalysis - INFO - Starting ROC analysis for 3 color channels
+2025-08-07 04:42:40,035 - imanalysis - DEBUG - Analyzing channel RGB index 0 for camera DSLR
+2025-08-07 04:42:40,035 - imanalysis - DEBUG - Analyzing channel HSV index 1 for camera DSLR
+2025-08-07 04:42:40,035 - imanalysis - DEBUG - Analyzing channel YCrCb index 1 for camera DSLR
+2025-08-07 04:42:40,035 - imanalysis - DEBUG - Loading 30 strata directly to GPU
+2025-08-07 04:42:40,035 - imanalysis - DEBUG - Loading 30 strata directly to GPU
+2025-08-07 04:42:40,035 - imanalysis - DEBUG - Loading 30 strata directly to GPU
+2025-08-07 04:42:42,339 - imanalysis - DEBUG - Transferred 270000 rows to GPU - GT: (270000, 400), Ref: (270000, 400, 3)
+2025-08-07 04:42:42,343 - imanalysis - DEBUG - GPU batch loaded successfully
+2025-08-07 04:42:42,417 - imanalysis - DEBUG - Processing boundary 2/1326: [ 0 10]
+2025-08-07 04:42:42,461 - imanalysis - DEBUG - Transferred 270000 rows to GPU - GT: (270000, 400), Ref: (270000, 400, 3)
+2025-08-07 04:42:42,465 - imanalysis - DEBUG - GPU batch loaded successfully
+2025-08-07 04:42:42,480 - imanalysis - DEBUG - Transferred 270000 rows to GPU - GT: (270000, 400), Ref: (270000, 400, 3)
+2025-08-07 04:42:42,484 - imanalysis - DEBUG - GPU batch loaded successfully
+2025-08-07 04:42:42,567 - imanalysis - DEBUG - Processing boundary 2/1326: [ 0 10]
+2025-08-07 04:42:42,568 - imanalysis - DEBUG - Processing boundary 2/1326: [ 0 10]
+2025-08-07 04:42:42,694 - imanalysis - DEBUG - Processing boundary 3/1326: [ 0 15]
+2025-08-07 04:42:42,804 - imanalysis - DEBUG - Processing boundary 3/1326: [ 0 15]
+2025-08-07 04:42:42,829 - imanalysis - DEBUG - Processing boundary 3/1326: [ 0 15]
+2025-08-07 04:42:42,959 - imanalysis - DEBUG - Processing boundary 4/1326: [ 0 20]
+2025-08-07 04:42:43,044 - imanalysis - DEBUG - Processing boundary 4/1326: [ 0 20]
+2025-08-07 04:42:43,099 - imanalysis - DEBUG - Processing boundary 4/1326: [ 0 20]
+2025-08-07 04:42:43,239 - imanalysis - DEBUG - Processing boundary 5/1326: [ 0 25]
+2025-08-07 04:42:43,294 - imanalysis - DEBUG - Processing boundary 5/1326: [ 0 25]
+2025-08-07 04:42:43,386 - imanalysis - DEBUG - Processing boundary 5/1326: [ 0 25]
+2025-08-07 04:42:43,513 - imanalysis - DEBUG - Processing boundary 6/1326: [ 0 30]
+2025-08-07 04:42:43,535 - imanalysis - DEBUG - Processing boundary 6/1326: [ 0 30]
+2025-08-07 04:42:43,657 - imanalysis - DEBUG - Processing boundary 6/1326: [ 0 30]
+2025-08-07 04:42:43,779 - imanalysis - DEBUG - Processing boundary 7/1326: [ 0 35]
+2025-08-07 04:42:43,785 - imanalysis - DEBUG - Processing boundary 7/1326: [ 0 35]
+2025-08-07 04:42:43,930 - imanalysis - DEBUG - Processing boundary 7/1326: [ 0 35]
+2025-08-07 04:42:44,019 - imanalysis - DEBUG - Processing boundary 8/1326: [ 0 40]
+2025-08-07 04:42:44,050 - imanalysis - DEBUG - Processing boundary 8/1326: [ 0 40]
+2025-08-07 04:42:44,191 - imanalysis - DEBUG - Processing boundary 8/1326: [ 0 40]
+2025-08-07 04:42:44,257 - imanalysis - DEBUG - Processing boundary 9/1326: [ 0 45]
+2025-08-07 04:42:44,308 - imanalysis - DEBUG - Processing boundary 9/1326: [ 0 45]
+2025-08-07 04:42:44,456 - imanalysis - DEBUG - Processing boundary 9/1326: [ 0 45]
+2025-08-07 04:42:44,493 - imanalysis - DEBUG - Processing boundary 10/1326: [ 0 50]
+2025-08-07 04:42:44,577 - imanalysis - DEBUG - Processing boundary 10/1326: [ 0 50]
+2025-08-07 04:42:44,720 - imanalysis - DEBUG - Processing boundary 10/1326: [ 0 50]
+2025-08-07 04:42:44,732 - imanalysis - DEBUG - Processing boundary 11/1326: [ 0 55]
+2025-08-07 04:42:44,842 - imanalysis - DEBUG - Processing boundary 11/1326: [ 0 55]
+2025-08-07 04:42:44,968 - imanalysis - DEBUG - Processing boundary 12/1326: [ 0 60]
+2025-08-07 04:42:44,981 - imanalysis - DEBUG - Processing boundary 11/1326: [ 0 55]
+2025-08-07 04:42:45,104 - imanalysis - DEBUG - Processing boundary 12/1326: [ 0 60]
+2025-08-07 04:42:45,204 - imanalysis - DEBUG - Processing boundary 13/1326: [ 0 65]
+2025-08-07 04:42:45,247 - imanalysis - DEBUG - Processing boundary 12/1326: [ 0 60]
+2025-08-07 04:42:45,360 - imanalysis - DEBUG - Processing boundary 13/1326: [ 0 65]
+2025-08-07 04:42:45,438 - imanalysis - DEBUG - Processing boundary 14/1326: [ 0 70]
+2025-08-07 04:42:45,513 - imanalysis - DEBUG - Processing boundary 13/1326: [ 0 65]
+2025-08-07 04:42:45,621 - imanalysis - DEBUG - Processing boundary 14/1326: [ 0 70]
+2025-08-07 04:42:45,673 - imanalysis - DEBUG - Processing boundary 15/1326: [ 0 75]
+2025-08-07 04:42:45,775 - imanalysis - DEBUG - Processing boundary 14/1326: [ 0 70]
+2025-08-07 04:42:45,877 - imanalysis - DEBUG - Processing boundary 15/1326: [ 0 75]
+2025-08-07 04:42:45,905 - imanalysis - DEBUG - Processing boundary 16/1326: [ 0 80]
+2025-08-07 04:42:46,039 - imanalysis - DEBUG - Processing boundary 15/1326: [ 0 75]
+2025-08-07 04:42:46,133 - imanalysis - DEBUG - Processing boundary 16/1326: [ 0 80]
+2025-08-07 04:42:46,138 - imanalysis - DEBUG - Processing boundary 17/1326: [ 0 85]
+2025-08-07 04:42:46,304 - imanalysis - DEBUG - Processing boundary 16/1326: [ 0 80]
+2025-08-07 04:42:46,376 - imanalysis - DEBUG - Processing boundary 18/1326: [ 0 90]
+2025-08-07 04:42:46,397 - imanalysis - DEBUG - Processing boundary 17/1326: [ 0 85]
+2025-08-07 04:42:46,571 - imanalysis - DEBUG - Processing boundary 17/1326: [ 0 85]
+2025-08-07 04:42:46,617 - imanalysis - DEBUG - Processing boundary 19/1326: [ 0 95]
+2025-08-07 04:42:46,662 - imanalysis - DEBUG - Processing boundary 18/1326: [ 0 90]
+2025-08-07 04:42:46,831 - imanalysis - DEBUG - Processing boundary 18/1326: [ 0 90]
+2025-08-07 04:42:46,853 - imanalysis - DEBUG - Processing boundary 20/1326: [  0 100]
+2025-08-07 04:42:46,932 - imanalysis - DEBUG - Processing boundary 19/1326: [ 0 95]
+2025-08-07 04:42:47,093 - imanalysis - DEBUG - Processing boundary 21/1326: [  0 105]
+2025-08-07 04:42:47,095 - imanalysis - DEBUG - Processing boundary 19/1326: [ 0 95]
+2025-08-07 04:42:47,200 - imanalysis - DEBUG - Processing boundary 20/1326: [  0 100]
+2025-08-07 04:42:47,333 - imanalysis - DEBUG - Processing boundary 22/1326: [  0 110]
+2025-08-07 04:42:47,369 - imanalysis - DEBUG - Processing boundary 20/1326: [  0 100]
+2025-08-07 04:42:47,474 - imanalysis - DEBUG - Processing boundary 21/1326: [  0 105]
+2025-08-07 04:42:47,576 - imanalysis - DEBUG - Processing boundary 23/1326: [  0 115]
+2025-08-07 04:42:47,657 - imanalysis - DEBUG - Processing boundary 21/1326: [  0 105]
+2025-08-07 04:42:47,777 - imanalysis - DEBUG - Processing boundary 22/1326: [  0 110]
+2025-08-07 04:42:47,843 - imanalysis - DEBUG - Processing boundary 24/1326: [  0 120]
+2025-08-07 04:42:47,943 - imanalysis - DEBUG - Processing boundary 22/1326: [  0 110]
+2025-08-07 04:42:48,049 - imanalysis - DEBUG - Processing boundary 23/1326: [  0 115]
+2025-08-07 04:42:48,102 - imanalysis - DEBUG - Processing boundary 25/1326: [  0 125]
+2025-08-07 04:42:48,184 - imanalysis - DEBUG - Processing boundary 23/1326: [  0 115]
+2025-08-07 04:42:48,326 - imanalysis - DEBUG - Processing boundary 24/1326: [  0 120]
+2025-08-07 04:42:48,376 - imanalysis - DEBUG - Processing boundary 26/1326: [  0 130]
+2025-08-07 04:42:48,431 - imanalysis - DEBUG - Processing boundary 24/1326: [  0 120]
+2025-08-07 04:42:48,606 - imanalysis - DEBUG - Processing boundary 25/1326: [  0 125]
+2025-08-07 04:42:48,652 - imanalysis - DEBUG - Processing boundary 27/1326: [  0 135]
+2025-08-07 04:42:48,676 - imanalysis - DEBUG - Processing boundary 25/1326: [  0 125]
+2025-08-07 04:42:48,876 - imanalysis - DEBUG - Processing boundary 26/1326: [  0 130]
+2025-08-07 04:42:48,917 - imanalysis - DEBUG - Processing boundary 26/1326: [  0 130]
+2025-08-07 04:42:48,919 - imanalysis - DEBUG - Processing boundary 28/1326: [  0 140]
+2025-08-07 04:42:49,152 - imanalysis - DEBUG - Processing boundary 27/1326: [  0 135]
+2025-08-07 04:42:49,165 - imanalysis - DEBUG - Processing boundary 27/1326: [  0 135]
+2025-08-07 04:42:49,197 - imanalysis - DEBUG - Processing boundary 29/1326: [  0 145]
+2025-08-07 04:42:49,409 - imanalysis - DEBUG - Processing boundary 28/1326: [  0 140]
+2025-08-07 04:42:49,419 - imanalysis - DEBUG - Processing boundary 28/1326: [  0 140]
+2025-08-07 04:42:49,471 - imanalysis - DEBUG - Processing boundary 30/1326: [  0 150]
+2025-08-07 04:42:49,652 - imanalysis - DEBUG - Processing boundary 29/1326: [  0 145]
+2025-08-07 04:42:49,690 - imanalysis - DEBUG - Processing boundary 29/1326: [  0 145]
+2025-08-07 04:42:49,740 - imanalysis - DEBUG - Processing boundary 31/1326: [  0 155]
+2025-08-07 04:42:49,891 - imanalysis - DEBUG - Processing boundary 30/1326: [  0 150]
+2025-08-07 04:42:49,958 - imanalysis - DEBUG - Processing boundary 30/1326: [  0 150]
+2025-08-07 04:42:50,006 - imanalysis - DEBUG - Processing boundary 32/1326: [  0 160]
+2025-08-07 04:42:50,129 - imanalysis - DEBUG - Processing boundary 31/1326: [  0 155]
+2025-08-07 04:42:50,223 - imanalysis - DEBUG - Processing boundary 31/1326: [  0 155]
+2025-08-07 04:42:50,273 - imanalysis - DEBUG - Processing boundary 33/1326: [  0 165]
+2025-08-07 04:42:50,371 - imanalysis - DEBUG - Processing boundary 32/1326: [  0 160]
+2025-08-07 04:42:50,499 - imanalysis - DEBUG - Processing boundary 32/1326: [  0 160]
+2025-08-07 04:42:50,549 - imanalysis - DEBUG - Processing boundary 34/1326: [  0 170]
+2025-08-07 04:42:50,613 - imanalysis - DEBUG - Processing boundary 33/1326: [  0 165]
+2025-08-07 04:42:50,767 - imanalysis - DEBUG - Processing boundary 33/1326: [  0 165]
+2025-08-07 04:42:50,815 - imanalysis - DEBUG - Processing boundary 35/1326: [  0 175]
+2025-08-07 04:42:50,848 - imanalysis - DEBUG - Processing boundary 34/1326: [  0 170]
+2025-08-07 04:42:51,037 - imanalysis - DEBUG - Processing boundary 34/1326: [  0 170]
+2025-08-07 04:42:51,082 - imanalysis - DEBUG - Processing boundary 36/1326: [  0 180]
+2025-08-07 04:42:51,085 - imanalysis - DEBUG - Processing boundary 35/1326: [  0 175]
+2025-08-07 04:42:51,310 - imanalysis - DEBUG - Processing boundary 35/1326: [  0 175]
+2025-08-07 04:42:51,330 - imanalysis - DEBUG - Processing boundary 36/1326: [  0 180]
+2025-08-07 04:42:51,357 - imanalysis - DEBUG - Processing boundary 37/1326: [  0 185]
+2025-08-07 04:42:51,570 - imanalysis - DEBUG - Processing boundary 37/1326: [  0 185]
+2025-08-07 04:42:51,571 - imanalysis - DEBUG - Processing boundary 36/1326: [  0 180]
+2025-08-07 04:42:51,629 - imanalysis - DEBUG - Processing boundary 38/1326: [  0 190]
+2025-08-07 04:42:51,808 - imanalysis - DEBUG - Processing boundary 38/1326: [  0 190]
+2025-08-07 04:42:51,834 - imanalysis - DEBUG - Processing boundary 37/1326: [  0 185]
+2025-08-07 04:42:51,897 - imanalysis - DEBUG - Processing boundary 39/1326: [  0 195]
+2025-08-07 04:42:52,047 - imanalysis - DEBUG - Processing boundary 39/1326: [  0 195]
+2025-08-07 04:42:52,101 - imanalysis - DEBUG - Processing boundary 38/1326: [  0 190]
+2025-08-07 04:42:52,166 - imanalysis - DEBUG - Processing boundary 40/1326: [  0 200]
+2025-08-07 04:42:52,285 - imanalysis - DEBUG - Processing boundary 40/1326: [  0 200]
+2025-08-07 04:42:52,365 - imanalysis - DEBUG - Processing boundary 39/1326: [  0 195]
+2025-08-07 04:42:52,435 - imanalysis - DEBUG - Processing boundary 41/1326: [  0 205]
+2025-08-07 04:42:52,525 - imanalysis - DEBUG - Processing boundary 41/1326: [  0 205]
+2025-08-07 04:42:52,632 - imanalysis - DEBUG - Processing boundary 40/1326: [  0 200]
+2025-08-07 04:42:52,703 - imanalysis - DEBUG - Processing boundary 42/1326: [  0 210]
+2025-08-07 04:42:52,764 - imanalysis - DEBUG - Processing boundary 42/1326: [  0 210]
+2025-08-07 04:42:52,902 - imanalysis - DEBUG - Processing boundary 41/1326: [  0 205]
+2025-08-07 04:42:52,974 - imanalysis - DEBUG - Processing boundary 43/1326: [  0 215]
+2025-08-07 04:42:53,007 - imanalysis - DEBUG - Processing boundary 43/1326: [  0 215]
+2025-08-07 04:42:53,170 - imanalysis - DEBUG - Processing boundary 42/1326: [  0 210]
+2025-08-07 04:42:53,237 - imanalysis - DEBUG - Processing boundary 44/1326: [  0 220]
+2025-08-07 04:42:53,244 - imanalysis - DEBUG - Processing boundary 44/1326: [  0 220]
+2025-08-07 04:42:53,435 - imanalysis - DEBUG - Processing boundary 43/1326: [  0 215]
+2025-08-07 04:42:53,486 - imanalysis - DEBUG - Processing boundary 45/1326: [  0 225]
+2025-08-07 04:42:53,503 - imanalysis - DEBUG - Processing boundary 45/1326: [  0 225]
+2025-08-07 04:42:53,696 - imanalysis - DEBUG - Processing boundary 44/1326: [  0 220]
+2025-08-07 04:42:53,726 - imanalysis - DEBUG - Processing boundary 46/1326: [  0 230]

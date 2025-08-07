@@ -2,7 +2,6 @@ from typing import (
     TypeVar,
     TypedDict,
     Optional,
-    Final,
     Any,
     Generic,
     List,
@@ -12,8 +11,8 @@ from typing import (
 )
 from datetime import datetime
 from decimal import Decimal
-from abc import ABC, abstractmethod
-from pydantic import BaseModel, EmailStr
+from abc import ABC
+from pydantic import BaseModel, EmailStr, SecretStr
 from pydantic_extra_types.mac_address import MacAddress
 from pydantic_extra_types.coordinate import Latitude, Longitude
 from enum import Enum
@@ -104,11 +103,8 @@ class CameraModel(Enum):
         """
         Match input string to camera model.
         """
-        camera = camera.lower()
-        for _, camtype in cls.__members__.items():
-            if camera == camtype.value:
-                return camtype
-        return cls.UNKNOWN
+        camera = camera.upper()
+        return cls[camera] if camera in cls.__members__.items() else cls.UNKNOWN
 
     @classmethod
     @lru_cache(maxsize=50)
@@ -147,6 +143,12 @@ class DeviceType(Enum):
     ESP32S3 = "ESP32S3"
     ESP32 = "ESP32"
     ESP8266 = "ESP8266"
+
+    @classmethod
+    @lru_cache(maxsize=50)
+    def match(cls, device: str):
+        device = device.upper()
+        return cls[device] if device in cls.__members__.items() else cls.UNKNOWN
 
 
 class EntityJSON(TypedDict, total=False):
@@ -217,14 +219,13 @@ class Station(Entity):
     """
 
     name: str
-    device_model: str
-    device_type: DeviceType
+    device_model: DeviceType
     camera_model: CameraModel
     firmware_version: str
     altitude: float
     latitude: Latitude
     longitude: Longitude
-    sensors: Optional[list[StationStatus]] = None
+    sensors: Optional[StationStatus] = None
 
 
 class Reading(Entity):
@@ -259,4 +260,16 @@ class User(BaseModel):
     ID: str
     name: str
     email: EmailStr
+    password: SecretStr
+    role: UserRole = UserRole.VISITOR
+
+class UserJson(TypedDict, total=False):
+    """
+    Represents a user in JSON format.
+    """
+
+    ID: str
+    name: str
+    email: EmailStr
+    password: SecretStr
     role: UserRole = UserRole.VISITOR

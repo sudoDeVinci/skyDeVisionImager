@@ -4,9 +4,12 @@ from threading import Lock
 from typing import Optional, Generator
 from pathlib import Path
 import json
-from logging import INFO, FileHandler, Logger, StreamHandler, basicConfig, getLogger
+from logging import INFO, FileHandler, Logger, StreamHandler, basicConfig, getLogger, ERROR, DEBUG
 from contextlib import contextmanager
 from .schema import apply_schema
+from dotenv import load_dotenv
+from os import environ
+from bcrypt import hashpw, gensalt, checkpw
 
 
 class SQLiteConnectionPool:
@@ -77,6 +80,7 @@ class Manager:
     _dbfile: Optional[Path] = None
     _default_dbfile: Path = Path("database.db")
     _logfile: Path = Path("logs") / "server.db.log"
+    _secret: Optional[str] = None
     logger: Logger
 
     @classmethod
@@ -126,7 +130,13 @@ class Manager:
         )
         cls.logger = getLogger(__name__)
         cls.logger.setLevel(INFO)
+        load_dotenv()
+        cls._secret = environ.get("DBSECRET", None)
 
+        if cls._secret is None:
+            cls.log("DBSECRET not found in environment variables. Cannot continue.", level=INFO)
+            raise ValueError("DBSECRET not found in environment variables.")
+        
         try:
             with open(cls._configfile, "r") as file:
                 data = json.load(file)
@@ -137,6 +147,48 @@ class Manager:
             cls.log(f"Error loading configuration: {err}")
         except json.JSONDecodeError as err:
             cls.log(f"Error parsing configuration: {err}")
+
+    def hash_password(cls, password: str) -> str:
+        """
+        Hash + salt a password via bcrypt using the database secret key.
+
+        Args:
+            - password(str): The password to hash
+
+        Returns:
+            - str: The hashed password
+        """
+
+        hashed: bytes = b""
+
+        try:
+            peppered = f"{password}{cls._secret}"
+            hashed = hashpw(peppered.encode("utf-8"), gensalt())
+        except Exception as err:
+            cls.log(f"Error hashing password::: {err}", level=ERROR)
+            hashed = hashpw(password.encode("utf-8"), gensalt())
+
+        return hashed.decode("utf-8")
+
+
+    def password_match(cls, stored_hash: str, provided_password: str) -> bool:
+        """
+        Check if a password matches the stored hash.
+
+        Args:
+            - stored_hash(str): The stored password hash
+            - provided_password(str): The password to check
+
+        Returns:
+            - bool: True if the password matches, False otherwise
+        """
+        try:
+            peppered = f"{provided_password}{cls._secret}"
+            return checkpw(peppered.encode("utf-8"), stored_hash.encode("utf-8"))
+        except Exception as err:
+            cls.log(f"Error checking password::: {err}", level=ERROR)
+            return checkpw(provided_password.encode("utf-8"), stored_hash.encode("utf-8"))
+
 
     @classmethod
     def connected(cls) -> bool:
