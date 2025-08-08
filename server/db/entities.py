@@ -6,6 +6,7 @@ from typing import (
     Generic,
     List,
     Mapping,
+    NotRequired,
     Self,
     Sequence,
 )
@@ -20,11 +21,11 @@ from functools import lru_cache
 
 
 def dt2str(dt: datetime) -> str:
-    return dt.strftime("%Y-%m-%d %H:%M:%S.%f")
+    return dt.strftime("%Y-%m-%d %H:%M:%S")
 
 
 def str2dt(s: str) -> datetime:
-    return datetime.strptime(s, "%Y-%m-%d %H:%M:%S.%f")
+    return datetime.strptime(s, "%Y-%m-%d %H:%M:%S")
 
 
 AnyDict = TypeVar(
@@ -107,6 +108,7 @@ class DeviceType(Enum):
     Enum representing the device types supported by the system.
     Each device type is represented by a string value.
     """
+
     UNKNOWN = "UNKNOWN"
     ESP32S3 = "ESP32S3"
     ESP32 = "ESP32"
@@ -143,8 +145,6 @@ class UserRole(Enum):
         return role.lower() in cls.__members__.values()
 
 
-
-
 class StationStatus(BaseModel):
     """
     A representation of the state of the sensor onboard a given weather station
@@ -166,6 +166,7 @@ class StationStatus(BaseModel):
     CAM: bool = False
     WIFI: bool = False
 
+
 class StationStatusJSON(TypedDict, total=False):
     """
     JSON representation of the StationStatus.
@@ -173,7 +174,7 @@ class StationStatusJSON(TypedDict, total=False):
 
     Attributes:
         MAC (MacAddress): The MAC address of the station.
-        timestamp (str): The timestamp of the status in string format.
+        timestamp (datetime): The timestamp of the status in string format.
         SHT (bool): Status of the SHT sensor.
         BMP (bool): Status of the BMP sensor.
         CAM (bool): Status of the camera.
@@ -181,13 +182,11 @@ class StationStatusJSON(TypedDict, total=False):
     """
 
     MAC: MacAddress
-    timestamp: Optional[str] = None
+    timestamp: Optional[datetime]
     SHT: bool
     BMP: bool
     CAM: bool
     WIFI: bool
-
-
 
 
 class Station(BaseModel):
@@ -216,12 +215,13 @@ class Station(BaseModel):
     longitude: Longitude
     sensors: Optional[StationStatus] = None
 
+
 class StationJSON(TypedDict, total=False):
     """
     JSON representation of the Station.
 
     This is used to serialize the Station for API responses or storage.
-    It mirrors the structure of the Station model but uses TypedDict for JSON compatibility.    
+    It mirrors the structure of the Station model but uses TypedDict for JSON compatibility.
 
     Attributes:
         MAC (MacAddress): The MAC address of the station.
@@ -243,9 +243,7 @@ class StationJSON(TypedDict, total=False):
     altitude: float
     latitude: Latitude
     longitude: Longitude
-    sensors: Optional[StationStatusJSON] = None
-
-
+    sensors: NotRequired[Optional[StationStatusJSON]]
 
 
 class Reading(BaseModel):
@@ -270,6 +268,7 @@ class Reading(BaseModel):
     dewpoint: float
     filepath: Optional[str] = None
 
+
 class ReadingJSON(TypedDict, total=False):
     """
     JSON representation of the Reading.
@@ -293,9 +292,7 @@ class ReadingJSON(TypedDict, total=False):
     humidity: float
     pressure: float
     dewpoint: float
-    filepath: Optional[str] = None
-
-
+    filepath: Optional[str]
 
 
 class Location(BaseModel):
@@ -315,6 +312,7 @@ class Location(BaseModel):
     city: str
     latitude: Latitude
     longitude: Longitude
+
 
 class LocationJSON(TypedDict, total=False):
     """
@@ -338,8 +336,6 @@ class LocationJSON(TypedDict, total=False):
     longitude: Longitude
 
 
-
-
 class User(BaseModel):
     """
     Represents a user in the database.
@@ -351,6 +347,7 @@ class User(BaseModel):
     password: SecretStr
     role: UserRole = UserRole.VISITOR
 
+
 class UserJSON(TypedDict, total=False):
     """
     Represents a user in JSON format.
@@ -360,5 +357,4 @@ class UserJSON(TypedDict, total=False):
     name: str
     email: EmailStr
     password: SecretStr
-    role: UserRole = UserRole.VISITOR
-
+    role: UserRole

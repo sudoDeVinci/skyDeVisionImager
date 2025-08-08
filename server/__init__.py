@@ -15,7 +15,7 @@ from .db import (
     Service,
     UserService,
     StatusService,
-    StationService
+    StationService,
 )
 
 from .geotiff import (
@@ -55,7 +55,7 @@ from .imageanalysis import (
     BoundaryArray,
     cpu_compute_confusion_matrix,
     gpu_compute_confusion_matrix,
-    verify_gpu_setup
+    verify_gpu_setup,
 )
 
 __all__ = (
@@ -116,4 +116,3 @@ __all__ = (
     "gpu_compute_confusion_matrix",
     "verify_gpu_setup",
 )
-

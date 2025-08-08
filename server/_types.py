@@ -1,5 +1,6 @@
 from typing import TypedDict, Any
 
+
 class ErrorDict(TypedDict, total=False):
     """
     Schema for error responses.

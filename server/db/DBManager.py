@@ -4,7 +4,16 @@ from threading import Lock
 from typing import Optional, Generator
 from pathlib import Path
 import json
-from logging import INFO, FileHandler, Logger, StreamHandler, basicConfig, getLogger, ERROR, DEBUG
+from logging import (
+    INFO,
+    FileHandler,
+    Logger,
+    StreamHandler,
+    basicConfig,
+    getLogger,
+    ERROR,
+    DEBUG,
+)
 from contextlib import contextmanager
 from .schema import apply_schema
 from dotenv import load_dotenv
@@ -134,9 +143,12 @@ class Manager:
         cls._secret = environ.get("DBSECRET", None)
 
         if cls._secret is None:
-            cls.log("DBSECRET not found in environment variables. Cannot continue.", level=INFO)
+            cls.log(
+                "DBSECRET not found in environment variables. Cannot continue.",
+                level=INFO,
+            )
             raise ValueError("DBSECRET not found in environment variables.")
-        
+
         try:
             with open(cls._configfile, "r") as file:
                 data = json.load(file)
@@ -148,6 +160,7 @@ class Manager:
         except json.JSONDecodeError as err:
             cls.log(f"Error parsing configuration: {err}")
 
+    @classmethod
     def hash_password(cls, password: str) -> str:
         """
         Hash + salt a password via bcrypt using the database secret key.
@@ -170,7 +183,7 @@ class Manager:
 
         return hashed.decode("utf-8")
 
-
+    @classmethod
     def password_match(cls, stored_hash: str, provided_password: str) -> bool:
         """
         Check if a password matches the stored hash.
@@ -187,8 +200,9 @@ class Manager:
             return checkpw(peppered.encode("utf-8"), stored_hash.encode("utf-8"))
         except Exception as err:
             cls.log(f"Error checking password::: {err}", level=ERROR)
-            return checkpw(provided_password.encode("utf-8"), stored_hash.encode("utf-8"))
-
+            return checkpw(
+                provided_password.encode("utf-8"), stored_hash.encode("utf-8")
+            )
 
     @classmethod
     def connected(cls) -> bool:

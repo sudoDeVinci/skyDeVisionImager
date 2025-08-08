@@ -3,12 +3,16 @@ from flask import Request
 from enum import Enum
 from functools import lru_cache
 from re import compile
-from typing_extensions import (
-    Self,
-    Iterable,
-    Any,
-    Optional
-)
+from typing_extensions import Self, Iterable, Any, Optional
+
+
+class MissingHeadersError(Exception):
+    """
+    Exception raised when a required header is missing.
+    """
+
+    def __init__(self: "MissingHeadersError", headers: Iterable[str]):
+        super().__init__(f"Missing required headers: {headers}")
 
 
 class HEADERS(Enum):
@@ -26,19 +30,15 @@ class HEADERS(Enum):
 
     @classmethod
     @lru_cache(maxsize=10)
-    def match(cls: Self, header: Optional[str]) -> "HEADERS":
+    def match(cls: "HEADERS", header: Optional[str]) -> Self:  # type: ignore
         """
         Match input string to header.
         """
-        header = header.lower()
-        for _, headertype in cls.__members__.items():
-            if header == headertype.value:
-                return headertype
-        return cls.UNKNOWN
+        return cls[header] if header in cls.__members__.items() else cls.UNKNOWN  # type: ignore
 
     @classmethod
     @lru_cache(maxsize=10)
-    def __contains__(cls: Self, header: Optional[str]) -> bool:
+    def __contains__(cls: "HEADERS", header: Optional[str]) -> bool:  # type: ignore
         """
         Check if a header is supported.
         """
@@ -46,33 +46,14 @@ class HEADERS(Enum):
 
     @classmethod
     @lru_cache(maxsize=10)
-    def _missing_(cls: Self, value: Any):
+    def _missing_(cls: "HEADERS", value: Any):  # type: ignore
         """
         Handle missing headers.
         """
         return cls.UNKNOWN
 
-    @classmethod
-    @lru_cache(maxsize=1)
-    def members(cls: Self) -> tuple[str]:
-        """
-        Return an iterable of headers.
-        """
-        return tuple(ctype for _, ctype in cls.__members__.items())
 
-    @classmethod
-    @lru_cache(maxsize=1)
-    def names(cls: Self) -> tuple[str]:
-        """
-        Return a tuple of header names.
-        """
-        return tuple(names for names, _ in cls.__members__.items())
-    
-
-def headercheck(
-    headers: Headers,
-    required: Optional[Iterable[str]] = None
-) -> None:
+def headercheck(headers: Headers, required: Optional[Iterable[str]] = None) -> None:
     """
     Check if all required headers are present in the request.
 
@@ -80,10 +61,14 @@ def headercheck(
         required (Iterable[str]): List of required header names.
         headers (Headers): Headers from the request.
     Raises:
-        ValueError: If any required header is missing.
+        MissingHeadersError: If any required headers are missing.
     """
     if required is None:
-        required = [HEADERS.MACADDRESS, HEADERS.TIMESTAMP, HEADERS.FIRMWAREVERSION]
+        required = [
+            HEADERS.MACADDRESS.value,
+            HEADERS.TIMESTAMP.value,
+            HEADERS.FIRMWAREVERSION.value,
+        ]
     missing = [head for head in required if head not in headers]
     if missing:
-        raise ValueError(f"Missing required headers: {', '.join(missing)}") 
+        raise MissingHeadersError(missing)

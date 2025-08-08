@@ -32,7 +32,7 @@ from .roccurve import (
     BoundaryArray,
     cpu_compute_confusion_matrix,
     gpu_compute_confusion_matrix,
-    verify_gpu_setup
+    verify_gpu_setup,
 )
 
 

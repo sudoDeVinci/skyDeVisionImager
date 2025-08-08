@@ -1,12 +1,5 @@
 from __future__ import annotations
-from nptyping import (
-    NDArray,
-    Shape,
-    UInt8,
-    UInt16,
-    Void,
-    Bool
-)
+from nptyping import NDArray, Shape, UInt8, UInt16, Float32, Float64, Void, Bool
 from numpy import (
     uint8,
     uint16,
@@ -20,7 +13,7 @@ from numpy import (
 )
 
 from numpy.random import choice
-from numba import njit, types as nbtypes
+from numba import njit, types as nbtypes  # type: ignore[import-untyped]
 from typing_extensions import Self
 from dataclasses import dataclass
 from typing import Annotated, Final, Optional, Any
@@ -37,7 +30,7 @@ from .extraction import (
     get_datasets_vstack,
     frequency_distribution,
     get_masks_vstacks_sparse,
-    get_reference_vstacks_sparse
+    get_reference_vstacks_sparse,
 )
 
 from concurrent.futures import (
@@ -61,7 +54,7 @@ numbainterpreter.setLevel("WARNING")
 
 
 DEFAULT_EPSILON: Final[float32] = float32(1e-32)
-BOUNDARY_WIDTH: Final[uint8] = uint8(5)
+BOUNDARY_WIDTH: Final[uint8] = uint8(10)
 
 
 type BoundaryArray = Annotated[
@@ -115,25 +108,26 @@ def verify_gpu_setup() -> bool:
         bool: True if GPU is properly configured, False otherwise.
     """
     LOGGER.info("=== GPU Setup Verification ===")
-    
+
     opencl_available = cv2.ocl.haveOpenCL()
     opencl_enabled = cv2.ocl.useOpenCL()
-    
+
     LOGGER.info(f"OpenCL available: {opencl_available}")
     LOGGER.info(f"OpenCL enabled: {opencl_enabled}")
-    
+
     if not opencl_available:
         LOGGER.warning("OpenCL not available - falling back to CPU")
         return False
-        
+
     if not opencl_enabled:
         LOGGER.warning("OpenCL not enabled - enabling now")
         cv2.ocl.setUseOpenCL(True)
-    
+
     try:
         device = cv2.ocl.Device.getDefault()
 
-        log = ("\n"
+        log = (
+            "\n"
             f"\nDevice Name: {device.name()}\n"
             f"Device Type: {device.type()}\n"
             f"Max Compute Units: {device.maxComputeUnits()}\n"
@@ -146,18 +140,18 @@ def verify_gpu_setup() -> bool:
 
     except Exception as e:
         LOGGER.warning(f"Could not get device info: {e}")
-    
+
     try:
         test_umat = cv2.UMat(rows=1000, cols=1000, type=cv2.CV_8UC1)
         result = cv2.blur(test_umat, (5, 5))
-        
+
         if isinstance(result, cv2.UMat):
             LOGGER.info("GPU operations working correctly")
             return True
         else:
             LOGGER.warning("GPU operations not working - result is not UMat")
             return False
-            
+
     except Exception as e:
         LOGGER.error(f"GPU test failed: {e}")
         return False
@@ -173,7 +167,7 @@ class AnalysisConfiguration:
     strata_size: uint16
     boundary_width: uint8 = BOUNDARY_WIDTH
     jaccard_threshold: float32 = float32(0.25)
-    max_workers: Optional[uint8] = uint8(2)
+    max_workers: uint8 = uint8(2)
     caching: bool = True
     gpu_caching: bool = True
 
@@ -190,9 +184,7 @@ class AnalysisConfiguration:
             raise ValueError("max_workers must be at least 1 if specified")
 
 
-def generate_boundary_permutations(
-    step_size: uint8 = BOUNDARY_WIDTH
-) -> BoundaryArray:
+def generate_boundary_permutations(step_size: uint8 = BOUNDARY_WIDTH) -> BoundaryArray:
     """
     Generate all possible boundary permutations for thresholding.
     This generates pairs of lower and upper bounds for thresholding operations.
@@ -213,7 +205,7 @@ def generate_boundary_permutations(
         for upper in range(lower + step_size, 256, step_size):
             boundaries[count] = [lower, upper]
             count += 1
-            
+
     return boundaries[:count]
 
 
@@ -222,7 +214,7 @@ def generate_boundary_permutations(
         nbtypes.Array(nbtypes.uint8, 1, "C"),
         nbtypes.Array(nbtypes.uint8, 1, "C"),
     ),
-    fastmath=True
+    fastmath=True,
 )
 def compute_jaccard_similarity(array1: ChannelData, array2: ChannelData) -> float32:
     """
@@ -274,12 +266,12 @@ def compute_jaccard_similarity(array1: ChannelData, array2: ChannelData) -> floa
         nbtypes.Array(nbtypes.bool_, 2, "C"),
         nbtypes.Array(nbtypes.bool_, 2, "C"),
     ),
-    fastmath=True
+    fastmath=True,
 )
 def cpu_compute_confusion_matrix(
     ground_truth_masks: BitMapImage,
     predicted_masks: BitMapImage,
-) -> NDArray[Shape["4"], float32]:
+) -> tuple[float32, float32, float32, float32]:
     """
     Compute confusion matrix metrics for ROC analysis on our cpu as a fallback.
     This one is specifically implemented for numba use.
@@ -324,12 +316,12 @@ def gpu_compute_confusion_matrix(
     gt_inv_gpu = cv2.bitwise_not(ground_truth_masks)
     fp_mask_gpu = cv2.bitwise_and(gt_inv_gpu, predicted_masks)
     tn_mask_gpu = cv2.bitwise_and(gt_inv_gpu, pred_inv_gpu)
-    
+
     tp = float32(cv2.countNonZero(tp_mask_gpu))
     fn = float32(cv2.countNonZero(fn_mask_gpu))
     fp = float32(cv2.countNonZero(fp_mask_gpu))
     tn = float32(cv2.countNonZero(tn_mask_gpu))
-    
+
     tpr = tp / (tp + fn + DEFAULT_EPSILON)
     fpr = fp / (fp + tn + DEFAULT_EPSILON)
     precision = tp / (tp + fp + DEFAULT_EPSILON)
@@ -340,8 +332,8 @@ def gpu_compute_confusion_matrix(
 
 def bootstrap_indexes(
     indexes: NDArray[Shape["*"], UInt16],
-    stratum_size: Optional[uint8] = None,
-    strata_count: uint8 = uint8(100),
+    stratum_size: Optional[uint16] = None,
+    strata_count: uint16 = uint16(100),
 ) -> NDArray[Shape["*, *"], UInt16]:
     """
     Split the dataset indexes into testing strata using bootstrapping.
@@ -356,12 +348,12 @@ def bootstrap_indexes(
     n_population = len(indexes) - 1
 
     if stratum_size is None:
-        stratum_size = uint8(n_population)
+        stratum_size = uint16(n_population)
     if stratum_size > n_population:
-        stratum_size = uint8(n_population)
+        stratum_size = uint16(n_population)
 
     testing_strata = npzeros((strata_count, stratum_size), dtype=uint16)
-    
+
     for i in range(strata_count):
         testing_strata[i] = choice(indexes, size=stratum_size, replace=True)
 
@@ -417,9 +409,7 @@ def analyze_channel_jaccard(
 
 
 class ROCAnalyzer:
-    """
-    
-    """
+    """ """
 
     __slots__ = ("config", "camera", "_cache")
 
@@ -434,16 +424,15 @@ class ROCAnalyzer:
             else AnalysisConfiguration(
                 strata_count=uint16(30),
                 strata_size=uint16(30),
-                boundary_width=5,
+                boundary_width=BOUNDARY_WIDTH,
                 jaccard_threshold=float32(0.25),
                 max_workers=uint8(6),
                 caching=False,
-                gpu_caching=True
+                gpu_caching=True,
             )
         )
         self._cache: dict[str, Any] = {}
         self.camera = camera
-
 
     def generate_cache_key(self, ctag: ColourTag) -> str:
         """
@@ -458,7 +447,6 @@ class ROCAnalyzer:
                 "Camera and configuration must be set before generating cache key"
             )
         return f"{self.camera.model.value}_{ctag.tag}_{self.config.strata_count}_{self.config.strata_size}"
-
 
     def run_similarity_analysis(
         self, camera: Camera, ctags: list[ColourTag]
@@ -479,7 +467,7 @@ class ROCAnalyzer:
             return empty((1,), dtype=ColorSpaceChannelsJaccardRecords)
 
         results = npzeros(len(clist), dtype=ColorSpaceChannelsJaccardRecords)
-        workers = self.config.max_workers or min(len(clist), 4)
+        workers = self.config.max_workers
 
         LOGGER.debug(
             f">> Running similarity analysis with {workers} workers for {len(clist)} color tags."
@@ -513,84 +501,88 @@ class ROCAnalyzer:
 
         return results
 
-
     def run_boundaries(
         self: Self,
         index: uint8,
         boundaries: NDArray[Shape["*, 2"], UInt8],
         groundtruth_masks: cv2.UMat,
-        reference_image: cv2.UMat
-    ) -> NDArray[Shape["*, 6"], float32]:
-        
-        #results = npzeros((boundaries.shape[0], 6), dtype=float32)
-        
+        reference_image: cv2.UMat,
+    ) -> NDArray[Shape["*, 6"], Float32]:
+
+        # results = npzeros((boundaries.shape[0], 6), dtype=float32)
+
         # Pre-split the reference image once to avoid repeated splits
         target_channel = cv2.split(reference_image)[int(index)]
         results = npzeros((boundaries.shape[0], 6), dtype=float32)
 
         for i in range(1, boundaries.shape[0]):
-            LOGGER.debug(f"Processing boundary {i+1}/{boundaries.shape[0]}: {boundaries[i]}")
+            LOGGER.debug(
+                f"Processing boundary {i+1}/{boundaries.shape[0]}: {boundaries[i]}"
+            )
             lower_bound = int(boundaries[i][0])
             upper_bound = int(boundaries[i][1])
 
             # Use the pre-split channel for more efficient thresholding
-            thresholded_masks = cv2.inRange(target_channel, lower_bound, upper_bound)
-            tpr, fpr, precision, accuracy = gpu_compute_confusion_matrix(groundtruth_masks, thresholded_masks)
+            # Ints are autom converted to cv2.Scalar
+            thresholded_masks = cv2.inRange(target_channel, lower_bound, upper_bound)  # type: ignore[call-overload]
+            tpr, fpr, precision, accuracy = gpu_compute_confusion_matrix(
+                groundtruth_masks, thresholded_masks
+            )
             results[i] = [lower_bound, upper_bound, tpr, fpr, precision, accuracy]
 
         return results
-
 
     def _load_batch_to_gpu(
         self,
         camera: Camera,
         tag: ColourTag,
-        bootstrap_samples: NDArray[Shape["*, *"], UInt16]
+        bootstrap_samples: NDArray[Shape["*, *"], UInt16],
     ) -> tuple[cv2.UMat, cv2.UMat]:
         """
         Load all bootstrap data directly to GPU in batches to minimize transfers.
         """
-        
+
         LOGGER.debug(f"Loading {bootstrap_samples.shape[0]} strata directly to GPU")
-        
+
         # Load first sample to get dimensions
         sample_indices = bootstrap_samples[0]
         gt_sample, _ = get_masks_vstacks_sparse(camera, sample_indices[:1])
         ref_sample = get_reference_vstacks_sparse(camera, tag, sample_indices[:1])
-        
+
         h, w = gt_sample.shape
         _, _, c = ref_sample.shape
-        
+
         # Pre-allocate large GPU buffers
         total_height = h * bootstrap_samples.shape[0] * bootstrap_samples.shape[1]
-        
+
         # Create large CPU buffers first
         all_gt_cpu = npzeros((total_height, w), dtype=uint8)
         all_ref_cpu = npzeros((total_height, w, c), dtype=uint8)
-        
+
         current_row = 0
-        
+
         # Fill CPU buffers efficiently
         for stratum_idx in range(bootstrap_samples.shape[0]):
             sample_indices = bootstrap_samples[stratum_idx]
-            
+
             gt_masks, _ = get_masks_vstacks_sparse(camera, sample_indices)
             ref_imgs = get_reference_vstacks_sparse(camera, tag, sample_indices)
-            
+
             if gt_masks is not None and ref_imgs is not None:
                 gt_uint8 = (gt_masks * 255).astype(uint8)
-                
+
                 rows_to_add = gt_uint8.shape[0]
-                all_gt_cpu[current_row:current_row + rows_to_add] = gt_uint8
-                all_ref_cpu[current_row:current_row + rows_to_add] = ref_imgs
+                all_gt_cpu[current_row : current_row + rows_to_add] = gt_uint8
+                all_ref_cpu[current_row : current_row + rows_to_add] = ref_imgs
                 current_row += rows_to_add
-        
+
         # Single transfer to GPU
-        final_gt_umat = cv2.UMat(all_gt_cpu[:current_row])
-        final_ref_umat = cv2.UMat(all_ref_cpu[:current_row])
-        
-        
-        LOGGER.debug(f"Transferred {current_row} rows to GPU - GT: ({current_row}, {w}), Ref: ({current_row}, {w}, {c})")
+        final_gt_umat = cv2.UMat(all_gt_cpu[:current_row])  # type: ignore[call-overload]
+        final_ref_umat = cv2.UMat(all_ref_cpu[:current_row])  # type: ignore[call-overload]
+
+        LOGGER.debug(
+            f"Transferred {current_row} rows to GPU - GT: ({current_row}, {w}), Ref: ({current_row}, {w}, {c})"
+        )
         return final_gt_umat, final_ref_umat
 
     def _analyze_channel_roc(
@@ -599,43 +591,44 @@ class ROCAnalyzer:
         tag: ColourTag,
         index: uint8,
         bootstrap_samples: NDArray[Shape["*, *"], UInt16],
-        boundaries: BoundaryArray | cv2.UMat
-    ) -> NDArray[Shape["*, 6"], float64]:
-        
-        LOGGER.debug(f"Analyzing channel {tag.tag} index {index} for camera {camera.model.value}")
+        boundaries: BoundaryArray,
+    ) -> NDArray[Shape["*, 6"], Float32]:
 
-        big_gt_umat, big_ref_umat = self._load_batch_to_gpu(camera, tag, bootstrap_samples)
-        
+        LOGGER.debug(
+            f"Analyzing channel {tag.tag} index {index} for camera {camera.model.value}"
+        )
+
+        big_gt_umat, big_ref_umat = self._load_batch_to_gpu(
+            camera, tag, bootstrap_samples
+        )
+
         LOGGER.debug(f"GPU batch loaded successfully")
 
         results = self.run_boundaries(
             index=index,
-            boundaries=boundaries, 
+            boundaries=boundaries,
             groundtruth_masks=big_gt_umat,
-            reference_image=big_ref_umat
+            reference_image=big_ref_umat,
         )
 
         LOGGER.debug(f"Completed channel analysis for {tag.tag} index {index}")
         return results
 
     def analyze_roc(
-        self: Self,
-        camera: Camera,
-        colortags: list[ColourTag],
-        overwrite: bool = False
-    ) -> dict[str, NDArray[Shape["6"], float64]]:
-        
+        self: Self, camera: Camera, colortags: list[ColourTag], overwrite: bool = False
+    ) -> dict[str, NDArray[Shape["6"], Float32]]:
+
         LOGGER.info(f"Starting ROC analysis for camera {camera.model.value}")
 
         similarityresults = self.run_similarity_analysis(camera, colortags)
         if not similarityresults.size:
             LOGGER.warning("No similarity results found")
             return {}
-        
+
         bootstrap_samples = bootstrap_indexes(
             array([i for i in range(len(camera.cloud_images_paths()))]),
             stratum_size=self.config.strata_size,
-            strata_count=self.config.strata_count
+            strata_count=self.config.strata_count,
         )
 
         boundaries = generate_boundary_permutations(
@@ -647,63 +640,74 @@ class ROCAnalyzer:
         try:
             analysis_tasks = []
             for similarity_result in similarityresults:
-                ctag_name = similarity_result['tag']
-                
-                best_channel = similarity_result['components'][0]
-                
-                if best_channel['score'] > self.config.jaccard_threshold:
-                    LOGGER.info(f"Skipping {ctag_name} - similarity too high: {best_channel['score']}")
+                ctag_name = similarity_result["tag"]
+
+                best_channel = similarity_result["components"][0]
+
+                if best_channel["score"] > self.config.jaccard_threshold:
+                    LOGGER.info(
+                        f"Skipping {ctag_name} - similarity too high: {best_channel['score']}"
+                    )
                     continue
-                    
-                channel_index = best_channel['index']
+
+                channel_index = best_channel["index"]
                 tag = ColourTag.match(ctag_name)
                 if tag is ColourTag.UNKNOWN:
                     LOGGER.warning(f"Unknown color tag: {ctag_name}, skipping analysis")
                     continue
-                
-                analysis_tasks.append({
-                    'ctag_name': ctag_name,
-                    'tag': tag,
-                    'channel_index': channel_index,
-                    'best_channel': best_channel
-                })
-            
+
+                analysis_tasks.append(
+                    {
+                        "ctag_name": ctag_name,
+                        "tag": tag,
+                        "channel_index": channel_index,
+                        "best_channel": best_channel,
+                    }
+                )
+
             if not analysis_tasks:
                 LOGGER.warning("No valid analysis tasks found")
                 return {}
-            
-            LOGGER.info(f"Starting ROC analysis for {len(analysis_tasks)} color channels")
-            
-            with ProcessPoolExecutor(max_workers=self.config.max_workers) as executor:
+
+            LOGGER.info(
+                f"Starting ROC analysis for {len(analysis_tasks)} color channels"
+            )
+
+            with ProcessPoolExecutor(
+                max_workers=int(self.config.max_workers)
+            ) as executor:
                 futures = {}
                 for task in analysis_tasks:
                     future = executor.submit(
                         self._analyze_channel_roc,
                         camera,
-                        task['tag'],
-                        task['channel_index'],
+                        task["tag"],
+                        task["channel_index"],
                         bootstrap_samples,
-                        boundaries
+                        boundaries,
                     )
                     futures[future] = task
-                
+
                 for future in as_completed(futures, timeout=600):
                     task = futures[future]
-                    ctag_name = task['ctag_name']
-                    best_channel = task['best_channel']
-                    
+                    ctag_name = task["ctag_name"]
+                    best_channel = task["best_channel"]
+
                     try:
                         channel_results = future.result()
-                        results[f"{ctag_name}_{best_channel['component']}"] = channel_results
-                        LOGGER.info(f"Completed analysis for {ctag_name} channel {best_channel['component']}")
-                        
+                        results[f"{ctag_name}_{best_channel['component']}"] = (
+                            channel_results
+                        )
+                        LOGGER.info(
+                            f"Completed analysis for {ctag_name} channel {best_channel['component']}"
+                        )
+
                     except Exception as e:
                         LOGGER.error(f"Failed to analyze {ctag_name}: {e}")
 
             LOGGER.info(f"ROC analysis completed for camera {camera.model.value}")
             return results
-    
+
         except Exception as e:
             LOGGER.error(f"Error during ROC analysis: {e}")
             return {}
-    
