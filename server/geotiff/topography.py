@@ -30,7 +30,7 @@ import pickle
 from hashlib import md5
 from io import TextIOWrapper
 
-
+type CoordinateArray = NDArray[Shape["*, *"], Float32]
 type GeoCoordinateArray = NDArray[Shape["*, 3"], Float32]
 
 
@@ -44,9 +44,20 @@ type GeoCoordinateArray = NDArray[Shape["*, 3"], Float32]
     cache=True,
 )
 def _vectorized_xyz_extraction(
-    longitudes, latitudes, raster_data
+    longitudes: CoordinateArray,
+    latitudes: CoordinateArray,
+    raster_data: CoordinateArray,
 ) -> GeoCoordinateArray:
-    """Numba-optimized function to extract valid XYZ coordinates."""
+    """
+    Numba-optimized function to extract valid XYZ coordinates.
+    Args:
+        longitudes (NDArray[Shape["*, *"], Float32]): 2D array of longitudes.
+        latitudes (NDArray[Shape["*, *"], Float32]): 2D array of latitudes.
+        raster_data (NDArray[Shape["*, *"], Float32]): 2D array of raster data (elevation).
+
+    Returns:
+        NDArray[Shape["*, 3"], Float32]: 2D array of valid XYZ coordinates where each row is [longitude, latitude, elevation].
+    """
     print(
         f"Longitudes shape ::: W:{longitudes.shape[0]}, H:{longitudes.shape[1]},"
         f"Latitudes shape ::: W:{latitudes.shape[0]}, H:{latitudes.shape[1]}, "
