@@ -1,4 +1,6 @@
 from .entities import (
+    dt2str,
+    str2dt,
     User,
     UserJSON,
     Station,
@@ -20,6 +22,7 @@ from abc import ABC, abstractmethod
 from typing import Generic, TypeVar, Optional, Union
 from uuid import uuid4
 from logging import ERROR, DEBUG
+from datetime import datetime, UTC
 
 T = TypeVar("T", bound=BaseModel)
 
@@ -394,7 +397,7 @@ class StatusService(Service[StationStatus]):
             if data:
                 result = StationStatus(
                     MAC=data[0],
-                    timestamp=data[1],
+                    timestamp=str2dt(data[1]),
                     SHT=data[2],
                     BMP=data[3],
                     CAM=data[4],
@@ -436,7 +439,7 @@ class StatusService(Service[StationStatus]):
                 query,
                 (
                     status.MAC,
-                    status.timestamp,
+                    dt2str(status.timestamp),
                     int(status.SHT),
                     int(status.BMP),
                     int(status.CAM),
@@ -608,8 +611,8 @@ class StationService(Service[Station]):
                 result = Station(
                     MAC=mac,
                     name=data[1],
-                    device_model=DeviceType.match(data[2]),
-                    camera_model=CameraModel.match(data[3]),
+                    device_model=DeviceType[data[2]],
+                    camera_model=CameraModel[data[3]],
                     firmware_version=data[4],
                     altitude=data[5],
                     latitude=Latitude(data[6]),
@@ -704,7 +707,7 @@ class StationService(Service[Station]):
 
             station.sensors = StationStatus(
                 MAC=station.MAC,
-                timestamp=None,
+                timestamp=datetime.now(tz=UTC),
                 SHT=False,
                 BMP=False,
                 CAM=False,

@@ -1,4 +1,5 @@
 from .db import (
+    Manager,
     CameraModel,
     DeviceType,
     UserRole,
@@ -58,7 +59,25 @@ from .imageanalysis import (
     verify_gpu_setup,
 )
 
+from flask import Flask
+from .api import apiRouter
+
+
+def create_app() -> Flask:
+
+    Manager.load()
+    secret = Manager.get_secret()
+    if secret is None:
+        raise ValueError("Database secret is None :: Please check environment")
+
+    app = Flask(__name__)
+    app.config["SECRET_KEY"] = secret
+    app.register_blueprint(apiRouter)
+    return app
+
+
 __all__ = (
+    "create_app",
     "Manager",
     "CameraModel",
     "DeviceType",

@@ -38,13 +38,6 @@ A comprehensive environmental monitoring and computer vision platform that combi
 
 ## 🚀 Quick Start
 
-### Prerequisites
-```bash
-Python 3.9+
-OpenCV 4.10+
-GDAL/Rasterio for geospatial processing
-```
-
 ### Installation
 ```bash
 git clone https://github.com/sudoDeVinci/skyDeVisionImager.git

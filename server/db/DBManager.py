@@ -161,6 +161,10 @@ class Manager:
             cls.log(f"Error parsing configuration: {err}")
 
     @classmethod
+    def get_secret(cls) -> str | None:
+        return cls._secret
+
+    @classmethod
     def hash_password(cls, password: str) -> str:
         """
         Hash + salt a password via bcrypt using the database secret key.

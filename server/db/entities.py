@@ -10,7 +10,7 @@ from typing import (
     Self,
     Sequence,
 )
-from datetime import datetime
+from datetime import datetime, UTC
 from decimal import Decimal
 from abc import ABC
 from pydantic import BaseModel, EmailStr, SecretStr
@@ -20,12 +20,14 @@ from enum import Enum
 from functools import lru_cache
 
 
-def dt2str(dt: datetime) -> str:
-    return dt.strftime("%Y-%m-%d %H:%M:%S")
+def dt2str(dt: datetime | None) -> str:
+    if dt is None:
+        return ""
+    return dt.astimezone(UTC).strftime("%Y-%m-%d %H:%M:%S.%f")
 
 
 def str2dt(s: str) -> datetime:
-    return datetime.strptime(s, "%Y-%m-%d %H:%M:%S")
+    return datetime.strptime(s, "%Y-%m-%d %H:%M:%S.%f").replace(tzinfo=UTC)
 
 
 AnyDict = TypeVar(
@@ -68,7 +70,6 @@ class CameraModel(Enum):
         """
         Match input string to camera model.
         """
-        camera = camera.upper()
         return cls[camera] if camera in cls.__members__.items() else cls.UNKNOWN
 
     @classmethod
@@ -117,7 +118,6 @@ class DeviceType(Enum):
     @classmethod
     @lru_cache(maxsize=50)
     def match(cls, device: str):
-        device = device.upper()
         return cls[device] if device in cls.__members__.items() else cls.UNKNOWN
 
 
