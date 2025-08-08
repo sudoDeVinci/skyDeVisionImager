@@ -1,7 +1,6 @@
-import pytest
 from typing import no_type_check
 from flask.testing import FlaskClient
-from server.db import CameraModel, DeviceType, Station, StationJSON, StationService
+from server.db import CameraModel, DeviceType, Station, StationService
 
 
 @no_type_check

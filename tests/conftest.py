@@ -1,10 +1,7 @@
 from collections.abc import Generator
 import pytest
-import uuid
 import tempfile
 import os
-from unittest.mock import patch
-from typing import Final
 from server import create_app, Manager
 from flask import Flask, testing
 
