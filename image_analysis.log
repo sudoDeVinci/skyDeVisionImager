@@ -1,16 +1,32 @@
-2025-08-08 08:27:45,393 - server.db.DBManager - INFO - Error loading configuration: [Errno 2] No such file or directory: 'configs/config.json'
-2025-08-08 08:27:45,396 - server.db.DBManager - INFO - Error loading configuration: [Errno 2] No such file or directory: 'configs/config.json'
-2025-08-08 08:27:45,396 - server.db.DBManager - INFO - Database file set to: /tmp/tmpd9u1ry5f.db
-2025-08-08 08:27:45,396 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpd9u1ry5f.db
-2025-08-08 08:27:45,398 - server.db.DBManager - INFO - Error loading configuration: [Errno 2] No such file or directory: 'configs/config.json'
-2025-08-08 08:27:45,400 - server.db.DBManager - INFO - Error loading configuration: [Errno 2] No such file or directory: 'configs/config.json'
-2025-08-08 08:27:45,400 - server.db.DBManager - INFO - Database file set to: /tmp/tmplujp8ghl.db
-2025-08-08 08:27:45,400 - server.db.DBManager - INFO - Connecting to database: /tmp/tmplujp8ghl.db
-2025-08-08 08:27:45,404 - server.db.DBManager - INFO - Error loading configuration: [Errno 2] No such file or directory: 'configs/config.json'
-2025-08-08 08:27:45,407 - server.db.DBManager - INFO - Error loading configuration: [Errno 2] No such file or directory: 'configs/config.json'
-2025-08-08 08:27:45,407 - server.db.DBManager - INFO - Database file set to: /tmp/tmp_ye1e0hk.db
-2025-08-08 08:27:45,407 - server.db.DBManager - INFO - Connecting to database: /tmp/tmp_ye1e0hk.db
-2025-08-08 08:27:45,409 - server.db.DBManager - INFO - Error loading configuration: [Errno 2] No such file or directory: 'configs/config.json'
-2025-08-08 08:27:45,411 - server.db.DBManager - INFO - Error loading configuration: [Errno 2] No such file or directory: 'configs/config.json'
-2025-08-08 08:27:45,411 - server.db.DBManager - INFO - Database file set to: /tmp/tmpw8n20d2a.db
-2025-08-08 08:27:45,411 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpw8n20d2a.db
+2025-08-08 08:57:11,800 - server.db.DBManager - INFO - Error loading configuration: [Errno 2] No such file or directory: 'configs/config.json'
+2025-08-08 08:57:11,802 - server.db.DBManager - INFO - Error loading configuration: [Errno 2] No such file or directory: 'configs/config.json'
+2025-08-08 08:57:11,802 - server.db.DBManager - INFO - Database file set to: /tmp/tmplshfd9nz.db
+2025-08-08 08:57:11,802 - server.db.DBManager - INFO - Connecting to database: /tmp/tmplshfd9nz.db
+2025-08-08 08:57:11,804 - server.db.DBManager - INFO - Error loading configuration: [Errno 2] No such file or directory: 'configs/config.json'
+2025-08-08 08:57:11,807 - server.db.DBManager - INFO - Error loading configuration: [Errno 2] No such file or directory: 'configs/config.json'
+2025-08-08 08:57:11,807 - server.db.DBManager - INFO - Database file set to: /tmp/tmprpo9sbpd.db
+2025-08-08 08:57:11,807 - server.db.DBManager - INFO - Connecting to database: /tmp/tmprpo9sbpd.db
+2025-08-08 08:57:11,811 - server.db.DBManager - INFO - Error loading configuration: [Errno 2] No such file or directory: 'configs/config.json'
+2025-08-08 08:57:11,814 - server.db.DBManager - INFO - Error loading configuration: [Errno 2] No such file or directory: 'configs/config.json'
+2025-08-08 08:57:11,814 - server.db.DBManager - INFO - Database file set to: /tmp/tmpmt15f5su.db
+2025-08-08 08:57:11,814 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpmt15f5su.db
+2025-08-08 08:57:11,817 - server.db.DBManager - INFO - Error loading configuration: [Errno 2] No such file or directory: 'configs/config.json'
+2025-08-08 08:57:11,819 - server.db.DBManager - INFO - Error loading configuration: [Errno 2] No such file or directory: 'configs/config.json'
+2025-08-08 08:57:11,819 - server.db.DBManager - INFO - Database file set to: /tmp/tmpbhhpl4iy.db
+2025-08-08 08:57:11,819 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpbhhpl4iy.db
+2025-08-08 08:57:11,822 - server.db.DBManager - INFO - Error loading configuration: [Errno 2] No such file or directory: 'configs/config.json'
+2025-08-08 08:57:11,824 - server.db.DBManager - INFO - Error loading configuration: [Errno 2] No such file or directory: 'configs/config.json'
+2025-08-08 08:57:11,824 - server.db.DBManager - INFO - Database file set to: /tmp/tmpwt57kyg9.db
+2025-08-08 08:57:11,824 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpwt57kyg9.db
+2025-08-08 08:57:11,829 - server.db.DBManager - INFO - Error loading configuration: [Errno 2] No such file or directory: 'configs/config.json'
+2025-08-08 08:57:11,831 - server.db.DBManager - INFO - Error loading configuration: [Errno 2] No such file or directory: 'configs/config.json'
+2025-08-08 08:57:11,831 - server.db.DBManager - INFO - Database file set to: /tmp/tmpmmx5vakd.db
+2025-08-08 08:57:11,831 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpmmx5vakd.db
+2025-08-08 08:57:11,834 - server.db.DBManager - INFO - Error loading configuration: [Errno 2] No such file or directory: 'configs/config.json'
+2025-08-08 08:57:11,836 - server.db.DBManager - INFO - Error loading configuration: [Errno 2] No such file or directory: 'configs/config.json'
+2025-08-08 08:57:11,836 - server.db.DBManager - INFO - Database file set to: /tmp/tmpmn019_hl.db
+2025-08-08 08:57:11,836 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpmn019_hl.db
+2025-08-08 08:57:11,838 - server.db.DBManager - INFO - Error loading configuration: [Errno 2] No such file or directory: 'configs/config.json'
+2025-08-08 08:57:11,841 - server.db.DBManager - INFO - Error loading configuration: [Errno 2] No such file or directory: 'configs/config.json'
+2025-08-08 08:57:11,841 - server.db.DBManager - INFO - Database file set to: /tmp/tmpjj6ulyfa.db
+2025-08-08 08:57:11,841 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpjj6ulyfa.db

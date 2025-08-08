@@ -791,12 +791,11 @@ class StationService(Service[Station]):
             if not cursor:
                 raise InternalDBError("Failed to get cursor for station deletion.")
 
+            StatusService.delete(MAC=mac)
             cursor.execute(query, (mac,))
 
             if cursor.rowcount == 0:
                 raise NotFoundError("No station found to delete.")
-
-        StatusService.delete(MAC=mac)
 
     @staticmethod
     def exists(**kwargs) -> bool:
