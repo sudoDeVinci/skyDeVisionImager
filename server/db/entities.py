@@ -27,7 +27,16 @@ def dt2str(dt: datetime | None) -> str:
 
 
 def str2dt(s: str) -> datetime:
-    return datetime.strptime(s, "%Y-%m-%d %H:%M:%S.%f").replace(tzinfo=UTC)
+    try:
+        dt = datetime.fromisoformat(s)
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=UTC)
+        else:
+            dt = dt.astimezone(UTC)
+        return dt
+    except ValueError:
+        # fallback for legacy format without tz
+        return datetime.strptime(s, "%Y-%m-%d %H:%M:%S.%f").replace(tzinfo=UTC)
 
 
 AnyDict = TypeVar(

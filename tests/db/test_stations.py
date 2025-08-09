@@ -106,7 +106,7 @@ def test_list_station_offset(client: FlaskClient) -> None:
 
     # Test with offset
     limit = 5
-    page = 2
+    page = 1
     offset = limit * page
     limited_stations = StationService.list(limit=limit, page=page)
     assert isinstance(limited_stations, list), "Expected a list of stations"
