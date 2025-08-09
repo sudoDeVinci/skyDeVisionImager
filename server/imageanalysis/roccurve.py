@@ -54,7 +54,7 @@ numbainterpreter.setLevel("WARNING")
 
 
 DEFAULT_EPSILON: Final[float32] = float32(1e-32)
-BOUNDARY_WIDTH: Final[uint8] = uint8(10)
+BOUNDARY_WIDTH: Final[uint8] = uint8(25)
 
 
 type BoundaryArray = Annotated[

@@ -705,6 +705,7 @@ class StationService(Service[Station]):
                 ),
             )
 
+        if station.sensors is None:
             station.sensors = StationStatus(
                 MAC=station.MAC,
                 timestamp=datetime.now(tz=UTC),

@@ -315,6 +315,8 @@ def get_datasets_vstack(
         camera (Camera): The camera instance to get datasets for.
     Returns:
         tuple[ColorImage, ColorImage]: A tuple containing the cloud images and sky images - stitched together vertically.
+    Raises:
+        ValueError: If any image cannot be read.
     """
 
     cloud_paths = list(camera.cloud_images_paths())
@@ -322,6 +324,8 @@ def get_datasets_vstack(
 
     # Read first image to get dimensions
     sample = imread(str(cloud_paths[0]))
+    if sample is None:
+        raise ValueError(f"Could not read cloud image from {cloud_paths[0]}")
     h, w, c = sample.shape
 
     # Pre-allocate final arrays
@@ -345,6 +349,13 @@ def get_datasets_vstacks_sparse(
 ) -> tuple[ColorImage, ColorImage]:
     """
     Create sparse stacked images where output position matches index value.
+    Args:
+        camera (Camera): The camera instance to get datasets for.
+        indices (NDArray[Shape["*"], UInt16]): The indices of the images to include.
+    Returns:
+        tuple[ColorImage, ColorImage]: A tuple containing the cloud images and sky images - stitched together vertically.
+    Raises:
+        ValueError: If any image cannot be read.
     """
     cloud_paths = list(camera.cloud_images_paths())
     sky_paths = list(camera.sky_images_paths())
@@ -352,6 +363,8 @@ def get_datasets_vstacks_sparse(
     # Use first valid index for dimensions
     sample_idx = int(indices[0])
     sample = imread(str(cloud_paths[sample_idx]))
+    if sample is None:
+        raise ValueError(f"Could not read cloud image from {cloud_paths[sample_idx]}")
     h, w, c = sample.shape
 
     # Pre-allocate for actual number of images
@@ -380,13 +393,21 @@ def get_masks_vstack(
         camera (Camera): The camera instance to get masks for.
     Returns:
         tuple[ColorImage, ColorImage]: A tuple containing the cloud masks and sky masks - stitched together vertically.
+    Raises:
+        ValueError: If any mask cannot be read.
     """
 
     cloud_masks = [imread(str(file)) for file in camera.cloud_masks_paths()]
     sky_masks = [imread(str(file)) for file in camera.sky_masks_paths()]
 
-    clouds = vstack(cloud_masks, dtype=bool_)
-    skies = vstack(sky_masks, dtype=bool_)
+    if any(mask is None for mask in cloud_masks):
+        raise ValueError("Could not read one or more cloud masks.")
+
+    if any(mask is None for mask in sky_masks):
+        raise ValueError("Could not read one or more sky masks.")
+
+    clouds = vstack(cast(list[MatLike], cloud_masks), dtype=bool_)
+    skies = vstack(cast(list[MatLike], sky_masks), dtype=bool_)
 
     return clouds, skies
 
@@ -398,13 +419,32 @@ def get_masks_vstacks_sparse(
 
     """
     Create sparse stacked masks where output position matches index value.
+
+    Args:
+        camera (Camera): The camera instance to get masks for.
+        indices (NDArray[Shape["*"], UInt16]): The indices of the masks to include.
+
+    Returns:
+        tuple[BitMapImage, BitMapImage]: A tuple containing the cloud masks and sky masks - stitched together vertically.
+
+    Raises:
+        ValueError: If any mask cannot be read.
     """
     cloud_mask_paths = list(camera.cloud_masks_paths())
     sky_mask_paths = list(camera.sky_masks_paths())
 
+    if any(mask is None for mask in cloud_mask_paths):
+        raise ValueError("Could not read one or more cloud masks.")
+    if any(mask is None for mask in sky_mask_paths):
+        raise ValueError("Could not read one or more sky masks.")
+
     # Use first valid index for dimensions
     sample_idx = int(indices[0])
     sample = imread(str(cloud_mask_paths[sample_idx]), IMREAD_GRAYSCALE)
+    if sample is None:
+        raise ValueError(
+            f"Could not read cloud mask from {cloud_mask_paths[sample_idx]}"
+        )
     h, w = sample.shape
 
     # Pre-allocate for actual number of images
@@ -417,6 +457,10 @@ def get_masks_vstacks_sparse(
         if idx < len(cloud_mask_paths) and idx < len(sky_mask_paths):
             img_cloud = imread(str(cloud_mask_paths[idx]), IMREAD_GRAYSCALE)
             img_sky = imread(str(sky_mask_paths[idx]), IMREAD_GRAYSCALE)
+            if img_cloud is None or img_sky is None:
+                raise ValueError(
+                    f"Could not read cloud or sky mask from {cloud_mask_paths[idx]} or {sky_mask_paths[idx]}"
+                )
             clouds[i * h : (i + 1) * h] = img_cloud > 0
             skies[i * h : (i + 1) * h] = img_sky > 0
 
@@ -434,6 +478,8 @@ def get_reference_vstacks_sparse(
     # Use first valid index for dimensions
     sample_idx = int(indices[0])
     sample = imread(str(refpaths[sample_idx]))
+    if sample is None:
+        raise ValueError(f"Could not read reference image from {refpaths[sample_idx]}")
     h, w, c = sample.shape
 
     # Pre-allocate for actual number of images
