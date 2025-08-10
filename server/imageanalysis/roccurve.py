@@ -8,8 +8,10 @@ from numpy import (
     empty,
     unique,
     array,
+    ascontiguousarray,
     zeros as npzeros,
     dtype as npdtype,
+    copy as npcopy,
 )
 
 from numpy.random import choice
@@ -18,6 +20,7 @@ from typing_extensions import Self
 from dataclasses import dataclass
 from typing import Annotated, Final, Optional, Any
 import cv2
+from gc import collect
 
 from .configuration import Camera
 from logging import Logger, getLogger, basicConfig, StreamHandler, FileHandler
@@ -26,6 +29,7 @@ from .extraction import (
     ColourTag,
     ColorImage,
     BitMapImage,
+    GrayScaleImage,
     ChannelData,
     get_datasets_vstack,
     frequency_distribution,
@@ -35,7 +39,7 @@ from .extraction import (
 
 from concurrent.futures import (
     as_completed,
-    ProcessPoolExecutor,
+    ThreadPoolExecutor,  # Changed from ProcessPoolExecutor
 )
 
 basicConfig(
@@ -54,14 +58,12 @@ numbainterpreter.setLevel("WARNING")
 
 
 DEFAULT_EPSILON: Final[float32] = float32(1e-32)
-BOUNDARY_WIDTH: Final[uint8] = uint8(25)
+BOUNDARY_WIDTH: Final[uint8] = uint8(10)
 
 
-type BoundaryArray = Annotated[
-    NDArray[Shape["*, 2"], UInt8], "Represents a 2D array of boundary values (N, 2)"
-]
+type BoundaryArray = list[tuple[uint8, list[uint8]]]
 """
-Represents a 2D array of boundary values (N, 2)"]
+A list of tuple boundaries for thresholding. The first item is the lower boundary, the second item is a list of upper boundaries.
 """
 
 type BitMapArray = Annotated[
@@ -187,26 +189,23 @@ class AnalysisConfiguration:
 def generate_boundary_permutations(step_size: uint8 = BOUNDARY_WIDTH) -> BoundaryArray:
     """
     Generate all possible boundary permutations for thresholding.
-    This generates pairs of lower and upper bounds for thresholding operations.
+    This generates f lower and upper bounds for thresholding operations.
     Args:
         step_size (int): Step size for generating boundaries.
     Returns:
-        BoundaryArray: 2D array of boundary values.
+        A list of tuple boundaries for thresholding. The first item is the lower boundary, the second item is a list of upper boundaries.
     """
-    max_combinations = 0
-    for lower in range(0, 256, step_size):
-        for upper in range(lower + step_size, 256, step_size):
-            max_combinations += 1
 
-    boundaries = npzeros((max_combinations, 2), dtype=uint8)
-    count = 0
+    boundaries: BoundaryArray = []
 
     for lower in range(0, 256, step_size):
+        boundarytuple: tuple[uint8, list[uint8]] = (uint8(lower), [])
         for upper in range(lower + step_size, 256, step_size):
-            boundaries[count] = [lower, upper]
-            count += 1
+            boundarytuple[1].append(uint8(upper))
+        if boundarytuple[1]:
+            boundaries.append(boundarytuple)
 
-    return boundaries[:count]
+    return boundaries
 
 
 @njit(
@@ -261,66 +260,38 @@ def compute_jaccard_similarity(array1: ChannelData, array2: ChannelData) -> floa
     return float32(intersection_count / (union_count + DEFAULT_EPSILON))
 
 
-@njit(
-    nbtypes.UniTuple(nbtypes.float32, 4)(
-        nbtypes.Array(nbtypes.bool_, 2, "C"),
-        nbtypes.Array(nbtypes.bool_, 2, "C"),
-    ),
-    fastmath=True,
-)
-def cpu_compute_confusion_matrix(
-    ground_truth_masks: BitMapImage,
-    predicted_masks: BitMapImage,
-) -> tuple[float32, float32, float32, float32]:
-    """
-    Compute confusion matrix metrics for ROC analysis on our cpu as a fallback.
-    This one is specifically implemented for numba use.
-
-    Args:
-        ground_truth_masks: Composite image of the ground truth BitMaps corresponding to this strata.
-        predicted_masks: Predicted binary masks.
-
-    Returns:
-        ConfusionMatrix: An array containing true positive rate, false positive rate, precision, and accuracy.
-    """
-    tp = (ground_truth_masks & predicted_masks).sum(dtype=float32)
-    fn = (ground_truth_masks & ~predicted_masks).sum(dtype=float32)
-    fp = (~ground_truth_masks & predicted_masks).sum(dtype=float32)
-    tn = (~ground_truth_masks & ~predicted_masks).sum(dtype=float32)
-
-    tpr = tp / (tp + fn + DEFAULT_EPSILON)
-    fpr = fp / (fp + tn + DEFAULT_EPSILON)
-    precision = tp / (tp + fp + DEFAULT_EPSILON)
-    accuracy = (tp + tn) / (tp + tn + fp + fn + DEFAULT_EPSILON)
-
-    return tpr, fpr, precision, accuracy
-
-
-def gpu_compute_confusion_matrix(
+def _compute_confusion_matrix_masks(
     ground_truth_masks: cv2.UMat,
     predicted_masks: cv2.UMat,
-) -> tuple[float32, float32, float32, float32]:
+) -> tuple[cv2.UMat, cv2.UMat, cv2.UMat, cv2.UMat]:
     """
     Compute confusion matrix metrics for ROC analysis on our GPU.
-
     Args:
-        ground_truth_masks: Composite image of the ground truth BitMaps corresponding to this strata.
-        predicted_masks: Predicted binary masks.
-
+        ground_truth_masks (cv2.UMat): Ground truth masks as UMat.
+        predicted_masks (cv2.UMat): Predicted masks as UMat.
     Returns:
-        ConfusionMatrix: An array containing true positive rate, false positive rate, precision, and accuracy.
+        tuple: A tuple containing the true positive, false negative, false positive, and true negative masks.
     """
-    tp_mask_gpu = cv2.bitwise_and(ground_truth_masks, predicted_masks)
-    pred_inv_gpu = cv2.bitwise_not(predicted_masks)
-    fn_mask_gpu = cv2.bitwise_and(ground_truth_masks, pred_inv_gpu)
-    gt_inv_gpu = cv2.bitwise_not(ground_truth_masks)
-    fp_mask_gpu = cv2.bitwise_and(gt_inv_gpu, predicted_masks)
-    tn_mask_gpu = cv2.bitwise_and(gt_inv_gpu, pred_inv_gpu)
+    tp_mask = cv2.bitwise_and(ground_truth_masks, predicted_masks)
+    pred_inv = cv2.bitwise_not(predicted_masks)
+    fn_mask = cv2.bitwise_and(ground_truth_masks, pred_inv)
+    gt_inv = cv2.bitwise_not(ground_truth_masks)
+    fp_mask = cv2.bitwise_and(gt_inv, predicted_masks)
+    tn_mask = cv2.bitwise_and(gt_inv, pred_inv)
 
-    tp = float32(cv2.countNonZero(tp_mask_gpu))
-    fn = float32(cv2.countNonZero(fn_mask_gpu))
-    fp = float32(cv2.countNonZero(fp_mask_gpu))
-    tn = float32(cv2.countNonZero(tn_mask_gpu))
+    return tp_mask, fn_mask, fp_mask, tn_mask
+
+
+def _compute_confusion_matrix(
+    tp_mask: cv2.UMat,
+    fn_mask: cv2.UMat,
+    fp_mask: cv2.UMat,
+    tn_mask: cv2.UMat,
+):
+    tp = float32(cv2.countNonZero(tp_mask))
+    fn = float32(cv2.countNonZero(fn_mask))
+    fp = float32(cv2.countNonZero(fp_mask))
+    tn = float32(cv2.countNonZero(tn_mask))
 
     tpr = tp / (tp + fn + DEFAULT_EPSILON)
     fpr = fp / (fp + tn + DEFAULT_EPSILON)
@@ -328,6 +299,73 @@ def gpu_compute_confusion_matrix(
     accuracy = (tp + tn) / (tp + tn + fp + fn + DEFAULT_EPSILON)
 
     return tpr, fpr, precision, accuracy
+
+
+def _batch_compute_confusion_matrix(
+    lower_bound: uint8,
+    upper_bounds: list[uint8],
+    mask_shape: tuple[int, int],
+    ground_truth_masks: cv2.UMat,
+    boundary_masks: cv2.UMat,
+) -> NDArray[Shape["*, 5"], Float32]:
+
+    boundary_count = len(upper_bounds)
+    mask_height, mask_width = mask_shape
+    # Replicate the ground truth masks for each boundary
+    results = empty((boundary_count, 6), dtype=float32)
+    repeated_ground_truth_masks = cv2.repeat(ground_truth_masks, boundary_count, 1)
+
+    LOGGER.debug(
+        f"_batch_compute_confusion_matrix :: Lower bound: {lower_bound}, Upper bounds: {upper_bounds}, Mask shape: {mask_shape}"
+    )
+    LOGGER.debug(
+        f"_batch_compute_confusion_matrix :: Boundary count: {boundary_count}, Mask height: {mask_height}, Mask width: {mask_width}"
+    )
+
+    # Precompute all the confusion matrix components at once
+    LOGGER.debug(
+        f"_batch_compute_confusion_matrix :: Computing confusion matrix masks for {boundary_count} boundaries"
+    )
+    tpmask, fnmask, fpmask, tnmask = _compute_confusion_matrix_masks(
+        repeated_ground_truth_masks, boundary_masks
+    )
+    LOGGER.debug(f"_batch_compute_confusion_matrix :: Confusion matrix masks computed")
+
+    for i in range(boundary_count):
+        startrow = i * mask_height
+
+        roi: cv2.typing.Rect = (0, startrow, mask_width, mask_height)
+
+        # Make a mask for this boundary stripe
+        tpslice = cv2.UMat(tpmask, roi)
+        fnslice = cv2.UMat(fnmask, roi)
+        fpslice = cv2.UMat(fpmask, roi)
+        tnslice = cv2.UMat(tnmask, roi)
+
+        LOGGER.debug(
+            f"_batch_compute_confusion_matrix :: Processing boundary {i + 1}/{boundary_count} with bounds ({lower_bound}, {upper_bounds[i]})"
+        )
+        tpr, fpr, precision, accuracy = _compute_confusion_matrix(
+            tpslice,
+            fnslice,
+            fpslice,
+            tnslice,
+        )
+
+        LOGGER.debug(
+            f"_batch_compute_confusion_matrix :: Boundary {i + 1} results: TPR={tpr}, FPR={fpr}, Precision={precision}, Accuracy={accuracy}"
+        )
+        results[i] = (
+            float32(lower_bound),
+            float32(upper_bounds[i]),
+            tpr,
+            fpr,
+            precision,
+            accuracy,
+        )
+        LOGGER.debug(f"=============================================")
+
+    return results
 
 
 def bootstrap_indexes(
@@ -422,11 +460,11 @@ class ROCAnalyzer:
             config
             if config is not None
             else AnalysisConfiguration(
-                strata_count=uint16(30),
-                strata_size=uint16(30),
+                strata_count=uint16(10),
+                strata_size=uint16(10),
                 boundary_width=BOUNDARY_WIDTH,
                 jaccard_threshold=float32(0.25),
-                max_workers=uint8(6),
+                max_workers=uint8(2),
                 caching=False,
                 gpu_caching=True,
             )
@@ -448,7 +486,7 @@ class ROCAnalyzer:
             )
         return f"{self.camera.model.value}_{ctag.tag}_{self.config.strata_count}_{self.config.strata_size}"
 
-    def run_similarity_analysis(
+    def _run_similarity_analysis(
         self, camera: Camera, ctags: list[ColourTag]
     ) -> NDArray[Shape["*, 3"], Void]:
         """
@@ -476,7 +514,7 @@ class ROCAnalyzer:
         # Get the datasets for cloud and sky images so we can reuse across Processes
         cloudset, skyset = get_datasets_vstack(camera)
 
-        with ProcessPoolExecutor(max_workers=int(workers)) as executor:
+        with ThreadPoolExecutor(max_workers=int(workers)) as executor:
 
             # Submit tasks for each color tag - Futures are hashable so we can map them to their color tag and retrieve as_completed
             LOGGER.debug(
@@ -501,50 +539,23 @@ class ROCAnalyzer:
 
         return results
 
-    def run_boundaries(
-        self: Self,
-        index: uint8,
-        boundaries: NDArray[Shape["*, 2"], UInt8],
-        groundtruth_masks: cv2.UMat,
-        reference_image: cv2.UMat,
-    ) -> NDArray[Shape["*, 6"], Float32]:
-
-        # results = npzeros((boundaries.shape[0], 6), dtype=float32)
-
-        # Pre-split the reference image once to avoid repeated splits
-        target_channel = cv2.split(reference_image)[int(index)]
-        results = npzeros((boundaries.shape[0], 6), dtype=float32)
-
-        for i in range(1, boundaries.shape[0]):
-            LOGGER.debug(
-                f"Processing boundary {i+1}/{boundaries.shape[0]}: {boundaries[i]}"
-            )
-            lower_bound = int(boundaries[i][0])
-            upper_bound = int(boundaries[i][1])
-
-            # Use the pre-split channel for more efficient thresholding
-            # Ints are autom converted to cv2.Scalar
-            thresholded_masks = cv2.inRange(target_channel, lower_bound, upper_bound)  # type: ignore[call-overload]
-            tpr, fpr, precision, accuracy = gpu_compute_confusion_matrix(
-                groundtruth_masks, thresholded_masks
-            )
-            results[i] = [lower_bound, upper_bound, tpr, fpr, precision, accuracy]
-
-        return results
-
-    def _load_batch_to_gpu(
+    def _load_batch(
         self,
         camera: Camera,
         tag: ColourTag,
         bootstrap_samples: NDArray[Shape["*, *"], UInt16],
-    ) -> tuple[cv2.UMat, cv2.UMat]:
+    ) -> tuple[tuple[int, int], GrayScaleImage, ColorImage]:
         """
-        Load all bootstrap data directly to GPU in batches to minimize transfers.
+        Load a batch of ground truth masks and reference images for the specified color tag.
+        Create a composite image of the ground truth masks and a composite image of the reference images According to the indices in the bootstrap samples.
+        Args:
+            camera (Camera): Camera instance to use for analysis.
+            tag (ColourTag): Color tag to analyze.
+            bootstrap_samples (NDArray[Shape["*, *"], UInt16]): Indices of the samples to use for bootstrapping.
+        Returns:
+            tuple[tuple[int, int]], BitMapImage, ColorImage]: A tuple containing the composite ground truth masks, reference images, and shape (height, width).
         """
 
-        LOGGER.debug(f"Loading {bootstrap_samples.shape[0]} strata directly to GPU")
-
-        # Load first sample to get dimensions
         sample_indices = bootstrap_samples[0]
         gt_sample, _ = get_masks_vstacks_sparse(camera, sample_indices[:1])
         ref_sample = get_reference_vstacks_sparse(camera, tag, sample_indices[:1])
@@ -552,16 +563,13 @@ class ROCAnalyzer:
         h, w = gt_sample.shape
         _, _, c = ref_sample.shape
 
-        # Pre-allocate large GPU buffers
         total_height = h * bootstrap_samples.shape[0] * bootstrap_samples.shape[1]
 
-        # Create large CPU buffers first
         all_gt_cpu = npzeros((total_height, w), dtype=uint8)
         all_ref_cpu = npzeros((total_height, w, c), dtype=uint8)
 
         current_row = 0
 
-        # Fill CPU buffers efficiently
         for stratum_idx in range(bootstrap_samples.shape[0]):
             sample_indices = bootstrap_samples[stratum_idx]
 
@@ -576,14 +584,57 @@ class ROCAnalyzer:
                 all_ref_cpu[current_row : current_row + rows_to_add] = ref_imgs
                 current_row += rows_to_add
 
-        # Single transfer to GPU
-        final_gt_umat = cv2.UMat(all_gt_cpu[:current_row])  # type: ignore[call-overload]
-        final_ref_umat = cv2.UMat(all_ref_cpu[:current_row])  # type: ignore[call-overload]
+        return (total_height, w), all_gt_cpu, all_ref_cpu
+
+    def _load_boundary_batch(
+        self,
+        index: uint8,
+        camera: Camera,
+        tag: ColourTag,
+        bootstrap_samples: NDArray[Shape["*, *"], UInt16],
+        boundaries: tuple[uint8, list[uint8]],
+    ) -> tuple[tuple[int, int], GrayScaleImage, GrayScaleImage]:
+        """
+        Load a batch of ground truth masks and reference images for the specified color tag.
+        We load the ground truth masks and reference images for the specified color tag, ina ccordance with the indices in the bootstrap samples.
+        We create a composite image of the ground truth masks and a composite image of the reference images.
+        We do this for each lower boundary in the boundaries, creating a larger composite image.
+        """
 
         LOGGER.debug(
-            f"Transferred {current_row} rows to GPU - GT: ({current_row}, {w}), Ref: ({current_row}, {w}, {c})"
+            f"load_boundary_batch :: {tag.tag} :: Loading batch for camera {camera.model.value} and color tag {tag.tag}"
         )
-        return final_gt_umat, final_ref_umat
+
+        dims, big_gt_mask, big_ref_mask = self._load_batch(
+            camera, tag, bootstrap_samples
+        )
+
+        h, w = big_gt_mask.shape
+        size = len(boundaries[1])
+        height = h * size
+        width = w
+
+        bigger_bound_mask = npzeros((height, width), dtype=uint8)
+
+        LOGGER.debug(
+            f"load_boundary_batch :: {tag.tag} :: Ground truth mask is {big_gt_mask.shape}, Reference is {big_ref_mask.shape}"
+        )
+
+        current_row = 0
+        lowerbound = boundaries[0]
+        coi = cv2.split(big_ref_mask)[int(index)]
+        for upperbound in boundaries[1]:
+
+            boundmask = cv2.inRange(  # type: ignore
+                coi,
+                int(lowerbound),
+                int(upperbound),
+            )
+
+            bigger_bound_mask[current_row : current_row + h] = boundmask
+            current_row += h
+
+        return dims, big_gt_mask, bigger_bound_mask
 
     def _analyze_channel_roc(
         self: Self,
@@ -595,23 +646,62 @@ class ROCAnalyzer:
     ) -> NDArray[Shape["*, 6"], Float32]:
 
         LOGGER.debug(
-            f"Analyzing channel {tag.tag} index {index} for camera {camera.model.value}"
+            f"analayze_channel_roc :: Analyzing channel {tag.tag} index {index} for camera {camera.model.value}"
         )
 
-        big_gt_umat, big_ref_umat = self._load_batch_to_gpu(
-            camera, tag, bootstrap_samples
+        fullboundcount = 0
+        for boundarygroup in boundaries:
+            fullboundcount += len(boundarygroup[1])
+
+        results = empty((fullboundcount, 6), dtype=float32)
+        currentrow = 0
+
+        for boundarygroup in boundaries:
+
+            lowerbound, upperbounds = boundarygroup
+
+            dims, gtmask, boundmask = self._load_boundary_batch(
+                index=index,
+                camera=camera,
+                tag=tag,
+                bootstrap_samples=bootstrap_samples,
+                boundaries=boundarygroup,
+            )
+
+            LOGGER.debug(
+                f"analayze_channel_roc :: {tag.tag} :: Loaded Boundary masks for bounds starting with {boundarygroup[0]}"
+            )
+            LOGGER.debug(
+                f"analayze_channel_roc :: {tag.tag} Ground truth masks ::  dtype {gtmask.dtype}, Shape {gtmask.shape} || Boundary masks :: dtype {boundmask.dtype} Shape {boundmask.shape}"
+            )
+
+            gtumat = cv2.UMat(gtmask)  # type: ignore
+            boundumat = cv2.UMat(boundmask)  # type: ignore
+
+            LOGGER.debug(
+                f"analayze_channel_roc :: Mats loaded to gpu :: Free memory :: {cv2.ocl.Device.getDefault().globalMemSize() // (1024*1024)} MB"
+            )
+
+            confusionresult = _batch_compute_confusion_matrix(
+                lowerbound,
+                upperbounds,
+                dims,
+                gtumat,
+                boundumat,
+            )
+
+            del boundumat, gtumat
+
+            LOGGER.debug(
+                f"analayze_channel_roc :: {tag.tag} :: Computed confusion matrix for bounds starting with {boundarygroup[0]}"
+            )
+
+            results[currentrow : currentrow + len(upperbounds)] = confusionresult
+            currentrow += len(upperbounds)
+
+        LOGGER.debug(
+            f"analayze_channel_roc :: Completed channel analysis for {tag.tag} index {index}"
         )
-
-        LOGGER.debug(f"GPU batch loaded successfully")
-
-        results = self.run_boundaries(
-            index=index,
-            boundaries=boundaries,
-            groundtruth_masks=big_gt_umat,
-            reference_image=big_ref_umat,
-        )
-
-        LOGGER.debug(f"Completed channel analysis for {tag.tag} index {index}")
         return results
 
     def analyze_roc(
@@ -620,7 +710,7 @@ class ROCAnalyzer:
 
         LOGGER.info(f"Starting ROC analysis for camera {camera.model.value}")
 
-        similarityresults = self.run_similarity_analysis(camera, colortags)
+        similarityresults = self._run_similarity_analysis(camera, colortags)
         if not similarityresults.size:
             LOGGER.warning("No similarity results found")
             return {}
@@ -673,7 +763,7 @@ class ROCAnalyzer:
                 f"Starting ROC analysis for {len(analysis_tasks)} color channels"
             )
 
-            with ProcessPoolExecutor(
+            with ThreadPoolExecutor(
                 max_workers=int(self.config.max_workers)
             ) as executor:
                 futures = {}

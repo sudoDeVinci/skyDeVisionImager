@@ -54,8 +54,6 @@ from .imageanalysis import (
     Camera,
     ROCAnalyzer,
     BoundaryArray,
-    cpu_compute_confusion_matrix,
-    gpu_compute_confusion_matrix,
     verify_gpu_setup,
 )
 
@@ -131,7 +129,5 @@ __all__ = (
     "get_datasets_vstacks_sparse",
     "get_masks_vstacks_sparse",
     "get_reference_vstacks_sparse",
-    "cpu_compute_confusion_matrix",
-    "gpu_compute_confusion_matrix",
     "verify_gpu_setup",
 )
