@@ -1,51 +1,1104 @@
-2025-08-10 20:33:45,927 - imanalysis - INFO - === GPU Setup Verification ===
-2025-08-10 20:33:46,016 - imanalysis - INFO - OpenCL available: True
-2025-08-10 20:33:46,016 - imanalysis - INFO - OpenCL enabled: True
-2025-08-10 20:33:46,016 - imanalysis - INFO - 
+2025-08-10 20:56:43,735 - imanalysis - INFO - === GPU Setup Verification ===
+2025-08-10 20:56:44,060 - imanalysis - INFO - OpenCL available: True
+2025-08-10 20:56:44,060 - imanalysis - INFO - OpenCL enabled: True
+2025-08-10 20:56:44,060 - imanalysis - INFO - 
 
-Device Name: NVIDIA GeForce MX250
+Device Name: gfx1030
 Device Type: 4
-Max Compute Units: 3
-Global Memory: 1994 MB
-Local Memory: 48 KB
-Max Work Group Size: 1024
+Max Compute Units: 30
+Global Memory: 16368 MB
+Local Memory: 64 KB
+Max Work Group Size: 256
 
-2025-08-10 20:33:46,020 - imanalysis - INFO - GPU operations working correctly
-2025-08-10 20:33:46,020 - imanalysis - INFO - Starting ROC analysis for camera DSLR
-2025-08-10 20:33:46,020 - imanalysis - DEBUG - >> Running similarity analysis with 2 workers for 2 color tags.
-2025-08-10 20:33:46,342 - imanalysis - DEBUG - Starting analysis for 2 color tags with 2 workers.
-2025-08-10 20:33:46,342 - imanalysis - DEBUG - Cloud dataset size: (18000, 400, 3), Sky dataset size: (18000, 400, 3)
-2025-08-10 20:33:46,342 - imanalysis - DEBUG - >> Analyzing color channel: HSV
-2025-08-10 20:33:46,343 - imanalysis - DEBUG - >> Analyzing color channel: RGB
-2025-08-10 20:33:47,986 - imanalysis - DEBUG - >> Cloud distribution: (3,), Sky distribution: (3,)
-2025-08-10 20:33:47,987 - imanalysis - DEBUG - >> Jaccard scores: [('hue', 0.06818182, 0) ('saturation', 0.        , 1)
+2025-08-10 20:56:44,063 - imanalysis - INFO - GPU operations working correctly
+2025-08-10 20:56:44,063 - imanalysis - INFO - Starting ROC analysis for camera DSLR
+2025-08-10 20:56:44,063 - imanalysis - DEBUG - >> Running similarity analysis with 4 workers for 3 color tags.
+2025-08-10 20:56:44,261 - imanalysis - DEBUG - Starting analysis for 3 color tags with 4 workers.
+2025-08-10 20:56:44,261 - imanalysis - DEBUG - Cloud dataset size: (18000, 400, 3), Sky dataset size: (18000, 400, 3)
+2025-08-10 20:56:44,262 - imanalysis - DEBUG - >> Analyzing color channel: HSV
+2025-08-10 20:56:44,262 - imanalysis - DEBUG - >> Analyzing color channel: RGB
+2025-08-10 20:56:44,262 - imanalysis - DEBUG - >> Analyzing color channel: YCrCb
+2025-08-10 20:56:45,160 - imanalysis - DEBUG - >> Cloud distribution: (3,), Sky distribution: (3,)
+2025-08-10 20:56:45,161 - imanalysis - DEBUG - >> Jaccard scores: [('hue', 0.06818182, 0) ('saturation', 0.        , 1)
  ('value', 0.50857145, 2)]
-2025-08-10 20:33:48,021 - imanalysis - DEBUG - >> Sorted Jaccard scores: [('saturation', 0.        , 1) ('hue', 0.06818182, 0)
+2025-08-10 20:56:45,161 - imanalysis - DEBUG - >> Sorted Jaccard scores: [('saturation', 0.        , 1) ('hue', 0.06818182, 0)
  ('value', 0.50857145, 2)]
-2025-08-10 20:33:48,143 - imanalysis - DEBUG - >> Cloud distribution: (3,), Sky distribution: (3,)
-2025-08-10 20:33:48,144 - imanalysis - DEBUG - >> Jaccard scores: [('red', 0.21276596, 0) ('green', 0.5343915 , 1) ('blue', 0.50857145, 2)]
-2025-08-10 20:33:48,144 - imanalysis - DEBUG - >> Sorted Jaccard scores: [('red', 0.21276596, 0) ('blue', 0.50857145, 2) ('green', 0.5343915 , 1)]
-2025-08-10 20:33:48,148 - imanalysis - INFO - Starting ROC analysis for 2 color channels
-2025-08-10 20:33:48,149 - imanalysis - DEBUG - analayze_channel_roc :: Analyzing channel HSV index 1 for camera DSLR
-2025-08-10 20:33:48,149 - imanalysis - DEBUG - analayze_channel_roc :: Analyzing channel RGB index 0 for camera DSLR
-2025-08-10 20:33:48,149 - imanalysis - DEBUG - load_boundary_batch :: HSV :: Loading batch for camera DSLR and color tag HSV
-2025-08-10 20:33:48,150 - imanalysis - DEBUG - load_boundary_batch :: RGB :: Loading batch for camera DSLR and color tag RGB
-2025-08-10 20:33:48,691 - imanalysis - DEBUG - load_boundary_batch :: RGB :: Ground truth mask is (30000, 400), Reference is (30000, 400, 3)
-2025-08-10 20:33:48,694 - imanalysis - DEBUG - load_boundary_batch :: HSV :: Ground truth mask is (30000, 400), Reference is (30000, 400, 3)
-2025-08-10 20:33:48,869 - imanalysis - DEBUG - analayze_channel_roc :: RGB :: Loaded Boundary masks for bounds starting with 0
-2025-08-10 20:33:48,869 - imanalysis - DEBUG - analayze_channel_roc :: RGB Ground truth masks ::  dtype uint8, Shape (30000, 400) || Boundary masks :: dtype uint8 Shape (750000, 400)
-2025-08-10 20:33:48,972 - imanalysis - DEBUG - analayze_channel_roc :: Mats loaded to gpu :: Free memory :: 1994 MB
-2025-08-10 20:33:48,973 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Lower bound: 0, Upper bounds: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250], Mask shape: (30000, 400)
-2025-08-10 20:33:48,973 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary count: 25, Mask height: 30000, Mask width: 400
-2025-08-10 20:33:48,973 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Computing confusion matrix masks for 25 boundaries
-2025-08-10 20:33:48,979 - imanalysis - DEBUG - analayze_channel_roc :: HSV :: Loaded Boundary masks for bounds starting with 0
-2025-08-10 20:33:48,979 - imanalysis - DEBUG - analayze_channel_roc :: HSV Ground truth masks ::  dtype uint8, Shape (30000, 400) || Boundary masks :: dtype uint8 Shape (750000, 400)
-2025-08-10 20:33:49,104 - imanalysis - DEBUG - analayze_channel_roc :: Mats loaded to gpu :: Free memory :: 1994 MB
-2025-08-10 20:33:49,104 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Lower bound: 0, Upper bounds: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200, 210, 220, 230, 240, 250], Mask shape: (30000, 400)
-2025-08-10 20:33:49,104 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary count: 25, Mask height: 30000, Mask width: 400
-2025-08-10 20:33:49,104 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Computing confusion matrix masks for 25 boundaries
-2025-08-10 20:33:49,892 - imanalysis - ERROR - Failed to analyze RGB: OpenCV(4.12.0) /io/opencv/modules/core/src/ocl.cpp:5955: error: (-220:Unknown error code -220) OpenCL error CL_MEM_OBJECT_ALLOCATION_FAILURE (-4) during call: clEnqueueReadBuffer(q, handle=0x7f53c001f070, CL_TRUE, 0, sz=300000000, data=0x7f52c65af040, 0, 0, 0) in function 'map'
-
-2025-08-10 20:33:49,893 - imanalysis - ERROR - Failed to analyze HSV: OpenCV(4.12.0) /io/opencv/modules/core/src/ocl.cpp:5955: error: (-220:Unknown error code -220) OpenCL error CL_MEM_OBJECT_ALLOCATION_FAILURE (-4) during call: clEnqueueReadBuffer(q, handle=0x7f53b8062ac0, CL_TRUE, 0, sz=300000000, data=0x7f52a2979040, 0, 0, 0) in function 'map'
-
-2025-08-10 20:33:49,893 - imanalysis - INFO - ROC analysis completed for camera DSLR
+2025-08-10 20:56:45,167 - imanalysis - DEBUG - >> Cloud distribution: (3,), Sky distribution: (3,)
+2025-08-10 20:56:45,167 - imanalysis - DEBUG - >> Jaccard scores: [('Y', 0.425     , 0) ('Cr', 0.16393442, 1) ('Cb', 0.16438356, 2)]
+2025-08-10 20:56:45,168 - imanalysis - DEBUG - >> Sorted Jaccard scores: [('Cr', 0.16393442, 1) ('Cb', 0.16438356, 2) ('Y', 0.425     , 0)]
+2025-08-10 20:56:45,246 - imanalysis - DEBUG - >> Cloud distribution: (3,), Sky distribution: (3,)
+2025-08-10 20:56:45,246 - imanalysis - DEBUG - >> Jaccard scores: [('red', 0.21276596, 0) ('green', 0.5343915 , 1) ('blue', 0.50857145, 2)]
+2025-08-10 20:56:45,246 - imanalysis - DEBUG - >> Sorted Jaccard scores: [('red', 0.21276596, 0) ('blue', 0.50857145, 2) ('green', 0.5343915 , 1)]
+2025-08-10 20:56:45,249 - imanalysis - INFO - Starting ROC analysis for 3 color channels
+2025-08-10 20:56:45,250 - imanalysis - DEBUG - analayze_channel_roc :: Analyzing channel HSV index 1 for camera DSLR
+2025-08-10 20:56:45,250 - imanalysis - DEBUG - analayze_channel_roc :: Analyzing channel RGB index 0 for camera DSLR
+2025-08-10 20:56:45,250 - imanalysis - DEBUG - analayze_channel_roc :: Analyzing channel YCrCb index 1 for camera DSLR
+2025-08-10 20:56:45,250 - imanalysis - DEBUG - load_boundary_batch :: HSV :: Loading batch for camera DSLR and color tag HSV
+2025-08-10 20:56:45,250 - imanalysis - DEBUG - load_boundary_batch :: RGB :: Loading batch for camera DSLR and color tag RGB
+2025-08-10 20:56:45,250 - imanalysis - DEBUG - load_boundary_batch :: YCrCb :: Loading batch for camera DSLR and color tag YCrCb
+2025-08-10 20:56:46,861 - imanalysis - DEBUG - load_boundary_batch :: HSV :: Ground truth mask is (180000, 400), Reference is (180000, 400, 3)
+2025-08-10 20:56:46,861 - imanalysis - DEBUG - load_boundary_batch :: RGB :: Ground truth mask is (180000, 400), Reference is (180000, 400, 3)
+2025-08-10 20:56:46,866 - imanalysis - DEBUG - load_boundary_batch :: YCrCb :: Ground truth mask is (180000, 400), Reference is (180000, 400, 3)
+2025-08-10 20:56:47,368 - imanalysis - DEBUG - analayze_channel_roc :: RGB :: Loaded Boundary masks for bounds starting with 0
+2025-08-10 20:56:47,368 - imanalysis - DEBUG - analayze_channel_roc :: RGB Ground truth masks ::  dtype uint8, Shape (180000, 400) || Boundary masks :: dtype uint8 Shape (2160000, 400)
+2025-08-10 20:56:47,521 - imanalysis - DEBUG - analayze_channel_roc :: Mats loaded to gpu :: Free memory :: 16368 MB
+2025-08-10 20:56:47,523 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Lower bound: 0, Upper bounds: [20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240], Mask shape: (180000, 400)
+2025-08-10 20:56:47,523 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary count: 12, Mask height: 180000, Mask width: 400
+2025-08-10 20:56:47,523 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Computing confusion matrix masks for 12 boundaries
+2025-08-10 20:56:47,526 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Confusion matrix masks computed
+2025-08-10 20:56:47,526 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 1/12 with bounds (0, 20)
+2025-08-10 20:56:47,536 - imanalysis - DEBUG - analayze_channel_roc :: YCrCb :: Loaded Boundary masks for bounds starting with 0
+2025-08-10 20:56:47,536 - imanalysis - DEBUG - analayze_channel_roc :: YCrCb Ground truth masks ::  dtype uint8, Shape (180000, 400) || Boundary masks :: dtype uint8 Shape (2160000, 400)
+2025-08-10 20:56:47,710 - imanalysis - DEBUG - analayze_channel_roc :: HSV :: Loaded Boundary masks for bounds starting with 0
+2025-08-10 20:56:47,711 - imanalysis - DEBUG - analayze_channel_roc :: Mats loaded to gpu :: Free memory :: 16368 MB
+2025-08-10 20:56:47,711 - imanalysis - DEBUG - analayze_channel_roc :: HSV Ground truth masks ::  dtype uint8, Shape (180000, 400) || Boundary masks :: dtype uint8 Shape (2160000, 400)
+2025-08-10 20:56:47,726 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Lower bound: 0, Upper bounds: [20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240], Mask shape: (180000, 400)
+2025-08-10 20:56:47,860 - imanalysis - DEBUG - analayze_channel_roc :: Mats loaded to gpu :: Free memory :: 16368 MB
+2025-08-10 20:56:47,860 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary count: 12, Mask height: 180000, Mask width: 400
+2025-08-10 20:56:47,860 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Computing confusion matrix masks for 12 boundaries
+2025-08-10 20:56:47,860 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Lower bound: 0, Upper bounds: [20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240], Mask shape: (180000, 400)
+2025-08-10 20:56:47,860 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary count: 12, Mask height: 180000, Mask width: 400
+2025-08-10 20:56:47,860 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Computing confusion matrix masks for 12 boundaries
+2025-08-10 20:56:48,047 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Confusion matrix masks computed
+2025-08-10 20:56:48,047 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 1/12 with bounds (0, 20)
+2025-08-10 20:56:48,366 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Confusion matrix masks computed
+2025-08-10 20:56:48,366 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 1/12 with bounds (0, 20)
+2025-08-10 20:56:48,375 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 1 results: TPR=0.00025735123199410737, FPR=0.06216932088136673, Precision=0.0038402623031288385, Accuracy=0.4857238829135895
+2025-08-10 20:56:48,375 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:48,375 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 2/12 with bounds (0, 40)
+2025-08-10 20:56:48,422 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 1 results: TPR=0.0, FPR=0.0, Precision=0.0, Accuracy=0.5177904367446899
+2025-08-10 20:56:48,423 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 1 results: TPR=0.5409990549087524, FPR=0.0006159452605061233, Precision=0.9987789988517761, Accuracy=0.7783464193344116
+2025-08-10 20:56:48,423 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:48,423 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:48,423 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 2/12 with bounds (0, 40)
+2025-08-10 20:56:48,423 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 2/12 with bounds (0, 40)
+2025-08-10 20:56:48,425 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 2 results: TPR=0.0018465922912582755, FPR=0.13505686819553375, Precision=0.012573063373565674, Accuracy=0.44874972105026245
+2025-08-10 20:56:48,426 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:48,426 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 3/12 with bounds (0, 60)
+2025-08-10 20:56:48,586 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 2 results: TPR=0.0, FPR=0.0, Precision=0.0, Accuracy=0.5177904367446899
+2025-08-10 20:56:48,586 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 2 results: TPR=0.7707838416099548, FPR=0.0024768440052866936, Precision=0.9965612888336182, Accuracy=0.8881872892379761
+2025-08-10 20:56:48,586 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:48,587 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:48,587 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 3/12 with bounds (0, 60)
+2025-08-10 20:56:48,587 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 3/12 with bounds (0, 60)
+2025-08-10 20:56:48,589 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 3 results: TPR=0.008249985985457897, FPR=0.4690515697002411, Precision=0.016116037964820862, Accuracy=0.2788982093334198
+2025-08-10 20:56:48,589 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:48,589 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 4/12 with bounds (0, 80)
+2025-08-10 20:56:48,615 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 3 results: TPR=0.8793221116065979, FPR=0.007143145892769098, Precision=0.9913525581359863, Accuracy=0.9381093382835388
+2025-08-10 20:56:48,615 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 3 results: TPR=0.0, FPR=0.00014146650210022926, Precision=0.0, Accuracy=0.517717182636261
+2025-08-10 20:56:48,615 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:48,615 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:48,615 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 4/12 with bounds (0, 80)
+2025-08-10 20:56:48,616 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 4/12 with bounds (0, 80)
+2025-08-10 20:56:48,618 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 4 results: TPR=0.023904141038656235, FPR=0.7935546636581421, Precision=0.027287429198622704, Accuracy=0.11842221021652222
+2025-08-10 20:56:48,618 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:48,618 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 5/12 with bounds (0, 100)
+2025-08-10 20:56:48,644 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 4 results: TPR=0.9293925762176514, FPR=0.020050207152962685, Precision=0.9773591756820679, Accuracy=0.955570638179779
+2025-08-10 20:56:48,644 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 4 results: TPR=0.0013205992290750146, FPR=0.11832575500011444, Precision=0.010286861099302769, Accuracy=0.4571593105792999
+2025-08-10 20:56:48,644 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:48,644 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:48,644 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 5/12 with bounds (0, 100)
+2025-08-10 20:56:48,644 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 5/12 with bounds (0, 100)
+2025-08-10 20:56:48,646 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 5 results: TPR=0.05200044438242912, FPR=0.8957565426826477, Precision=0.051289960741996765, Accuracy=0.07905136048793793
+2025-08-10 20:56:48,646 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:48,647 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 6/12 with bounds (0, 120)
+2025-08-10 20:56:48,673 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 5 results: TPR=0.9599595069885254, FPR=0.060869380831718445, Precision=0.9362533092498779, Accuracy=0.9491745233535767
+2025-08-10 20:56:48,673 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 5 results: TPR=0.012215067632496357, FPR=0.5382568836212158, Precision=0.020696893334388733, Accuracy=0.24497638642787933
+2025-08-10 20:56:48,673 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:48,673 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:48,673 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 6/12 with bounds (0, 120)
+2025-08-10 20:56:48,673 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 6/12 with bounds (0, 120)
+2025-08-10 20:56:48,675 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 6 results: TPR=0.11967748403549194, FPR=0.9549579620361328, Precision=0.1045127734541893, Accuracy=0.08103194087743759
+2025-08-10 20:56:48,675 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:48,675 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 7/12 with bounds (0, 140)
+2025-08-10 20:56:48,701 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 6 results: TPR=0.9783940315246582, FPR=0.1371482014656067, Precision=0.8691720962524414, Accuracy=0.9185673594474792
+2025-08-10 20:56:48,701 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 6 results: TPR=0.18960022926330566, FPR=0.9821987152099609, Precision=0.1523783653974533, Accuracy=0.10064438730478287
+2025-08-10 20:56:48,701 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:48,702 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:48,702 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 7/12 with bounds (0, 140)
+2025-08-10 20:56:48,702 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 7/12 with bounds (0, 140)
+2025-08-10 20:56:48,704 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 7 results: TPR=0.2646024227142334, FPR=0.9829717874526978, Precision=0.20044046640396118, Accuracy=0.1364108920097351
+2025-08-10 20:56:48,704 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:48,704 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 8/12 with bounds (0, 160)
+2025-08-10 20:56:48,730 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 7 results: TPR=0.9891154766082764, FPR=0.2686324417591095, Precision=0.7742165923118591, Accuracy=0.8556560277938843
+2025-08-10 20:56:48,730 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 7 results: TPR=0.999982476234436, FPR=0.9994500279426575, Precision=0.48234254121780396, Accuracy=0.48248589038848877
+2025-08-10 20:56:48,730 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:48,731 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:48,731 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 8/12 with bounds (0, 160)
+2025-08-10 20:56:48,731 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 8/12 with bounds (0, 160)
+2025-08-10 20:56:48,733 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 8 results: TPR=0.4425640404224396, FPR=0.9933891892433167, Precision=0.2932339012622833, Accuracy=0.21683159470558167
+2025-08-10 20:56:48,733 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:48,733 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 9/12 with bounds (0, 180)
+2025-08-10 20:56:48,759 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 8 results: TPR=0.9953508973121643, FPR=0.4962114095687866, Precision=0.6513324975967407, Accuracy=0.7408246397972107
+2025-08-10 20:56:48,759 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 8 results: TPR=1.0, FPR=0.9998974204063416, Precision=0.4822351634502411, Accuracy=0.48226267099380493
+2025-08-10 20:56:48,759 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:48,760 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:48,760 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 9/12 with bounds (0, 180)
+2025-08-10 20:56:48,760 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 9/12 with bounds (0, 180)
+2025-08-10 20:56:48,762 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 9 results: TPR=0.616325855255127, FPR=0.9977482557296753, Precision=0.3651879131793976, Accuracy=0.29836416244506836
+2025-08-10 20:56:48,762 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:48,762 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 10/12 with bounds (0, 200)
+2025-08-10 20:56:48,788 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 9 results: TPR=0.9977110028266907, FPR=0.8451130986213684, Precision=0.5236825942993164, Accuracy=0.5613046884536743
+2025-08-10 20:56:48,788 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 9 results: TPR=1.0, FPR=1.0, Precision=0.48220956325531006, Accuracy=0.48220956325531006
+2025-08-10 20:56:48,788 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:48,788 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:48,789 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 10/12 with bounds (0, 200)
+2025-08-10 20:56:48,789 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 10/12 with bounds (0, 200)
+2025-08-10 20:56:48,791 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 10 results: TPR=0.7876081466674805, FPR=0.9992780089378357, Precision=0.42330411076545715, Accuracy=0.3801659643650055
+2025-08-10 20:56:48,791 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:48,791 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 11/12 with bounds (0, 220)
+2025-08-10 20:56:48,817 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 10 results: TPR=0.9988334774971008, FPR=0.8743282556533813, Precision=0.5154802203178406, Accuracy=0.5467187166213989
+2025-08-10 20:56:48,817 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 10 results: TPR=1.0, FPR=1.0, Precision=0.48220956325531006, Accuracy=0.48220956325531006
+2025-08-10 20:56:48,817 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:48,817 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:48,818 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 11/12 with bounds (0, 220)
+2025-08-10 20:56:48,818 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 11/12 with bounds (0, 220)
+2025-08-10 20:56:48,819 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 11 results: TPR=0.9155332446098328, FPR=0.9997820854187012, Precision=0.46027830243110657, Accuracy=0.44159170985221863
+2025-08-10 20:56:48,820 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:48,820 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 12/12 with bounds (0, 240)
+2025-08-10 20:56:48,846 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 11 results: TPR=1.0, FPR=1.0, Precision=0.48220956325531006, Accuracy=0.48220956325531006
+2025-08-10 20:56:48,846 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:48,846 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 12/12 with bounds (0, 240)
+2025-08-10 20:56:48,846 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 11 results: TPR=0.9994277358055115, FPR=0.9140704274177551, Precision=0.5045207142829895, Accuracy=0.526427149772644
+2025-08-10 20:56:48,846 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:48,846 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 12/12 with bounds (0, 240)
+2025-08-10 20:56:48,848 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 12 results: TPR=0.9766159653663635, FPR=0.9999799132347107, Precision=0.4763093888759613, Accuracy=0.47094395756721497
+2025-08-10 20:56:48,849 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:48,849 - imanalysis - DEBUG - analayze_channel_roc :: RGB :: Computed confusion matrix for bounds starting with 0
+2025-08-10 20:56:48,849 - imanalysis - DEBUG - load_boundary_batch :: RGB :: Loading batch for camera DSLR and color tag RGB
+2025-08-10 20:56:48,873 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 12 results: TPR=0.9997850060462952, FPR=0.9821681380271912, Precision=0.48664969205856323, Accuracy=0.4913390576839447
+2025-08-10 20:56:48,873 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 12 results: TPR=1.0, FPR=1.0, Precision=0.48220956325531006, Accuracy=0.48220956325531006
+2025-08-10 20:56:48,873 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:48,874 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:48,882 - imanalysis - DEBUG - analayze_channel_roc :: HSV :: Computed confusion matrix for bounds starting with 0
+2025-08-10 20:56:48,889 - imanalysis - DEBUG - analayze_channel_roc :: YCrCb :: Computed confusion matrix for bounds starting with 0
+2025-08-10 20:56:48,889 - imanalysis - DEBUG - load_boundary_batch :: HSV :: Loading batch for camera DSLR and color tag HSV
+2025-08-10 20:56:48,890 - imanalysis - DEBUG - load_boundary_batch :: YCrCb :: Loading batch for camera DSLR and color tag YCrCb
+2025-08-10 20:56:50,371 - imanalysis - DEBUG - load_boundary_batch :: RGB :: Ground truth mask is (180000, 400), Reference is (180000, 400, 3)
+2025-08-10 20:56:50,435 - imanalysis - DEBUG - load_boundary_batch :: YCrCb :: Ground truth mask is (180000, 400), Reference is (180000, 400, 3)
+2025-08-10 20:56:50,452 - imanalysis - DEBUG - load_boundary_batch :: HSV :: Ground truth mask is (180000, 400), Reference is (180000, 400, 3)
+2025-08-10 20:56:50,853 - imanalysis - DEBUG - analayze_channel_roc :: RGB :: Loaded Boundary masks for bounds starting with 20
+2025-08-10 20:56:50,854 - imanalysis - DEBUG - analayze_channel_roc :: RGB Ground truth masks ::  dtype uint8, Shape (180000, 400) || Boundary masks :: dtype uint8 Shape (1980000, 400)
+2025-08-10 20:56:50,992 - imanalysis - DEBUG - analayze_channel_roc :: Mats loaded to gpu :: Free memory :: 16368 MB
+2025-08-10 20:56:50,994 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Lower bound: 20, Upper bounds: [40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240], Mask shape: (180000, 400)
+2025-08-10 20:56:50,994 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary count: 11, Mask height: 180000, Mask width: 400
+2025-08-10 20:56:50,994 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Computing confusion matrix masks for 11 boundaries
+2025-08-10 20:56:50,995 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Confusion matrix masks computed
+2025-08-10 20:56:50,996 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 1/11 with bounds (20, 40)
+2025-08-10 20:56:51,032 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 1 results: TPR=0.001617381232790649, FPR=0.07682137936353683, Precision=0.01922999881207943, Accuracy=0.4787929952144623
+2025-08-10 20:56:51,032 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:51,032 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 2/11 with bounds (20, 60)
+2025-08-10 20:56:51,050 - imanalysis - DEBUG - analayze_channel_roc :: YCrCb :: Loaded Boundary masks for bounds starting with 20
+2025-08-10 20:56:51,050 - imanalysis - DEBUG - analayze_channel_roc :: YCrCb Ground truth masks ::  dtype uint8, Shape (180000, 400) || Boundary masks :: dtype uint8 Shape (1980000, 400)
+2025-08-10 20:56:51,184 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 2 results: TPR=0.008020775392651558, FPR=0.4108160734176636, Precision=0.017857683822512627, Accuracy=0.30894148349761963
+2025-08-10 20:56:51,185 - imanalysis - DEBUG - analayze_channel_roc :: Mats loaded to gpu :: Free memory :: 16368 MB
+2025-08-10 20:56:51,185 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:51,185 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 3/11 with bounds (20, 80)
+2025-08-10 20:56:51,186 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Lower bound: 20, Upper bounds: [40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240], Mask shape: (180000, 400)
+2025-08-10 20:56:51,186 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary count: 11, Mask height: 180000, Mask width: 400
+2025-08-10 20:56:51,186 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Computing confusion matrix masks for 11 boundaries
+2025-08-10 20:56:51,187 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Confusion matrix masks computed
+2025-08-10 20:56:51,187 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 1/11 with bounds (20, 40)
+2025-08-10 20:56:51,202 - imanalysis - DEBUG - analayze_channel_roc :: HSV :: Loaded Boundary masks for bounds starting with 20
+2025-08-10 20:56:51,202 - imanalysis - DEBUG - analayze_channel_roc :: HSV Ground truth masks ::  dtype uint8, Shape (180000, 400) || Boundary masks :: dtype uint8 Shape (1980000, 400)
+2025-08-10 20:56:51,373 - imanalysis - DEBUG - analayze_channel_roc :: Mats loaded to gpu :: Free memory :: 16368 MB
+2025-08-10 20:56:51,374 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Lower bound: 20, Upper bounds: [40, 60, 80, 100, 120, 140, 160, 180, 200, 220, 240], Mask shape: (180000, 400)
+2025-08-10 20:56:51,374 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary count: 11, Mask height: 180000, Mask width: 400
+2025-08-10 20:56:51,374 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Computing confusion matrix masks for 11 boundaries
+2025-08-10 20:56:51,447 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Confusion matrix masks computed
+2025-08-10 20:56:51,447 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 1/11 with bounds (20, 40)
+2025-08-10 20:56:51,457 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 3 results: TPR=0.02367493137717247, FPR=0.735319197177887, Precision=0.029111459851264954, Accuracy=0.14846545457839966
+2025-08-10 20:56:51,457 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 1 results: TPR=0.0, FPR=0.0, Precision=0.0, Accuracy=0.5177904367446899
+2025-08-10 20:56:51,458 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:51,458 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:51,458 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 4/11 with bounds (20, 100)
+2025-08-10 20:56:51,458 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 2/11 with bounds (20, 60)
+2025-08-10 20:56:51,463 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 1 results: TPR=0.24765059351921082, FPR=0.0019295664969831705, Precision=0.9917030334472656, Accuracy=0.6362108588218689
+2025-08-10 20:56:51,463 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:51,463 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 2/11 with bounds (20, 60)
+2025-08-10 20:56:51,468 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 4 results: TPR=0.05177123472094536, FPR=0.8375210165977478, Precision=0.05443354696035385, Accuracy=0.10909461230039597
+2025-08-10 20:56:51,469 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 2 results: TPR=0.0, FPR=0.00014146650210022926, Precision=0.0, Accuracy=0.517717182636261
+2025-08-10 20:56:51,469 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:51,469 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:51,469 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 5/11 with bounds (20, 120)
+2025-08-10 20:56:51,469 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 3/11 with bounds (20, 80)
+2025-08-10 20:56:51,474 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 2 results: TPR=0.3561888635158539, FPR=0.006595868617296219, Precision=0.9805033802986145, Accuracy=0.6861328482627869
+2025-08-10 20:56:51,474 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:51,474 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 3/11 with bounds (20, 80)
+2025-08-10 20:56:51,479 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 5 results: TPR=0.11944826692342758, FPR=0.8967224955558777, Precision=0.11036139726638794, Accuracy=0.11107519268989563
+2025-08-10 20:56:51,479 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 3 results: TPR=0.0013205992290750146, FPR=0.11832575500011444, Precision=0.010286861099302769, Accuracy=0.4571593105792999
+2025-08-10 20:56:51,480 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:51,480 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:51,480 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 6/11 with bounds (20, 140)
+2025-08-10 20:56:51,480 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 4/11 with bounds (20, 100)
+2025-08-10 20:56:51,484 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 3 results: TPR=0.40625932812690735, FPR=0.019502930343151093, Precision=0.9509786367416382, Accuracy=0.7035940885543823
+2025-08-10 20:56:51,485 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:51,485 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 4/11 with bounds (20, 100)
+2025-08-10 20:56:51,489 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 6 results: TPR=0.26437321305274963, FPR=0.9247362613677979, Precision=0.21026340126991272, Accuracy=0.16645413637161255
+2025-08-10 20:56:51,489 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 4 results: TPR=0.012215067632496357, FPR=0.5382568836212158, Precision=0.020696893334388733, Accuracy=0.24497638642787933
+2025-08-10 20:56:51,489 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:51,490 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:51,490 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 7/11 with bounds (20, 160)
+2025-08-10 20:56:51,490 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 5/11 with bounds (20, 120)
+2025-08-10 20:56:51,492 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 4 results: TPR=0.43682625889778137, FPR=0.060322102159261703, Precision=0.8708668351173401, Accuracy=0.6971979737281799
+2025-08-10 20:56:51,493 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:51,493 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 5/11 with bounds (20, 120)
+2025-08-10 20:56:51,499 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 7 results: TPR=0.4423348307609558, FPR=0.9351537227630615, Precision=0.3057985305786133, Accuracy=0.2468748390674591
+2025-08-10 20:56:51,500 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 5 results: TPR=0.18960022926330566, FPR=0.9821987152099609, Precision=0.1523783653974533, Accuracy=0.10064438730478287
+2025-08-10 20:56:51,500 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:51,500 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:51,500 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 8/11 with bounds (20, 180)
+2025-08-10 20:56:51,500 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 6/11 with bounds (20, 140)
+2025-08-10 20:56:51,501 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 5 results: TPR=0.4552607536315918, FPR=0.13660092651844025, Precision=0.7563211917877197, Accuracy=0.6665908694267273
+2025-08-10 20:56:51,501 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:51,501 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 6/11 with bounds (20, 140)
+2025-08-10 20:56:51,510 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 8 results: TPR=0.6160966157913208, FPR=0.9395127296447754, Precision=0.3791519105434418, Accuracy=0.3284073770046234
+2025-08-10 20:56:51,510 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 6 results: TPR=0.999982476234436, FPR=0.9994500279426575, Precision=0.48234254121780396, Accuracy=0.48248589038848877
+2025-08-10 20:56:51,510 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 6 results: TPR=0.46598225831985474, FPR=0.26808515191078186, Precision=0.6181376576423645, Accuracy=0.6036795973777771
+2025-08-10 20:56:51,511 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:51,511 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:51,511 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:51,511 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 9/11 with bounds (20, 200)
+2025-08-10 20:56:51,511 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 7/11 with bounds (20, 160)
+2025-08-10 20:56:51,511 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 7/11 with bounds (20, 160)
+2025-08-10 20:56:51,521 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 9 results: TPR=0.7873789072036743, FPR=0.9410425424575806, Precision=0.4379538297653198, Accuracy=0.41020920872688293
+2025-08-10 20:56:51,521 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 7 results: TPR=0.4722176492214203, FPR=0.49566414952278137, Precision=0.4701230525970459, Accuracy=0.48884811997413635
+2025-08-10 20:56:51,521 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 7 results: TPR=1.0, FPR=0.9998974204063416, Precision=0.4822351634502411, Accuracy=0.48226267099380493
+2025-08-10 20:56:51,521 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:51,521 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:51,522 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:51,522 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 10/11 with bounds (20, 220)
+2025-08-10 20:56:51,522 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 8/11 with bounds (20, 180)
+2025-08-10 20:56:51,522 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 8/11 with bounds (20, 180)
+2025-08-10 20:56:51,532 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 10 results: TPR=0.9153041243553162, FPR=0.941546618938446, Precision=0.47515565156936646, Accuracy=0.47163495421409607
+2025-08-10 20:56:51,532 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 8 results: TPR=0.47457772493362427, FPR=0.8445658683776855, Precision=0.3435330092906952, Accuracy=0.30932822823524475
+2025-08-10 20:56:51,532 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 8 results: TPR=1.0, FPR=1.0, Precision=0.48220956325531006, Accuracy=0.48220956325531006
+2025-08-10 20:56:51,532 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:51,532 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:51,532 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:51,533 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 11/11 with bounds (20, 240)
+2025-08-10 20:56:51,533 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 9/11 with bounds (20, 200)
+2025-08-10 20:56:51,533 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 9/11 with bounds (20, 200)
+2025-08-10 20:56:51,543 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 9 results: TPR=0.475700318813324, FPR=0.8737809658050537, Precision=0.33643239736557007, Accuracy=0.294742226600647
+2025-08-10 20:56:51,543 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 9 results: TPR=1.0, FPR=1.0, Precision=0.48220956325531006, Accuracy=0.48220956325531006
+2025-08-10 20:56:51,543 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 11 results: TPR=0.9763867259025574, FPR=0.9417444467544556, Precision=0.49123415350914, Accuracy=0.5009872317314148
+2025-08-10 20:56:51,543 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:51,543 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:51,543 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:51,543 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 10/11 with bounds (20, 220)
+2025-08-10 20:56:51,544 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 10/11 with bounds (20, 220)
+2025-08-10 20:56:51,545 - imanalysis - DEBUG - analayze_channel_roc :: RGB :: Computed confusion matrix for bounds starting with 20
+2025-08-10 20:56:51,545 - imanalysis - DEBUG - load_boundary_batch :: RGB :: Loading batch for camera DSLR and color tag RGB
+2025-08-10 20:56:51,553 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 10 results: TPR=0.4762945771217346, FPR=0.913523256778717, Precision=0.32685062289237976, Accuracy=0.2744506299495697
+2025-08-10 20:56:51,553 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 10 results: TPR=1.0, FPR=1.0, Precision=0.48220956325531006, Accuracy=0.48220956325531006
+2025-08-10 20:56:51,553 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:51,553 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:51,553 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 11/11 with bounds (20, 240)
+2025-08-10 20:56:51,554 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 11/11 with bounds (20, 240)
+2025-08-10 20:56:51,561 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 11 results: TPR=0.47665178775787354, FPR=0.9816208481788635, Precision=0.3113938868045807, Accuracy=0.23936255276203156
+2025-08-10 20:56:51,561 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 11 results: TPR=1.0, FPR=1.0, Precision=0.48220956325531006, Accuracy=0.48220956325531006
+2025-08-10 20:56:51,562 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:51,562 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:51,563 - imanalysis - DEBUG - analayze_channel_roc :: HSV :: Computed confusion matrix for bounds starting with 20
+2025-08-10 20:56:51,564 - imanalysis - DEBUG - analayze_channel_roc :: YCrCb :: Computed confusion matrix for bounds starting with 20
+2025-08-10 20:56:51,564 - imanalysis - DEBUG - load_boundary_batch :: HSV :: Loading batch for camera DSLR and color tag HSV
+2025-08-10 20:56:51,564 - imanalysis - DEBUG - load_boundary_batch :: YCrCb :: Loading batch for camera DSLR and color tag YCrCb
+2025-08-10 20:56:53,148 - imanalysis - DEBUG - load_boundary_batch :: YCrCb :: Ground truth mask is (180000, 400), Reference is (180000, 400, 3)
+2025-08-10 20:56:53,152 - imanalysis - DEBUG - load_boundary_batch :: HSV :: Ground truth mask is (180000, 400), Reference is (180000, 400, 3)
+2025-08-10 20:56:53,152 - imanalysis - DEBUG - load_boundary_batch :: RGB :: Ground truth mask is (180000, 400), Reference is (180000, 400, 3)
+2025-08-10 20:56:53,607 - imanalysis - DEBUG - analayze_channel_roc :: RGB :: Loaded Boundary masks for bounds starting with 40
+2025-08-10 20:56:53,608 - imanalysis - DEBUG - analayze_channel_roc :: RGB Ground truth masks ::  dtype uint8, Shape (180000, 400) || Boundary masks :: dtype uint8 Shape (1800000, 400)
+2025-08-10 20:56:53,767 - imanalysis - DEBUG - analayze_channel_roc :: YCrCb :: Loaded Boundary masks for bounds starting with 40
+2025-08-10 20:56:53,767 - imanalysis - DEBUG - analayze_channel_roc :: Mats loaded to gpu :: Free memory :: 16368 MB
+2025-08-10 20:56:53,767 - imanalysis - DEBUG - analayze_channel_roc :: HSV :: Loaded Boundary masks for bounds starting with 40
+2025-08-10 20:56:53,767 - imanalysis - DEBUG - analayze_channel_roc :: YCrCb Ground truth masks ::  dtype uint8, Shape (180000, 400) || Boundary masks :: dtype uint8 Shape (1800000, 400)
+2025-08-10 20:56:53,768 - imanalysis - DEBUG - analayze_channel_roc :: HSV Ground truth masks ::  dtype uint8, Shape (180000, 400) || Boundary masks :: dtype uint8 Shape (1800000, 400)
+2025-08-10 20:56:53,785 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Lower bound: 40, Upper bounds: [60, 80, 100, 120, 140, 160, 180, 200, 220, 240], Mask shape: (180000, 400)
+2025-08-10 20:56:53,912 - imanalysis - DEBUG - analayze_channel_roc :: Mats loaded to gpu :: Free memory :: 16368 MB
+2025-08-10 20:56:54,024 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary count: 10, Mask height: 180000, Mask width: 400
+2025-08-10 20:56:54,025 - imanalysis - DEBUG - analayze_channel_roc :: Mats loaded to gpu :: Free memory :: 16368 MB
+2025-08-10 20:56:54,025 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Computing confusion matrix masks for 10 boundaries
+2025-08-10 20:56:54,025 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Lower bound: 40, Upper bounds: [60, 80, 100, 120, 140, 160, 180, 200, 220, 240], Mask shape: (180000, 400)
+2025-08-10 20:56:54,025 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary count: 10, Mask height: 180000, Mask width: 400
+2025-08-10 20:56:54,025 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Computing confusion matrix masks for 10 boundaries
+2025-08-10 20:56:54,025 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Lower bound: 40, Upper bounds: [60, 80, 100, 120, 140, 160, 180, 200, 220, 240], Mask shape: (180000, 400)
+2025-08-10 20:56:54,026 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary count: 10, Mask height: 180000, Mask width: 400
+2025-08-10 20:56:54,026 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Computing confusion matrix masks for 10 boundaries
+2025-08-10 20:56:54,028 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Confusion matrix masks computed
+2025-08-10 20:56:54,028 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Confusion matrix masks computed
+2025-08-10 20:56:54,028 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 1/10 with bounds (40, 60)
+2025-08-10 20:56:54,028 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 1/10 with bounds (40, 60)
+2025-08-10 20:56:54,173 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Confusion matrix masks computed
+2025-08-10 20:56:54,174 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 1/10 with bounds (40, 60)
+2025-08-10 20:56:54,295 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 1 results: TPR=0.0065504880622029305, FPR=0.3378728926181793, Precision=0.017734983935952187, Accuracy=0.3460017740726471
+2025-08-10 20:56:54,295 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 1 results: TPR=0.0, FPR=0.00014146650210022926, Precision=0.0, Accuracy=0.517717182636261
+2025-08-10 20:56:54,295 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:54,295 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:54,295 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 2/10 with bounds (40, 80)
+2025-08-10 20:56:54,295 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 2/10 with bounds (40, 80)
+2025-08-10 20:56:54,307 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 1 results: TPR=0.11644179373979568, FPR=0.004797656554728746, Precision=0.9576320648193359, Accuracy=0.5714555382728577
+2025-08-10 20:56:54,308 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:54,308 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 2/10 with bounds (40, 80)
+2025-08-10 20:56:54,315 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 2 results: TPR=0.0013205992290750146, FPR=0.11832575500011444, Precision=0.010286861099302769, Accuracy=0.4571593105792999
+2025-08-10 20:56:54,315 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 2 results: TPR=0.022204644978046417, FPR=0.6623760461807251, Precision=0.03027401491999626, Accuracy=0.18552574515342712
+2025-08-10 20:56:54,315 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:54,316 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:54,316 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 3/10 with bounds (40, 100)
+2025-08-10 20:56:54,316 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 3/10 with bounds (40, 100)
+2025-08-10 20:56:54,339 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 2 results: TPR=0.16651223599910736, FPR=0.017704717814922333, Precision=0.8975271582603455, Accuracy=0.5889168977737427
+2025-08-10 20:56:54,339 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:54,339 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 3/10 with bounds (40, 100)
+2025-08-10 20:56:54,344 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 3 results: TPR=0.012215067632496357, FPR=0.5382568836212158, Precision=0.020696893334388733, Accuracy=0.24497638642787933
+2025-08-10 20:56:54,344 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 3 results: TPR=0.050300948321819305, FPR=0.7645778656005859, Precision=0.057731255888938904, Accuracy=0.14615489542484283
+2025-08-10 20:56:54,345 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:54,345 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:54,345 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 4/10 with bounds (40, 120)
+2025-08-10 20:56:54,345 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 4/10 with bounds (40, 120)
+2025-08-10 20:56:54,359 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 3 results: TPR=0.19707916676998138, FPR=0.058523889631032944, Precision=0.7582260966300964, Accuracy=0.5825207829475403
+2025-08-10 20:56:54,359 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:54,359 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 4/10 with bounds (40, 120)
+2025-08-10 20:56:54,365 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 4 results: TPR=0.18960022926330566, FPR=0.9821987152099609, Precision=0.1523783653974533, Accuracy=0.10064438730478287
+2025-08-10 20:56:54,365 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:54,365 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 4 results: TPR=0.11797798424959183, FPR=0.823779284954071, Precision=0.11767888814210892, Accuracy=0.1481354832649231
+2025-08-10 20:56:54,365 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 5/10 with bounds (40, 140)
+2025-08-10 20:56:54,365 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:54,365 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 5/10 with bounds (40, 140)
+2025-08-10 20:56:54,380 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 4 results: TPR=0.2155136615037918, FPR=0.1348027139902115, Precision=0.5982118844985962, Accuracy=0.5519136786460876
+2025-08-10 20:56:54,380 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:54,380 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 5/10 with bounds (40, 140)
+2025-08-10 20:56:54,384 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 5 results: TPR=0.999982476234436, FPR=0.9994500279426575, Precision=0.48234254121780396, Accuracy=0.48248589038848877
+2025-08-10 20:56:54,384 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 5 results: TPR=0.2629029452800751, FPR=0.8517930507659912, Precision=0.22326314449310303, Accuracy=0.20351442694664001
+2025-08-10 20:56:54,384 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:54,385 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:54,385 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 6/10 with bounds (40, 160)
+2025-08-10 20:56:54,385 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 6/10 with bounds (40, 160)
+2025-08-10 20:56:54,399 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 5 results: TPR=0.22623518109321594, FPR=0.2662869393825531, Precision=0.44171831011772156, Accuracy=0.48900237679481506
+2025-08-10 20:56:54,399 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:54,399 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 6/10 with bounds (40, 160)
+2025-08-10 20:56:54,404 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 6 results: TPR=1.0, FPR=0.9998974204063416, Precision=0.4822351634502411, Accuracy=0.48226267099380493
+2025-08-10 20:56:54,404 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 6 results: TPR=0.44086453318595886, FPR=0.8622105717658997, Precision=0.3225770592689514, Accuracy=0.2839351296424866
+2025-08-10 20:56:54,404 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:54,404 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:54,404 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 7/10 with bounds (40, 180)
+2025-08-10 20:56:54,405 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 7/10 with bounds (40, 180)
+2025-08-10 20:56:54,418 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 6 results: TPR=0.2324705719947815, FPR=0.4938659369945526, Precision=0.30476853251457214, Accuracy=0.3741709291934967
+2025-08-10 20:56:54,418 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:54,419 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 7/10 with bounds (40, 180)
+2025-08-10 20:56:54,423 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 7 results: TPR=1.0, FPR=1.0, Precision=0.48220956325531006, Accuracy=0.48220956325531006
+2025-08-10 20:56:54,423 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 7 results: TPR=0.6146263480186462, FPR=0.8665695786476135, Precision=0.39778098464012146, Accuracy=0.36546769738197327
+2025-08-10 20:56:54,423 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:54,423 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:54,423 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 8/10 with bounds (40, 200)
+2025-08-10 20:56:54,423 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 8/10 with bounds (40, 200)
+2025-08-10 20:56:54,438 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 7 results: TPR=0.23483064770698547, FPR=0.8427677154541016, Precision=0.20603086054325104, Accuracy=0.19465097784996033
+2025-08-10 20:56:54,438 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:54,438 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 8/10 with bounds (40, 200)
+2025-08-10 20:56:54,443 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 8 results: TPR=1.0, FPR=1.0, Precision=0.48220956325531006, Accuracy=0.48220956325531006
+2025-08-10 20:56:54,443 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 8 results: TPR=0.7859086394309998, FPR=0.8680993914604187, Precision=0.4574388861656189, Accuracy=0.4472695291042328
+2025-08-10 20:56:54,443 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:54,443 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:54,443 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 9/10 with bounds (40, 220)
+2025-08-10 20:56:54,443 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 9/10 with bounds (40, 220)
+2025-08-10 20:56:54,457 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 8 results: TPR=0.235953226685524, FPR=0.871982753276825, Precision=0.2012776881456375, Accuracy=0.18006500601768494
+2025-08-10 20:56:54,457 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:54,457 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 9/10 with bounds (40, 220)
+2025-08-10 20:56:54,462 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 9 results: TPR=1.0, FPR=1.0, Precision=0.48220956325531006, Accuracy=0.48220956325531006
+2025-08-10 20:56:54,462 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 9 results: TPR=0.9138337969779968, FPR=0.8686034083366394, Precision=0.4948927164077759, Accuracy=0.5086953043937683
+2025-08-10 20:56:54,462 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:54,462 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:54,462 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 10/10 with bounds (40, 240)
+2025-08-10 20:56:54,462 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 10/10 with bounds (40, 240)
+2025-08-10 20:56:54,476 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 9 results: TPR=0.23654748499393463, FPR=0.9117249846458435, Precision=0.19460181891918182, Accuracy=0.15977340936660767
+2025-08-10 20:56:54,477 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:54,477 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 10/10 with bounds (40, 240)
+2025-08-10 20:56:54,481 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 10 results: TPR=1.0, FPR=1.0, Precision=0.48220956325531006, Accuracy=0.48220956325531006
+2025-08-10 20:56:54,481 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 10 results: TPR=0.974916398525238, FPR=0.8688012361526489, Precision=0.5110095739364624, Accuracy=0.5380474328994751
+2025-08-10 20:56:54,481 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:54,482 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:54,483 - imanalysis - DEBUG - analayze_channel_roc :: YCrCb :: Computed confusion matrix for bounds starting with 40
+2025-08-10 20:56:54,484 - imanalysis - DEBUG - analayze_channel_roc :: RGB :: Computed confusion matrix for bounds starting with 40
+2025-08-10 20:56:54,484 - imanalysis - DEBUG - load_boundary_batch :: YCrCb :: Loading batch for camera DSLR and color tag YCrCb
+2025-08-10 20:56:54,484 - imanalysis - DEBUG - load_boundary_batch :: RGB :: Loading batch for camera DSLR and color tag RGB
+2025-08-10 20:56:54,493 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 10 results: TPR=0.23690469563007355, FPR=0.9798226952552795, Precision=0.18378585577011108, Accuracy=0.12468533217906952
+2025-08-10 20:56:54,493 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:54,500 - imanalysis - DEBUG - analayze_channel_roc :: HSV :: Computed confusion matrix for bounds starting with 40
+2025-08-10 20:56:54,500 - imanalysis - DEBUG - load_boundary_batch :: HSV :: Loading batch for camera DSLR and color tag HSV
+2025-08-10 20:56:56,117 - imanalysis - DEBUG - load_boundary_batch :: HSV :: Ground truth mask is (180000, 400), Reference is (180000, 400, 3)
+2025-08-10 20:56:56,119 - imanalysis - DEBUG - load_boundary_batch :: YCrCb :: Ground truth mask is (180000, 400), Reference is (180000, 400, 3)
+2025-08-10 20:56:56,120 - imanalysis - DEBUG - load_boundary_batch :: RGB :: Ground truth mask is (180000, 400), Reference is (180000, 400, 3)
+2025-08-10 20:56:56,535 - imanalysis - DEBUG - analayze_channel_roc :: HSV :: Loaded Boundary masks for bounds starting with 60
+2025-08-10 20:56:56,535 - imanalysis - DEBUG - analayze_channel_roc :: HSV Ground truth masks ::  dtype uint8, Shape (180000, 400) || Boundary masks :: dtype uint8 Shape (1620000, 400)
+2025-08-10 20:56:56,652 - imanalysis - DEBUG - analayze_channel_roc :: Mats loaded to gpu :: Free memory :: 16368 MB
+2025-08-10 20:56:56,656 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Lower bound: 60, Upper bounds: [80, 100, 120, 140, 160, 180, 200, 220, 240], Mask shape: (180000, 400)
+2025-08-10 20:56:56,656 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary count: 9, Mask height: 180000, Mask width: 400
+2025-08-10 20:56:56,656 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Computing confusion matrix masks for 9 boundaries
+2025-08-10 20:56:56,657 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Confusion matrix masks computed
+2025-08-10 20:56:56,657 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 1/9 with bounds (60, 80)
+2025-08-10 20:56:56,674 - imanalysis - DEBUG - analayze_channel_roc :: YCrCb :: Loaded Boundary masks for bounds starting with 60
+2025-08-10 20:56:56,674 - imanalysis - DEBUG - analayze_channel_roc :: YCrCb Ground truth masks ::  dtype uint8, Shape (180000, 400) || Boundary masks :: dtype uint8 Shape (1620000, 400)
+2025-08-10 20:56:56,830 - imanalysis - DEBUG - analayze_channel_roc :: RGB :: Loaded Boundary masks for bounds starting with 60
+2025-08-10 20:56:56,830 - imanalysis - DEBUG - analayze_channel_roc :: Mats loaded to gpu :: Free memory :: 16368 MB
+2025-08-10 20:56:56,830 - imanalysis - DEBUG - analayze_channel_roc :: RGB Ground truth masks ::  dtype uint8, Shape (180000, 400) || Boundary masks :: dtype uint8 Shape (1620000, 400)
+2025-08-10 20:56:56,844 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Lower bound: 60, Upper bounds: [80, 100, 120, 140, 160, 180, 200, 220, 240], Mask shape: (180000, 400)
+2025-08-10 20:56:56,946 - imanalysis - DEBUG - analayze_channel_roc :: Mats loaded to gpu :: Free memory :: 16368 MB
+2025-08-10 20:56:56,946 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary count: 9, Mask height: 180000, Mask width: 400
+2025-08-10 20:56:56,946 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Computing confusion matrix masks for 9 boundaries
+2025-08-10 20:56:56,946 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Lower bound: 60, Upper bounds: [80, 100, 120, 140, 160, 180, 200, 220, 240], Mask shape: (180000, 400)
+2025-08-10 20:56:56,946 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary count: 9, Mask height: 180000, Mask width: 400
+2025-08-10 20:56:56,946 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Computing confusion matrix masks for 9 boundaries
+2025-08-10 20:56:56,948 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Confusion matrix masks computed
+2025-08-10 20:56:56,948 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 1/9 with bounds (60, 80)
+2025-08-10 20:56:56,948 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Confusion matrix masks computed
+2025-08-10 20:56:56,948 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 1/9 with bounds (60, 80)
+2025-08-10 20:56:57,002 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 1 results: TPR=0.05343493074178696, FPR=0.013253860175609589, Precision=0.7896777391433716, Accuracy=0.5366945266723633
+2025-08-10 20:56:57,002 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:57,002 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 2/9 with bounds (60, 100)
+2025-08-10 20:56:57,007 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 1 results: TPR=0.0013205992290750146, FPR=0.11824241280555725, Precision=0.010294036939740181, Accuracy=0.4572024345397949
+2025-08-10 20:56:57,007 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 1 results: TPR=0.016189826652407646, FPR=0.36537009477615356, Precision=0.039630480110645294, Accuracy=0.3364121615886688
+2025-08-10 20:56:57,008 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:57,008 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:57,008 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 2/9 with bounds (60, 100)
+2025-08-10 20:56:57,008 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 2/9 with bounds (60, 100)
+2025-08-10 20:56:57,013 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 2 results: TPR=0.08400186151266098, FPR=0.0540730319917202, Precision=0.5912926197052002, Accuracy=0.5302984714508057
+2025-08-10 20:56:57,013 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:57,013 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 3/9 with bounds (60, 120)
+2025-08-10 20:56:57,019 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 2 results: TPR=0.012215067632496357, FPR=0.5381735563278198, Precision=0.020700033754110336, Accuracy=0.2450195550918579
+2025-08-10 20:56:57,019 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 2 results: TPR=0.044286128133535385, FPR=0.4675719439983368, Precision=0.08105684816837311, Accuracy=0.2970413267612457
+2025-08-10 20:56:57,019 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:57,019 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:57,019 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 3/9 with bounds (60, 120)
+2025-08-10 20:56:57,019 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 3/9 with bounds (60, 120)
+2025-08-10 20:56:57,024 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 3 results: TPR=0.102436363697052, FPR=0.13035185635089874, Precision=0.42258089780807495, Accuracy=0.49969127774238586
+2025-08-10 20:56:57,024 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:57,024 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 4/9 with bounds (60, 140)
+2025-08-10 20:56:57,029 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 3 results: TPR=0.18960022926330566, FPR=0.9821153283119202, Precision=0.1523893177509308, Accuracy=0.10068754106760025
+2025-08-10 20:56:57,030 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 3 results: TPR=0.1119631677865982, FPR=0.5267733931541443, Precision=0.16523350775241852, Accuracy=0.29902195930480957
+2025-08-10 20:56:57,030 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:57,030 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:57,030 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 4/9 with bounds (60, 140)
+2025-08-10 20:56:57,030 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 4/9 with bounds (60, 140)
+2025-08-10 20:56:57,034 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 4 results: TPR=0.11315786838531494, FPR=0.26183608174324036, Precision=0.2869739234447479, Accuracy=0.43678003549575806
+2025-08-10 20:56:57,034 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:57,034 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 5/9 with bounds (60, 160)
+2025-08-10 20:56:57,041 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 4 results: TPR=0.999982476234436, FPR=0.9993666410446167, Precision=0.48236340284347534, Accuracy=0.48252904415130615
+2025-08-10 20:56:57,041 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 4 results: TPR=0.25688812136650085, FPR=0.5547870993614197, Precision=0.3012956380844116, Accuracy=0.3544008731842041
+2025-08-10 20:56:57,041 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:57,041 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:57,041 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 5/9 with bounds (60, 160)
+2025-08-10 20:56:57,041 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 5/9 with bounds (60, 160)
+2025-08-10 20:56:57,043 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 5 results: TPR=0.1193932592868805, FPR=0.48941507935523987, Precision=0.18512853980064392, Accuracy=0.3219485580921173
+2025-08-10 20:56:57,043 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:57,043 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 6/9 with bounds (60, 180)
+2025-08-10 20:56:57,050 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 5 results: TPR=1.0, FPR=0.9998140335083008, Precision=0.4822559654712677, Accuracy=0.48230576515197754
+2025-08-10 20:56:57,050 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 5 results: TPR=0.43484973907470703, FPR=0.5652046203613281, Precision=0.4174186885356903, Accuracy=0.43482154607772827
+2025-08-10 20:56:57,050 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:57,050 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:57,051 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 6/9 with bounds (60, 180)
+2025-08-10 20:56:57,051 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 6/9 with bounds (60, 180)
+2025-08-10 20:56:57,053 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 6 results: TPR=0.12175334244966507, FPR=0.8383168578147888, Precision=0.11914091557264328, Accuracy=0.14242862164974213
+2025-08-10 20:56:57,053 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:57,053 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 7/9 with bounds (60, 200)
+2025-08-10 20:56:57,060 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 6 results: TPR=0.6086114645004272, FPR=0.569563627243042, Precision=0.49877944588661194, Accuracy=0.5163540840148926
+2025-08-10 20:56:57,060 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 6 results: TPR=1.0, FPR=0.9999166131019592, Precision=0.4822303354740143, Accuracy=0.48225271701812744
+2025-08-10 20:56:57,060 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:57,060 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:57,060 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 7/9 with bounds (60, 200)
+2025-08-10 20:56:57,060 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 7/9 with bounds (60, 200)
+2025-08-10 20:56:57,062 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 7 results: TPR=0.12287592142820358, FPR=0.8675318956375122, Precision=0.11653407663106918, Accuracy=0.12784264981746674
+2025-08-10 20:56:57,062 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:57,062 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 8/9 with bounds (60, 220)
+2025-08-10 20:56:57,069 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 7 results: TPR=1.0, FPR=0.9999166131019592, Precision=0.4822303354740143, Accuracy=0.48225271701812744
+2025-08-10 20:56:57,069 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 7 results: TPR=0.7798938155174255, FPR=0.5710934400558472, Precision=0.5598154067993164, Accuracy=0.5981559157371521
+2025-08-10 20:56:57,069 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:57,069 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:57,069 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 8/9 with bounds (60, 220)
+2025-08-10 20:56:57,069 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 8/9 with bounds (60, 220)
+2025-08-10 20:56:57,071 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 8 results: TPR=0.12347017973661423, FPR=0.9072741866111755, Precision=0.11248187720775604, Accuracy=0.10755105316638947
+2025-08-10 20:56:57,072 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:57,072 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 9/9 with bounds (60, 240)
+2025-08-10 20:56:57,078 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 8 results: TPR=0.9078190326690674, FPR=0.5715975165367126, Precision=0.5966240167617798, Accuracy=0.65958172082901
+2025-08-10 20:56:57,079 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 8 results: TPR=1.0, FPR=0.9999166131019592, Precision=0.4822303354740143, Accuracy=0.48225271701812744
+2025-08-10 20:56:57,079 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:57,079 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:57,079 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 9/9 with bounds (60, 240)
+2025-08-10 20:56:57,079 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 9/9 with bounds (60, 240)
+2025-08-10 20:56:57,081 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 9 results: TPR=0.12382739037275314, FPR=0.9753718376159668, Precision=0.10572971403598785, Accuracy=0.07246298342943192
+2025-08-10 20:56:57,081 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:57,082 - imanalysis - DEBUG - analayze_channel_roc :: HSV :: Computed confusion matrix for bounds starting with 60
+2025-08-10 20:56:57,082 - imanalysis - DEBUG - load_boundary_batch :: HSV :: Loading batch for camera DSLR and color tag HSV
+2025-08-10 20:56:57,086 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 9 results: TPR=1.0, FPR=0.9999166131019592, Precision=0.4822303354740143, Accuracy=0.48225271701812744
+2025-08-10 20:56:57,087 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 9 results: TPR=0.9689015746116638, FPR=0.5717952847480774, Precision=0.6121099591255188, Accuracy=0.6889339089393616
+2025-08-10 20:56:57,087 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:57,087 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:57,088 - imanalysis - DEBUG - analayze_channel_roc :: YCrCb :: Computed confusion matrix for bounds starting with 60
+2025-08-10 20:56:57,089 - imanalysis - DEBUG - analayze_channel_roc :: RGB :: Computed confusion matrix for bounds starting with 60
+2025-08-10 20:56:57,089 - imanalysis - DEBUG - load_boundary_batch :: YCrCb :: Loading batch for camera DSLR and color tag YCrCb
+2025-08-10 20:56:57,089 - imanalysis - DEBUG - load_boundary_batch :: RGB :: Loading batch for camera DSLR and color tag RGB
+2025-08-10 20:56:58,586 - imanalysis - DEBUG - load_boundary_batch :: HSV :: Ground truth mask is (180000, 400), Reference is (180000, 400, 3)
+2025-08-10 20:56:58,637 - imanalysis - DEBUG - load_boundary_batch :: YCrCb :: Ground truth mask is (180000, 400), Reference is (180000, 400, 3)
+2025-08-10 20:56:58,660 - imanalysis - DEBUG - load_boundary_batch :: RGB :: Ground truth mask is (180000, 400), Reference is (180000, 400, 3)
+2025-08-10 20:56:58,963 - imanalysis - DEBUG - analayze_channel_roc :: HSV :: Loaded Boundary masks for bounds starting with 80
+2025-08-10 20:56:58,964 - imanalysis - DEBUG - analayze_channel_roc :: HSV Ground truth masks ::  dtype uint8, Shape (180000, 400) || Boundary masks :: dtype uint8 Shape (1440000, 400)
+2025-08-10 20:56:59,067 - imanalysis - DEBUG - analayze_channel_roc :: Mats loaded to gpu :: Free memory :: 16368 MB
+2025-08-10 20:56:59,069 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Lower bound: 80, Upper bounds: [100, 120, 140, 160, 180, 200, 220, 240], Mask shape: (180000, 400)
+2025-08-10 20:56:59,069 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary count: 8, Mask height: 180000, Mask width: 400
+2025-08-10 20:56:59,069 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Computing confusion matrix masks for 8 boundaries
+2025-08-10 20:56:59,070 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Confusion matrix masks computed
+2025-08-10 20:56:59,071 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 1/8 with bounds (80, 100)
+2025-08-10 20:56:59,110 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 1 results: TPR=0.03252216801047325, FPR=0.041874539107084274, Precision=0.41971391439437866, Accuracy=0.5117906928062439
+2025-08-10 20:56:59,110 - imanalysis - DEBUG - analayze_channel_roc :: RGB :: Loaded Boundary masks for bounds starting with 80
+2025-08-10 20:56:59,110 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:59,110 - imanalysis - DEBUG - analayze_channel_roc :: RGB Ground truth masks ::  dtype uint8, Shape (180000, 400) || Boundary masks :: dtype uint8 Shape (1440000, 400)
+2025-08-10 20:56:59,111 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 2/8 with bounds (80, 120)
+2025-08-10 20:56:59,226 - imanalysis - DEBUG - analayze_channel_roc :: Mats loaded to gpu :: Free memory :: 16368 MB
+2025-08-10 20:56:59,226 - imanalysis - DEBUG - analayze_channel_roc :: YCrCb :: Loaded Boundary masks for bounds starting with 80
+2025-08-10 20:56:59,227 - imanalysis - DEBUG - analayze_channel_roc :: YCrCb Ground truth masks ::  dtype uint8, Shape (180000, 400) || Boundary masks :: dtype uint8 Shape (1440000, 400)
+2025-08-10 20:56:59,245 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Lower bound: 80, Upper bounds: [100, 120, 140, 160, 180, 200, 220, 240], Mask shape: (180000, 400)
+2025-08-10 20:56:59,337 - imanalysis - DEBUG - analayze_channel_roc :: Mats loaded to gpu :: Free memory :: 16368 MB
+2025-08-10 20:56:59,337 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary count: 8, Mask height: 180000, Mask width: 400
+2025-08-10 20:56:59,337 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Computing confusion matrix masks for 8 boundaries
+2025-08-10 20:56:59,337 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Lower bound: 80, Upper bounds: [100, 120, 140, 160, 180, 200, 220, 240], Mask shape: (180000, 400)
+2025-08-10 20:56:59,337 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary count: 8, Mask height: 180000, Mask width: 400
+2025-08-10 20:56:59,337 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Computing confusion matrix masks for 8 boundaries
+2025-08-10 20:56:59,339 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Confusion matrix masks computed
+2025-08-10 20:56:59,339 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 1/8 with bounds (80, 100)
+2025-08-10 20:56:59,339 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Confusion matrix masks computed
+2025-08-10 20:56:59,339 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 1/8 with bounds (80, 100)
+2025-08-10 20:56:59,387 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 2 results: TPR=0.050956666469573975, FPR=0.11815335601568222, Precision=0.2865499258041382, Accuracy=0.48118355870246887
+2025-08-10 20:56:59,387 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:59,387 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 3/8 with bounds (80, 140)
+2025-08-10 20:56:59,392 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 1 results: TPR=0.011184885166585445, FPR=0.4394327998161316, Precision=0.0231550894677639, Accuracy=0.29564976692199707
+2025-08-10 20:56:59,392 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:59,392 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 2/8 with bounds (80, 120)
+2025-08-10 20:56:59,393 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 1 results: TPR=0.029040595516562462, FPR=0.10922179371118546, Precision=0.1984710693359375, Accuracy=0.4752401113510132
+2025-08-10 20:56:59,393 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:59,393 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 2/8 with bounds (80, 120)
+2025-08-10 20:56:59,397 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 3 results: TPR=0.06167817488312721, FPR=0.24963758885860443, Precision=0.18705330789089203, Accuracy=0.4182722866535187
+2025-08-10 20:56:59,398 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:59,398 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 4/8 with bounds (80, 160)
+2025-08-10 20:56:59,403 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 2 results: TPR=0.1885700523853302, FPR=0.8833745718002319, Precision=0.1658303290605545, Accuracy=0.1513177901506424
+2025-08-10 20:56:59,403 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:59,403 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 3/8 with bounds (80, 140)
+2025-08-10 20:56:59,403 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 2 results: TPR=0.09671763330698013, FPR=0.16842322051525116, Precision=0.34844622015953064, Accuracy=0.47722065448760986
+2025-08-10 20:56:59,403 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:59,403 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 3/8 with bounds (80, 140)
+2025-08-10 20:56:59,408 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 4 results: TPR=0.06791356205940247, FPR=0.47721654176712036, Precision=0.11702323704957962, Accuracy=0.3034408390522003
+2025-08-10 20:56:59,408 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:59,408 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 5/8 with bounds (80, 180)
+2025-08-10 20:56:59,414 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 3 results: TPR=0.9989522695541382, FPR=0.9006259441375732, Precision=0.5081056356430054, Accuracy=0.5331593155860901
+2025-08-10 20:56:59,414 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:59,414 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 4/8 with bounds (80, 160)
+2025-08-10 20:56:59,415 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 3 results: TPR=0.24164257943630219, FPR=0.19643695652484894, Precision=0.5339293479919434, Accuracy=0.5325996279716492
+2025-08-10 20:56:59,415 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:59,415 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 4/8 with bounds (80, 160)
+2025-08-10 20:56:59,418 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 5 results: TPR=0.07027364522218704, FPR=0.8261182904243469, Precision=0.07340443134307861, Accuracy=0.12392088770866394
+2025-08-10 20:56:59,418 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:59,418 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 6/8 with bounds (80, 200)
+2025-08-10 20:56:59,423 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 4 results: TPR=0.9989697933197021, FPR=0.9010733366012573, Precision=0.5079858303070068, Accuracy=0.5329360365867615
+2025-08-10 20:56:59,423 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:59,423 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 5/8 with bounds (80, 180)
+2025-08-10 20:56:59,425 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 4 results: TPR=0.41960418224334717, FPR=0.2068544626235962, Precision=0.6538723707199097, Accuracy=0.6130203604698181
+2025-08-10 20:56:59,425 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:59,425 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 5/8 with bounds (80, 180)
+2025-08-10 20:56:59,427 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 6 results: TPR=0.07139623165130615, FPR=0.8553333878517151, Precision=0.07212889939546585, Accuracy=0.10933491587638855
+2025-08-10 20:56:59,427 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:59,427 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 7/8 with bounds (80, 220)
+2025-08-10 20:56:59,433 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 5 results: TPR=0.9989697933197021, FPR=0.9011759161949158, Precision=0.5079573392868042, Accuracy=0.5328829288482666
+2025-08-10 20:56:59,433 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:59,433 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 6/8 with bounds (80, 200)
+2025-08-10 20:56:59,434 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 5 results: TPR=0.5933659672737122, FPR=0.21121345460414886, Precision=0.7234721183776855, Accuracy=0.6945528984069824
+2025-08-10 20:56:59,434 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:59,434 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 6/8 with bounds (80, 200)
+2025-08-10 20:56:59,437 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 7 results: TPR=0.0719904825091362, FPR=0.8950756192207336, Precision=0.06968318670988083, Accuracy=0.08904331922531128
+2025-08-10 20:56:59,437 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:59,437 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 8/8 with bounds (80, 240)
+2025-08-10 20:56:59,441 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 6 results: TPR=0.9989697933197021, FPR=0.9011759161949158, Precision=0.5079573392868042, Accuracy=0.5328829288482666
+2025-08-10 20:56:59,442 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:59,442 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 7/8 with bounds (80, 220)
+2025-08-10 20:56:59,444 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 6 results: TPR=0.7646483182907104, FPR=0.21274329721927643, Precision=0.7699692845344543, Accuracy=0.7763547301292419
+2025-08-10 20:56:59,444 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:59,444 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 7/8 with bounds (80, 220)
+2025-08-10 20:56:59,446 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 8 results: TPR=0.07234769314527512, FPR=0.9631733298301697, Precision=0.06537890434265137, Accuracy=0.05395524948835373
+2025-08-10 20:56:59,446 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:59,447 - imanalysis - DEBUG - analayze_channel_roc :: HSV :: Computed confusion matrix for bounds starting with 80
+2025-08-10 20:56:59,447 - imanalysis - DEBUG - load_boundary_batch :: HSV :: Loading batch for camera DSLR and color tag HSV
+2025-08-10 20:56:59,451 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 7 results: TPR=0.9989697933197021, FPR=0.9011759161949158, Precision=0.5079573392868042, Accuracy=0.5328829288482666
+2025-08-10 20:56:59,451 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:59,451 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 8/8 with bounds (80, 240)
+2025-08-10 20:56:59,452 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 7 results: TPR=0.8925734162330627, FPR=0.21324729919433594, Precision=0.7958351373672485, Accuracy=0.8377804160118103
+2025-08-10 20:56:59,453 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:59,453 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 8/8 with bounds (80, 240)
+2025-08-10 20:56:59,458 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 8 results: TPR=0.9989697933197021, FPR=0.9011759161949158, Precision=0.5079573392868042, Accuracy=0.5328829288482666
+2025-08-10 20:56:59,458 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:59,459 - imanalysis - DEBUG - analayze_channel_roc :: YCrCb :: Computed confusion matrix for bounds starting with 80
+2025-08-10 20:56:59,459 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 8 results: TPR=0.9536560773849487, FPR=0.21344512701034546, Precision=0.8062353730201721, Accuracy=0.8671326637268066
+2025-08-10 20:56:59,459 - imanalysis - DEBUG - load_boundary_batch :: YCrCb :: Loading batch for camera DSLR and color tag YCrCb
+2025-08-10 20:56:59,459 - imanalysis - DEBUG - =============================================
+2025-08-10 20:56:59,461 - imanalysis - DEBUG - analayze_channel_roc :: RGB :: Computed confusion matrix for bounds starting with 80
+2025-08-10 20:56:59,461 - imanalysis - DEBUG - load_boundary_batch :: RGB :: Loading batch for camera DSLR and color tag RGB
+2025-08-10 20:57:01,083 - imanalysis - DEBUG - load_boundary_batch :: RGB :: Ground truth mask is (180000, 400), Reference is (180000, 400, 3)
+2025-08-10 20:57:01,083 - imanalysis - DEBUG - load_boundary_batch :: YCrCb :: Ground truth mask is (180000, 400), Reference is (180000, 400, 3)
+2025-08-10 20:57:01,088 - imanalysis - DEBUG - load_boundary_batch :: HSV :: Ground truth mask is (180000, 400), Reference is (180000, 400, 3)
+2025-08-10 20:57:01,443 - imanalysis - DEBUG - analayze_channel_roc :: RGB :: Loaded Boundary masks for bounds starting with 100
+2025-08-10 20:57:01,443 - imanalysis - DEBUG - analayze_channel_roc :: RGB Ground truth masks ::  dtype uint8, Shape (180000, 400) || Boundary masks :: dtype uint8 Shape (1260000, 400)
+2025-08-10 20:57:01,548 - imanalysis - DEBUG - analayze_channel_roc :: YCrCb :: Loaded Boundary masks for bounds starting with 100
+2025-08-10 20:57:01,548 - imanalysis - DEBUG - analayze_channel_roc :: Mats loaded to gpu :: Free memory :: 16368 MB
+2025-08-10 20:57:01,549 - imanalysis - DEBUG - analayze_channel_roc :: YCrCb Ground truth masks ::  dtype uint8, Shape (180000, 400) || Boundary masks :: dtype uint8 Shape (1260000, 400)
+2025-08-10 20:57:01,660 - imanalysis - DEBUG - analayze_channel_roc :: HSV :: Loaded Boundary masks for bounds starting with 100
+2025-08-10 20:57:01,661 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Lower bound: 100, Upper bounds: [120, 140, 160, 180, 200, 220, 240], Mask shape: (180000, 400)
+2025-08-10 20:57:01,661 - imanalysis - DEBUG - analayze_channel_roc :: Mats loaded to gpu :: Free memory :: 16368 MB
+2025-08-10 20:57:01,661 - imanalysis - DEBUG - analayze_channel_roc :: HSV Ground truth masks ::  dtype uint8, Shape (180000, 400) || Boundary masks :: dtype uint8 Shape (1260000, 400)
+2025-08-10 20:57:01,661 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary count: 7, Mask height: 180000, Mask width: 400
+2025-08-10 20:57:01,674 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Lower bound: 100, Upper bounds: [120, 140, 160, 180, 200, 220, 240], Mask shape: (180000, 400)
+2025-08-10 20:57:01,674 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Computing confusion matrix masks for 7 boundaries
+2025-08-10 20:57:01,754 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary count: 7, Mask height: 180000, Mask width: 400
+2025-08-10 20:57:01,754 - imanalysis - DEBUG - analayze_channel_roc :: Mats loaded to gpu :: Free memory :: 16368 MB
+2025-08-10 20:57:01,754 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Computing confusion matrix masks for 7 boundaries
+2025-08-10 20:57:01,754 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Lower bound: 100, Upper bounds: [120, 140, 160, 180, 200, 220, 240], Mask shape: (180000, 400)
+2025-08-10 20:57:01,754 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary count: 7, Mask height: 180000, Mask width: 400
+2025-08-10 20:57:01,754 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Computing confusion matrix masks for 7 boundaries
+2025-08-10 20:57:01,756 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Confusion matrix masks computed
+2025-08-10 20:57:01,756 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 1/7 with bounds (100, 120)
+2025-08-10 20:57:01,756 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Confusion matrix masks computed
+2025-08-10 20:57:01,756 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 1/7 with bounds (100, 120)
+2025-08-10 20:57:01,757 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Confusion matrix masks computed
+2025-08-10 20:57:01,757 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 1/7 with bounds (100, 120)
+2025-08-10 20:57:01,822 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 1 results: TPR=0.06954402476549149, FPR=0.0635736957192421, Precision=0.5046420097351074, Accuracy=0.5184073448181152
+2025-08-10 20:57:01,822 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 1 results: TPR=0.019578423351049423, FPR=0.07929865270853043, Precision=0.18694491684436798, Accuracy=0.4861712157726288
+2025-08-10 20:57:01,822 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 1 results: TPR=0.17848582565784454, FPR=0.46574583649635315, Precision=0.2630215287208557, Accuracy=0.3626992106437683
+2025-08-10 20:57:01,823 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:01,823 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:01,823 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:01,823 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 2/7 with bounds (100, 140)
+2025-08-10 20:57:01,823 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 2/7 with bounds (100, 140)
+2025-08-10 20:57:01,823 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 2/7 with bounds (100, 140)
+2025-08-10 20:57:01,834 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 2 results: TPR=0.21446897089481354, FPR=0.09158743172883987, Precision=0.6856109499931335, Accuracy=0.5737863183021545
+2025-08-10 20:57:01,834 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 2 results: TPR=0.03029993176460266, FPR=0.21078288555145264, Precision=0.11806584149599075, Accuracy=0.423259973526001
+2025-08-10 20:57:01,834 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 2 results: TPR=0.988867998123169, FPR=0.4829971492290497, Precision=0.6559637188911438, Accuracy=0.7445407509803772
+2025-08-10 20:57:01,834 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:01,835 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:01,835 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:01,835 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 3/7 with bounds (100, 160)
+2025-08-10 20:57:01,835 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 3/7 with bounds (100, 160)
+2025-08-10 20:57:01,835 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 3/7 with bounds (100, 160)
+2025-08-10 20:57:01,846 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 3 results: TPR=0.3924305737018585, FPR=0.10200493782758713, Precision=0.7817931771278381, Accuracy=0.6542069911956787
+2025-08-10 20:57:01,846 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 3 results: TPR=0.036535318940877914, FPR=0.43836185336112976, Precision=0.0720272958278656, Accuracy=0.30842849612236023
+2025-08-10 20:57:01,846 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 3 results: TPR=0.9888856410980225, FPR=0.48344460129737854, Precision=0.6557587385177612, Accuracy=0.7443175315856934
+2025-08-10 20:57:01,846 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:01,847 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:01,847 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:01,847 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 4/7 with bounds (100, 180)
+2025-08-10 20:57:01,847 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 4/7 with bounds (100, 180)
+2025-08-10 20:57:01,847 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 4/7 with bounds (100, 180)
+2025-08-10 20:57:01,858 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 4 results: TPR=0.5661923885345459, FPR=0.1063639223575592, Precision=0.8321407437324524, Accuracy=0.7357395887374878
+2025-08-10 20:57:01,858 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 4 results: TPR=0.03889540582895279, FPR=0.7872635722160339, Precision=0.04398694261908531, Accuracy=0.12890860438346863
+2025-08-10 20:57:01,858 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 4 results: TPR=0.9888856410980225, FPR=0.483547180891037, Precision=0.6557108163833618, Accuracy=0.7442644238471985
+2025-08-10 20:57:01,858 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:01,858 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:01,858 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:01,858 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 5/7 with bounds (100, 200)
+2025-08-10 20:57:01,859 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 5/7 with bounds (100, 200)
+2025-08-10 20:57:01,859 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 5/7 with bounds (100, 200)
+2025-08-10 20:57:01,868 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 5 results: TPR=0.0400179848074913, FPR=0.8164786696434021, Precision=0.043652381747961044, Accuracy=0.11432262510061264
+2025-08-10 20:57:01,868 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 5 results: TPR=0.7374746799468994, FPR=0.10789376497268677, Precision=0.8642318844795227, Accuracy=0.8175413608551025
+2025-08-10 20:57:01,868 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 5 results: TPR=0.9888856410980225, FPR=0.483547180891037, Precision=0.6557108163833618, Accuracy=0.7442644238471985
+2025-08-10 20:57:01,868 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:01,869 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:01,869 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:01,869 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 6/7 with bounds (100, 220)
+2025-08-10 20:57:01,869 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 6/7 with bounds (100, 220)
+2025-08-10 20:57:01,869 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 6/7 with bounds (100, 220)
+2025-08-10 20:57:01,879 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 6 results: TPR=0.04061224311590195, FPR=0.8562209010124207, Precision=0.04230392351746559, Accuracy=0.09403102844953537
+2025-08-10 20:57:01,879 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 6 results: TPR=0.8653997778892517, FPR=0.10839777439832687, Precision=0.8814457058906555, Accuracy=0.8789671659469604
+2025-08-10 20:57:01,879 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 6 results: TPR=0.9888856410980225, FPR=0.483547180891037, Precision=0.6557108163833618, Accuracy=0.7442644238471985
+2025-08-10 20:57:01,879 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:01,879 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:01,879 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:01,879 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 7/7 with bounds (100, 240)
+2025-08-10 20:57:01,880 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 7/7 with bounds (100, 240)
+2025-08-10 20:57:01,880 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 7/7 with bounds (100, 240)
+2025-08-10 20:57:01,889 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 7 results: TPR=0.040969450026750565, FPR=0.9243186116218567, Precision=0.03964180871844292, Accuracy=0.05894295871257782
+2025-08-10 20:57:01,889 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 7 results: TPR=0.9264824986457825, FPR=0.1085956022143364, Precision=0.8882086277008057, Accuracy=0.9083194136619568
+2025-08-10 20:57:01,889 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 7 results: TPR=0.9888856410980225, FPR=0.483547180891037, Precision=0.6557108163833618, Accuracy=0.7442644238471985
+2025-08-10 20:57:01,889 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:01,890 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:01,890 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:01,891 - imanalysis - DEBUG - analayze_channel_roc :: HSV :: Computed confusion matrix for bounds starting with 100
+2025-08-10 20:57:01,891 - imanalysis - DEBUG - analayze_channel_roc :: RGB :: Computed confusion matrix for bounds starting with 100
+2025-08-10 20:57:01,892 - imanalysis - DEBUG - analayze_channel_roc :: YCrCb :: Computed confusion matrix for bounds starting with 100
+2025-08-10 20:57:01,892 - imanalysis - DEBUG - load_boundary_batch :: HSV :: Loading batch for camera DSLR and color tag HSV
+2025-08-10 20:57:01,893 - imanalysis - DEBUG - load_boundary_batch :: RGB :: Loading batch for camera DSLR and color tag RGB
+2025-08-10 20:57:01,893 - imanalysis - DEBUG - load_boundary_batch :: YCrCb :: Loading batch for camera DSLR and color tag YCrCb
+2025-08-10 20:57:03,403 - imanalysis - DEBUG - load_boundary_batch :: RGB :: Ground truth mask is (180000, 400), Reference is (180000, 400, 3)
+2025-08-10 20:57:03,494 - imanalysis - DEBUG - load_boundary_batch :: HSV :: Ground truth mask is (180000, 400), Reference is (180000, 400, 3)
+2025-08-10 20:57:03,496 - imanalysis - DEBUG - load_boundary_batch :: YCrCb :: Ground truth mask is (180000, 400), Reference is (180000, 400, 3)
+2025-08-10 20:57:03,693 - imanalysis - DEBUG - analayze_channel_roc :: RGB :: Loaded Boundary masks for bounds starting with 120
+2025-08-10 20:57:03,694 - imanalysis - DEBUG - analayze_channel_roc :: RGB Ground truth masks ::  dtype uint8, Shape (180000, 400) || Boundary masks :: dtype uint8 Shape (1080000, 400)
+2025-08-10 20:57:03,778 - imanalysis - DEBUG - analayze_channel_roc :: Mats loaded to gpu :: Free memory :: 16368 MB
+2025-08-10 20:57:03,780 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Lower bound: 120, Upper bounds: [140, 160, 180, 200, 220, 240], Mask shape: (180000, 400)
+2025-08-10 20:57:03,780 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary count: 6, Mask height: 180000, Mask width: 400
+2025-08-10 20:57:03,780 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Computing confusion matrix masks for 6 boundaries
+2025-08-10 20:57:03,781 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Confusion matrix masks computed
+2025-08-10 20:57:03,781 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 1/6 with bounds (120, 140)
+2025-08-10 20:57:03,806 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 1 results: TPR=0.1500767469406128, FPR=0.030404727905988693, Precision=0.821325957775116, Accuracy=0.5744156241416931
+2025-08-10 20:57:03,806 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:03,807 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 2/6 with bounds (120, 160)
+2025-08-10 20:57:03,811 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 2 results: TPR=0.32803836464881897, FPR=0.04082223027944565, Precision=0.8821253180503845, Accuracy=0.6548362970352173
+2025-08-10 20:57:03,811 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:03,811 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 3/6 with bounds (120, 180)
+2025-08-10 20:57:03,815 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 3 results: TPR=0.5018001794815063, FPR=0.04518122225999832, Precision=0.9118414521217346, Accuracy=0.7363688349723816
+2025-08-10 20:57:03,815 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:03,815 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 4/6 with bounds (120, 200)
+2025-08-10 20:57:03,822 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 4 results: TPR=0.6730824112892151, FPR=0.04671106114983559, Precision=0.9306485056877136, Accuracy=0.8181706666946411
+2025-08-10 20:57:03,822 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:03,822 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 5/6 with bounds (120, 220)
+2025-08-10 20:57:03,826 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 5 results: TPR=0.8010076284408569, FPR=0.04721507802605629, Precision=0.9404736757278442, Accuracy=0.879596471786499
+2025-08-10 20:57:03,826 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:03,827 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 6/6 with bounds (120, 240)
+2025-08-10 20:57:03,830 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 6 results: TPR=0.8620902895927429, FPR=0.047412894666194916, Precision=0.9442374110221863, Accuracy=0.908948540687561
+2025-08-10 20:57:03,831 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:03,832 - imanalysis - DEBUG - analayze_channel_roc :: RGB :: Computed confusion matrix for bounds starting with 120
+2025-08-10 20:57:03,832 - imanalysis - DEBUG - load_boundary_batch :: RGB :: Loading batch for camera DSLR and color tag RGB
+2025-08-10 20:57:03,865 - imanalysis - DEBUG - analayze_channel_roc :: HSV :: Loaded Boundary masks for bounds starting with 120
+2025-08-10 20:57:03,865 - imanalysis - DEBUG - analayze_channel_roc :: HSV Ground truth masks ::  dtype uint8, Shape (180000, 400) || Boundary masks :: dtype uint8 Shape (1080000, 400)
+2025-08-10 20:57:03,951 - imanalysis - DEBUG - analayze_channel_roc :: YCrCb :: Loaded Boundary masks for bounds starting with 120
+2025-08-10 20:57:03,952 - imanalysis - DEBUG - analayze_channel_roc :: Mats loaded to gpu :: Free memory :: 16368 MB
+2025-08-10 20:57:03,952 - imanalysis - DEBUG - analayze_channel_roc :: YCrCb Ground truth masks ::  dtype uint8, Shape (180000, 400) || Boundary masks :: dtype uint8 Shape (1080000, 400)
+2025-08-10 20:57:03,965 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Lower bound: 120, Upper bounds: [140, 160, 180, 200, 220, 240], Mask shape: (180000, 400)
+2025-08-10 20:57:03,965 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary count: 6, Mask height: 180000, Mask width: 400
+2025-08-10 20:57:03,965 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Computing confusion matrix masks for 6 boundaries
+2025-08-10 20:57:04,036 - imanalysis - DEBUG - analayze_channel_roc :: Mats loaded to gpu :: Free memory :: 16368 MB
+2025-08-10 20:57:04,037 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Lower bound: 120, Upper bounds: [140, 160, 180, 200, 220, 240], Mask shape: (180000, 400)
+2025-08-10 20:57:04,037 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary count: 6, Mask height: 180000, Mask width: 400
+2025-08-10 20:57:04,037 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Computing confusion matrix masks for 6 boundaries
+2025-08-10 20:57:04,038 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Confusion matrix masks computed
+2025-08-10 20:57:04,038 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 1/6 with bounds (120, 140)
+2025-08-10 20:57:04,038 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Confusion matrix masks computed
+2025-08-10 20:57:04,038 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 1/6 with bounds (120, 140)
+2025-08-10 20:57:04,075 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 1 results: TPR=0.011431952007114887, FPR=0.13679252564907074, Precision=0.07220879942178726, Accuracy=0.45247316360473633
+2025-08-10 20:57:04,075 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 1 results: TPR=0.8365028500556946, FPR=0.018074611201882362, Precision=0.9773244261741638, Accuracy=0.9118012189865112
+2025-08-10 20:57:04,075 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:04,075 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:04,075 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 2/6 with bounds (120, 160)
+2025-08-10 20:57:04,075 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 2/6 with bounds (120, 160)
+2025-08-10 20:57:04,083 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 2 results: TPR=0.017667341977357864, FPR=0.36437150835990906, Precision=0.043204378336668015, Accuracy=0.3376416862010956
+2025-08-10 20:57:04,083 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:04,083 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 2 results: TPR=0.8365203738212585, FPR=0.018522078171372414, Precision=0.9767765402793884, Accuracy=0.9115779995918274
+2025-08-10 20:57:04,083 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 3/6 with bounds (120, 180)
+2025-08-10 20:57:04,083 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:04,084 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 3/6 with bounds (120, 180)
+2025-08-10 20:57:04,091 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 3 results: TPR=0.02002742700278759, FPR=0.7132732272148132, Precision=0.02548242174088955, Accuracy=0.15812177956104279
+2025-08-10 20:57:04,091 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:04,091 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 4/6 with bounds (120, 200)
+2025-08-10 20:57:04,091 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 3 results: TPR=0.8365203738212585, FPR=0.018624624237418175, Precision=0.9766509532928467, Accuracy=0.9115248918533325
+2025-08-10 20:57:04,091 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:04,091 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 4/6 with bounds (120, 200)
+2025-08-10 20:57:04,098 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 4 results: TPR=0.021150007843971252, FPR=0.7424883246421814, Precision=0.025842344388365746, Accuracy=0.1435358077287674
+2025-08-10 20:57:04,098 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 4 results: TPR=0.8365203738212585, FPR=0.018624624237418175, Precision=0.9766509532928467, Accuracy=0.9115248918533325
+2025-08-10 20:57:04,098 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:04,098 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:04,098 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 5/6 with bounds (120, 220)
+2025-08-10 20:57:04,098 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 5/6 with bounds (120, 220)
+2025-08-10 20:57:04,104 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 5 results: TPR=0.021744264289736748, FPR=0.7822305560112, Precision=0.025234339758753777, Accuracy=0.12324421107769012
+2025-08-10 20:57:04,104 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:04,105 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 6/6 with bounds (120, 240)
+2025-08-10 20:57:04,106 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 5 results: TPR=0.8365203738212585, FPR=0.018624624237418175, Precision=0.9766509532928467, Accuracy=0.9115248918533325
+2025-08-10 20:57:04,106 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:04,106 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 6/6 with bounds (120, 240)
+2025-08-10 20:57:04,111 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 6 results: TPR=0.022101473063230515, FPR=0.8503282070159912, Precision=0.02363356575369835, Accuracy=0.08815614134073257
+2025-08-10 20:57:04,111 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:04,112 - imanalysis - DEBUG - analayze_channel_roc :: HSV :: Computed confusion matrix for bounds starting with 120
+2025-08-10 20:57:04,113 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 6 results: TPR=0.8365203738212585, FPR=0.018624624237418175, Precision=0.9766509532928467, Accuracy=0.9115248918533325
+2025-08-10 20:57:04,113 - imanalysis - DEBUG - load_boundary_batch :: HSV :: Loading batch for camera DSLR and color tag HSV
+2025-08-10 20:57:04,113 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:04,114 - imanalysis - DEBUG - analayze_channel_roc :: YCrCb :: Computed confusion matrix for bounds starting with 120
+2025-08-10 20:57:04,114 - imanalysis - DEBUG - load_boundary_batch :: YCrCb :: Loading batch for camera DSLR and color tag YCrCb
+2025-08-10 20:57:05,521 - imanalysis - DEBUG - load_boundary_batch :: RGB :: Ground truth mask is (180000, 400), Reference is (180000, 400, 3)
+2025-08-10 20:57:05,615 - imanalysis - DEBUG - load_boundary_batch :: YCrCb :: Ground truth mask is (180000, 400), Reference is (180000, 400, 3)
+2025-08-10 20:57:05,651 - imanalysis - DEBUG - load_boundary_batch :: HSV :: Ground truth mask is (180000, 400), Reference is (180000, 400, 3)
+2025-08-10 20:57:05,782 - imanalysis - DEBUG - analayze_channel_roc :: RGB :: Loaded Boundary masks for bounds starting with 140
+2025-08-10 20:57:05,783 - imanalysis - DEBUG - analayze_channel_roc :: RGB Ground truth masks ::  dtype uint8, Shape (180000, 400) || Boundary masks :: dtype uint8 Shape (900000, 400)
+2025-08-10 20:57:05,852 - imanalysis - DEBUG - analayze_channel_roc :: Mats loaded to gpu :: Free memory :: 16368 MB
+2025-08-10 20:57:05,854 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Lower bound: 140, Upper bounds: [160, 180, 200, 220, 240], Mask shape: (180000, 400)
+2025-08-10 20:57:05,854 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary count: 5, Mask height: 180000, Mask width: 400
+2025-08-10 20:57:05,854 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Computing confusion matrix masks for 5 boundaries
+2025-08-10 20:57:05,855 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Confusion matrix masks computed
+2025-08-10 20:57:05,855 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 1/5 with bounds (140, 160)
+2025-08-10 20:57:05,874 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 1 results: TPR=0.18637143075466156, FPR=0.011314342729747295, Precision=0.9388013482093811, Accuracy=0.6018021106719971
+2025-08-10 20:57:05,874 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:05,874 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 2/5 with bounds (140, 180)
+2025-08-10 20:57:05,878 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 2 results: TPR=0.36013323068618774, FPR=0.015673328191041946, Precision=0.9553542137145996, Accuracy=0.6833345890045166
+2025-08-10 20:57:05,878 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:05,878 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 3/5 with bounds (140, 200)
+2025-08-10 20:57:05,884 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 3 results: TPR=0.5314155220985413, FPR=0.01720317266881466, Precision=0.9664067029953003, Accuracy=0.7651364207267761
+2025-08-10 20:57:05,884 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:05,884 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 4/5 with bounds (140, 220)
+2025-08-10 20:57:05,888 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 4 results: TPR=0.6593406796455383, FPR=0.017707183957099915, Precision=0.971970796585083, Accuracy=0.826562225818634
+2025-08-10 20:57:05,888 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:05,888 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 5/5 with bounds (140, 240)
+2025-08-10 20:57:05,892 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 5 results: TPR=0.7204232811927795, FPR=0.017905008047819138, Precision=0.9740063548088074, Accuracy=0.8559144139289856
+2025-08-10 20:57:05,893 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:05,895 - imanalysis - DEBUG - analayze_channel_roc :: RGB :: Computed confusion matrix for bounds starting with 140
+2025-08-10 20:57:05,895 - imanalysis - DEBUG - load_boundary_batch :: RGB :: Loading batch for camera DSLR and color tag RGB
+2025-08-10 20:57:05,919 - imanalysis - DEBUG - analayze_channel_roc :: YCrCb :: Loaded Boundary masks for bounds starting with 140
+2025-08-10 20:57:05,919 - imanalysis - DEBUG - analayze_channel_roc :: YCrCb Ground truth masks ::  dtype uint8, Shape (180000, 400) || Boundary masks :: dtype uint8 Shape (900000, 400)
+2025-08-10 20:57:05,988 - imanalysis - DEBUG - analayze_channel_roc :: Mats loaded to gpu :: Free memory :: 16368 MB
+2025-08-10 20:57:05,989 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Lower bound: 140, Upper bounds: [160, 180, 200, 220, 240], Mask shape: (180000, 400)
+2025-08-10 20:57:05,989 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary count: 5, Mask height: 180000, Mask width: 400
+2025-08-10 20:57:05,989 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Computing confusion matrix masks for 5 boundaries
+2025-08-10 20:57:05,990 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Confusion matrix masks computed
+2025-08-10 20:57:05,990 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 1/5 with bounds (140, 160)
+2025-08-10 20:57:06,007 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 1 results: TPR=2.1774765627924353e-05, FPR=0.0005692993872798979, Precision=0.03439490497112274, Accuracy=0.5175061821937561
+2025-08-10 20:57:06,008 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:06,008 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 2/5 with bounds (140, 180)
+2025-08-10 20:57:06,012 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 2 results: TPR=2.1774765627924353e-05, FPR=0.0006718451622873545, Precision=0.029298918321728706, Accuracy=0.5174530744552612
+2025-08-10 20:57:06,012 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:06,013 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 3/5 with bounds (140, 200)
+2025-08-10 20:57:06,016 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 3 results: TPR=2.1774765627924353e-05, FPR=0.0006718451622873545, Precision=0.029298918321728706, Accuracy=0.5174530744552612
+2025-08-10 20:57:06,016 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:06,017 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 4/5 with bounds (140, 220)
+2025-08-10 20:57:06,028 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 4 results: TPR=2.1774765627924353e-05, FPR=0.0006718451622873545, Precision=0.029298918321728706, Accuracy=0.5174530744552612
+2025-08-10 20:57:06,028 - imanalysis - DEBUG - analayze_channel_roc :: HSV :: Loaded Boundary masks for bounds starting with 140
+2025-08-10 20:57:06,028 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:06,028 - imanalysis - DEBUG - analayze_channel_roc :: HSV Ground truth masks ::  dtype uint8, Shape (180000, 400) || Boundary masks :: dtype uint8 Shape (900000, 400)
+2025-08-10 20:57:06,029 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 5/5 with bounds (140, 240)
+2025-08-10 20:57:06,098 - imanalysis - DEBUG - analayze_channel_roc :: Mats loaded to gpu :: Free memory :: 16368 MB
+2025-08-10 20:57:06,099 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Lower bound: 140, Upper bounds: [160, 180, 200, 220, 240], Mask shape: (180000, 400)
+2025-08-10 20:57:06,099 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary count: 5, Mask height: 180000, Mask width: 400
+2025-08-10 20:57:06,099 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Computing confusion matrix masks for 5 boundaries
+2025-08-10 20:57:06,100 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Confusion matrix masks computed
+2025-08-10 20:57:06,100 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 1/5 with bounds (140, 160)
+2025-08-10 20:57:06,119 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 5 results: TPR=2.1774765627924353e-05, FPR=0.0006718451622873545, Precision=0.029298918321728706, Accuracy=0.5174530744552612
+2025-08-10 20:57:06,119 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:06,120 - imanalysis - DEBUG - analayze_channel_roc :: YCrCb :: Computed confusion matrix for bounds starting with 140
+2025-08-10 20:57:06,120 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 1 results: TPR=0.006647034548223019, FPR=0.2385949343442917, Precision=0.02528858743607998, Accuracy=0.3974534869194031
+2025-08-10 20:57:06,120 - imanalysis - DEBUG - load_boundary_batch :: YCrCb :: Loading batch for camera DSLR and color tag YCrCb
+2025-08-10 20:57:06,120 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:06,120 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 2/5 with bounds (140, 180)
+2025-08-10 20:57:06,126 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 2 results: TPR=0.009007120504975319, FPR=0.5874966979026794, Precision=0.014076846651732922, Accuracy=0.21793358027935028
+2025-08-10 20:57:06,126 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:06,126 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 3/5 with bounds (140, 200)
+2025-08-10 20:57:06,130 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 3 results: TPR=0.010129701346158981, FPR=0.6167117357254028, Precision=0.015066184103488922, Accuracy=0.2033476084470749
+2025-08-10 20:57:06,130 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:06,130 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 4/5 with bounds (140, 220)
+2025-08-10 20:57:06,135 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 4 results: TPR=0.010723956860601902, FPR=0.6564540266990662, Precision=0.014985633082687855, Accuracy=0.18305601179599762
+2025-08-10 20:57:06,136 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:06,136 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 5/5 with bounds (140, 240)
+2025-08-10 20:57:06,140 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 5 results: TPR=0.011081166565418243, FPR=0.7245516777038574, Precision=0.014042871072888374, Accuracy=0.14796794950962067
+2025-08-10 20:57:06,140 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:06,141 - imanalysis - DEBUG - analayze_channel_roc :: HSV :: Computed confusion matrix for bounds starting with 140
+2025-08-10 20:57:06,141 - imanalysis - DEBUG - load_boundary_batch :: HSV :: Loading batch for camera DSLR and color tag HSV
+2025-08-10 20:57:07,620 - imanalysis - DEBUG - load_boundary_batch :: RGB :: Ground truth mask is (180000, 400), Reference is (180000, 400, 3)
+2025-08-10 20:57:07,626 - imanalysis - DEBUG - load_boundary_batch :: YCrCb :: Ground truth mask is (180000, 400), Reference is (180000, 400, 3)
+2025-08-10 20:57:07,708 - imanalysis - DEBUG - load_boundary_batch :: HSV :: Ground truth mask is (180000, 400), Reference is (180000, 400, 3)
+2025-08-10 20:57:07,851 - imanalysis - DEBUG - analayze_channel_roc :: RGB :: Loaded Boundary masks for bounds starting with 160
+2025-08-10 20:57:07,852 - imanalysis - DEBUG - analayze_channel_roc :: RGB Ground truth masks ::  dtype uint8, Shape (180000, 400) || Boundary masks :: dtype uint8 Shape (720000, 400)
+2025-08-10 20:57:07,917 - imanalysis - DEBUG - analayze_channel_roc :: YCrCb :: Loaded Boundary masks for bounds starting with 160
+2025-08-10 20:57:07,918 - imanalysis - DEBUG - analayze_channel_roc :: Mats loaded to gpu :: Free memory :: 16368 MB
+2025-08-10 20:57:07,918 - imanalysis - DEBUG - analayze_channel_roc :: YCrCb Ground truth masks ::  dtype uint8, Shape (180000, 400) || Boundary masks :: dtype uint8 Shape (720000, 400)
+2025-08-10 20:57:07,976 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Lower bound: 160, Upper bounds: [180, 200, 220, 240], Mask shape: (180000, 400)
+2025-08-10 20:57:07,977 - imanalysis - DEBUG - analayze_channel_roc :: Mats loaded to gpu :: Free memory :: 16368 MB
+2025-08-10 20:57:07,977 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary count: 4, Mask height: 180000, Mask width: 400
+2025-08-10 20:57:07,977 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Computing confusion matrix masks for 4 boundaries
+2025-08-10 20:57:07,977 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Lower bound: 160, Upper bounds: [180, 200, 220, 240], Mask shape: (180000, 400)
+2025-08-10 20:57:07,977 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary count: 4, Mask height: 180000, Mask width: 400
+2025-08-10 20:57:07,977 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Computing confusion matrix masks for 4 boundaries
+2025-08-10 20:57:07,979 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Confusion matrix masks computed
+2025-08-10 20:57:07,979 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 1/4 with bounds (160, 180)
+2025-08-10 20:57:07,979 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Confusion matrix masks computed
+2025-08-10 20:57:07,979 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 1/4 with bounds (160, 180)
+2025-08-10 20:57:08,009 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 1 results: TPR=0.1831451654434204, FPR=0.004690013825893402, Precision=0.9732381701469421, Accuracy=0.6036763191223145
+2025-08-10 20:57:08,009 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 1 results: TPR=0.0, FPR=0.00010764222679426894, Precision=0.0, Accuracy=0.5177346467971802
+2025-08-10 20:57:08,009 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:08,009 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:08,010 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 2/4 with bounds (160, 200)
+2025-08-10 20:57:08,010 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 2/4 with bounds (160, 200)
+2025-08-10 20:57:08,017 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 2 results: TPR=0.3544274568557739, FPR=0.006219858769327402, Precision=0.9815046191215515, Accuracy=0.6854780912399292
+2025-08-10 20:57:08,017 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 2 results: TPR=0.0, FPR=0.00010764222679426894, Precision=0.0, Accuracy=0.5177346467971802
+2025-08-10 20:57:08,017 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:08,018 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:08,018 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 3/4 with bounds (160, 220)
+2025-08-10 20:57:08,018 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 3/4 with bounds (160, 220)
+2025-08-10 20:57:08,026 - imanalysis - DEBUG - analayze_channel_roc :: HSV :: Loaded Boundary masks for bounds starting with 160
+2025-08-10 20:57:08,026 - imanalysis - DEBUG - analayze_channel_roc :: HSV Ground truth masks ::  dtype uint8, Shape (180000, 400) || Boundary masks :: dtype uint8 Shape (720000, 400)
+2025-08-10 20:57:08,086 - imanalysis - DEBUG - analayze_channel_roc :: Mats loaded to gpu :: Free memory :: 16368 MB
+2025-08-10 20:57:08,087 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Lower bound: 160, Upper bounds: [180, 200, 220, 240], Mask shape: (180000, 400)
+2025-08-10 20:57:08,087 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary count: 4, Mask height: 180000, Mask width: 400
+2025-08-10 20:57:08,087 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Computing confusion matrix masks for 4 boundaries
+2025-08-10 20:57:08,087 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Confusion matrix masks computed
+2025-08-10 20:57:08,088 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 1/4 with bounds (160, 180)
+2025-08-10 20:57:08,101 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 3 results: TPR=0.482352614402771, FPR=0.0067238700576126575, Precision=0.9852523803710938, Accuracy=0.7469039559364319
+2025-08-10 20:57:08,101 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:08,101 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 4/4 with bounds (160, 240)
+2025-08-10 20:57:08,103 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 3 results: TPR=0.0, FPR=0.00010764222679426894, Precision=0.0, Accuracy=0.5177346467971802
+2025-08-10 20:57:08,104 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:08,104 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 4/4 with bounds (160, 240)
+2025-08-10 20:57:08,109 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 1 results: TPR=0.0025879712775349617, FPR=0.3707580864429474, Precision=0.006458572577685118, Accuracy=0.3270633816719055
+2025-08-10 20:57:08,109 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:08,109 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 2/4 with bounds (160, 200)
+2025-08-10 20:57:08,111 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 4 results: TPR=0.5434352159500122, FPR=0.006921692285686731, Precision=0.9865077137947083, Accuracy=0.7762560844421387
+2025-08-10 20:57:08,111 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:08,112 - imanalysis - DEBUG - analayze_channel_roc :: RGB :: Computed confusion matrix for bounds starting with 160
+2025-08-10 20:57:08,113 - imanalysis - DEBUG - load_boundary_batch :: RGB :: Loading batch for camera DSLR and color tag RGB
+2025-08-10 20:57:08,113 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 4 results: TPR=0.0, FPR=0.00010764222679426894, Precision=0.0, Accuracy=0.5177346467971802
+2025-08-10 20:57:08,113 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:08,116 - imanalysis - DEBUG - analayze_channel_roc :: YCrCb :: Computed confusion matrix for bounds starting with 160
+2025-08-10 20:57:08,116 - imanalysis - DEBUG - load_boundary_batch :: YCrCb :: Loading batch for camera DSLR and color tag YCrCb
+2025-08-10 20:57:08,117 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 2 results: TPR=0.003710552118718624, FPR=0.39997318387031555, Precision=0.008565515279769897, Accuracy=0.31247738003730774
+2025-08-10 20:57:08,117 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:08,117 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 3/4 with bounds (160, 220)
+2025-08-10 20:57:08,123 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 3 results: TPR=0.0043048071675002575, FPR=0.4397154152393341, Precision=0.009034876711666584, Accuracy=0.29218584299087524
+2025-08-10 20:57:08,123 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:08,123 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 4/4 with bounds (160, 240)
+2025-08-10 20:57:08,127 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 4 results: TPR=0.0046620178036391735, FPR=0.5078130960464478, Precision=0.00847723986953497, Accuracy=0.2570977210998535
+2025-08-10 20:57:08,127 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:08,128 - imanalysis - DEBUG - analayze_channel_roc :: HSV :: Computed confusion matrix for bounds starting with 160
+2025-08-10 20:57:08,128 - imanalysis - DEBUG - load_boundary_batch :: HSV :: Loading batch for camera DSLR and color tag HSV
+2025-08-10 20:57:09,596 - imanalysis - DEBUG - load_boundary_batch :: HSV :: Ground truth mask is (180000, 400), Reference is (180000, 400, 3)
+2025-08-10 20:57:09,641 - imanalysis - DEBUG - load_boundary_batch :: YCrCb :: Ground truth mask is (180000, 400), Reference is (180000, 400, 3)
+2025-08-10 20:57:09,645 - imanalysis - DEBUG - load_boundary_batch :: RGB :: Ground truth mask is (180000, 400), Reference is (180000, 400, 3)
+2025-08-10 20:57:09,810 - imanalysis - DEBUG - analayze_channel_roc :: HSV :: Loaded Boundary masks for bounds starting with 180
+2025-08-10 20:57:09,810 - imanalysis - DEBUG - analayze_channel_roc :: HSV Ground truth masks ::  dtype uint8, Shape (180000, 400) || Boundary masks :: dtype uint8 Shape (540000, 400)
+2025-08-10 20:57:09,860 - imanalysis - DEBUG - analayze_channel_roc :: Mats loaded to gpu :: Free memory :: 16368 MB
+2025-08-10 20:57:09,861 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Lower bound: 180, Upper bounds: [200, 220, 240], Mask shape: (180000, 400)
+2025-08-10 20:57:09,861 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary count: 3, Mask height: 180000, Mask width: 400
+2025-08-10 20:57:09,861 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Computing confusion matrix masks for 3 boundaries
+2025-08-10 20:57:09,862 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Confusion matrix masks computed
+2025-08-10 20:57:09,862 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 1/3 with bounds (180, 200)
+2025-08-10 20:57:09,876 - imanalysis - DEBUG - analayze_channel_roc :: YCrCb :: Loaded Boundary masks for bounds starting with 180
+2025-08-10 20:57:09,876 - imanalysis - DEBUG - analayze_channel_roc :: YCrCb Ground truth masks ::  dtype uint8, Shape (180000, 400) || Boundary masks :: dtype uint8 Shape (540000, 400)
+2025-08-10 20:57:09,924 - imanalysis - DEBUG - analayze_channel_roc :: Mats loaded to gpu :: Free memory :: 16368 MB
+2025-08-10 20:57:09,924 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Lower bound: 180, Upper bounds: [200, 220, 240], Mask shape: (180000, 400)
+2025-08-10 20:57:09,924 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary count: 3, Mask height: 180000, Mask width: 400
+2025-08-10 20:57:09,924 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Computing confusion matrix masks for 3 boundaries
+2025-08-10 20:57:09,925 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Confusion matrix masks computed
+2025-08-10 20:57:09,925 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 1/3 with bounds (180, 200)
+2025-08-10 20:57:09,940 - imanalysis - DEBUG - analayze_channel_roc :: RGB :: Loaded Boundary masks for bounds starting with 180
+2025-08-10 20:57:09,941 - imanalysis - DEBUG - analayze_channel_roc :: RGB Ground truth masks ::  dtype uint8, Shape (180000, 400) || Boundary masks :: dtype uint8 Shape (540000, 400)
+2025-08-10 20:57:09,991 - imanalysis - DEBUG - analayze_channel_roc :: Mats loaded to gpu :: Free memory :: 16368 MB
+2025-08-10 20:57:09,991 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 1 results: TPR=0.001193061238154769, FPR=0.030536377802491188, Precision=0.035107970237731934, Accuracy=0.5025543570518494
+2025-08-10 20:57:09,991 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:09,991 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 2/3 with bounds (180, 220)
+2025-08-10 20:57:09,991 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Lower bound: 180, Upper bounds: [200, 220, 240], Mask shape: (180000, 400)
+2025-08-10 20:57:09,992 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary count: 3, Mask height: 180000, Mask width: 400
+2025-08-10 20:57:09,992 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Computing confusion matrix masks for 3 boundaries
+2025-08-10 20:57:09,992 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Confusion matrix masks computed
+2025-08-10 20:57:09,993 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 1/3 with bounds (180, 200)
+2025-08-10 20:57:10,005 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 1 results: TPR=0.0, FPR=0.0, Precision=0.0, Accuracy=0.5177904367446899
+2025-08-10 20:57:10,005 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:10,005 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 2/3 with bounds (180, 220)
+2025-08-10 20:57:10,010 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 2 results: TPR=0.001787316519767046, FPR=0.07027862221002579, Precision=0.023136304691433907, Accuracy=0.48226267099380493
+2025-08-10 20:57:10,010 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 1 results: TPR=0.18097379803657532, FPR=0.0016784194158390164, Precision=0.9901394844055176, Accuracy=0.6041886210441589
+2025-08-10 20:57:10,010 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:10,010 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:10,011 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 3/3 with bounds (180, 240)
+2025-08-10 20:57:10,011 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 2/3 with bounds (180, 220)
+2025-08-10 20:57:10,015 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 2 results: TPR=0.0, FPR=0.0, Precision=0.0, Accuracy=0.5177904367446899
+2025-08-10 20:57:10,015 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:10,015 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 3/3 with bounds (180, 240)
+2025-08-10 20:57:10,020 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 3 results: TPR=0.002144526457414031, FPR=0.13837628066539764, Precision=0.014227488078176975, Accuracy=0.447174608707428
+2025-08-10 20:57:10,020 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:10,020 - imanalysis - DEBUG - analayze_channel_roc :: HSV :: Computed confusion matrix for bounds starting with 180
+2025-08-10 20:57:10,020 - imanalysis - DEBUG - load_boundary_batch :: HSV :: Loading batch for camera DSLR and color tag HSV
+2025-08-10 20:57:10,021 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 2 results: TPR=0.3088989555835724, FPR=0.00218243058770895, Precision=0.9924706220626831, Accuracy=0.6656144261360168
+2025-08-10 20:57:10,021 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:10,021 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 3/3 with bounds (180, 240)
+2025-08-10 20:57:10,023 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 3 results: TPR=0.0, FPR=0.0, Precision=0.0, Accuracy=0.5177904367446899
+2025-08-10 20:57:10,023 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:10,024 - imanalysis - DEBUG - analayze_channel_roc :: YCrCb :: Computed confusion matrix for bounds starting with 180
+2025-08-10 20:57:10,024 - imanalysis - DEBUG - load_boundary_batch :: YCrCb :: Loading batch for camera DSLR and color tag YCrCb
+2025-08-10 20:57:10,027 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 3 results: TPR=0.3699816167354584, FPR=0.002380252815783024, Precision=0.9931392669677734, Accuracy=0.6949666142463684
+2025-08-10 20:57:10,027 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:10,028 - imanalysis - DEBUG - analayze_channel_roc :: RGB :: Computed confusion matrix for bounds starting with 180
+2025-08-10 20:57:10,028 - imanalysis - DEBUG - load_boundary_batch :: RGB :: Loading batch for camera DSLR and color tag RGB
+2025-08-10 20:57:11,511 - imanalysis - DEBUG - load_boundary_batch :: HSV :: Ground truth mask is (180000, 400), Reference is (180000, 400, 3)
+2025-08-10 20:57:11,579 - imanalysis - DEBUG - load_boundary_batch :: YCrCb :: Ground truth mask is (180000, 400), Reference is (180000, 400, 3)
+2025-08-10 20:57:11,581 - imanalysis - DEBUG - load_boundary_batch :: RGB :: Ground truth mask is (180000, 400), Reference is (180000, 400, 3)
+2025-08-10 20:57:11,672 - imanalysis - DEBUG - analayze_channel_roc :: HSV :: Loaded Boundary masks for bounds starting with 200
+2025-08-10 20:57:11,673 - imanalysis - DEBUG - analayze_channel_roc :: HSV Ground truth masks ::  dtype uint8, Shape (180000, 400) || Boundary masks :: dtype uint8 Shape (360000, 400)
+2025-08-10 20:57:11,712 - imanalysis - DEBUG - analayze_channel_roc :: Mats loaded to gpu :: Free memory :: 16368 MB
+2025-08-10 20:57:11,714 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Lower bound: 200, Upper bounds: [220, 240], Mask shape: (180000, 400)
+2025-08-10 20:57:11,714 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary count: 2, Mask height: 180000, Mask width: 400
+2025-08-10 20:57:11,714 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Computing confusion matrix masks for 2 boundaries
+2025-08-10 20:57:11,715 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Confusion matrix masks computed
+2025-08-10 20:57:11,715 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 1/2 with bounds (200, 220)
+2025-08-10 20:57:11,732 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 1 results: TPR=0.0006368830800056458, FPR=0.04153020679950714, Precision=0.014080525375902653, Accuracy=0.4965936243534088
+2025-08-10 20:57:11,732 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:11,732 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 2/2 with bounds (200, 240)
+2025-08-10 20:57:11,736 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 2 results: TPR=0.000994092901237309, FPR=0.1096278727054596, Precision=0.008374052122235298, Accuracy=0.4615055322647095
+2025-08-10 20:57:11,736 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:11,737 - imanalysis - DEBUG - analayze_channel_roc :: HSV :: Computed confusion matrix for bounds starting with 200
+2025-08-10 20:57:11,737 - imanalysis - DEBUG - load_boundary_batch :: HSV :: Loading batch for camera DSLR and color tag HSV
+2025-08-10 20:57:11,760 - imanalysis - DEBUG - analayze_channel_roc :: RGB :: Loaded Boundary masks for bounds starting with 200
+2025-08-10 20:57:11,760 - imanalysis - DEBUG - analayze_channel_roc :: RGB Ground truth masks ::  dtype uint8, Shape (180000, 400) || Boundary masks :: dtype uint8 Shape (360000, 400)
+2025-08-10 20:57:11,803 - imanalysis - DEBUG - analayze_channel_roc :: Mats loaded to gpu :: Free memory :: 16368 MB
+2025-08-10 20:57:11,803 - imanalysis - DEBUG - analayze_channel_roc :: YCrCb :: Loaded Boundary masks for bounds starting with 200
+2025-08-10 20:57:11,803 - imanalysis - DEBUG - analayze_channel_roc :: YCrCb Ground truth masks ::  dtype uint8, Shape (180000, 400) || Boundary masks :: dtype uint8 Shape (360000, 400)
+2025-08-10 20:57:11,838 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Lower bound: 200, Upper bounds: [220, 240], Mask shape: (180000, 400)
+2025-08-10 20:57:11,838 - imanalysis - DEBUG - analayze_channel_roc :: Mats loaded to gpu :: Free memory :: 16368 MB
+2025-08-10 20:57:11,839 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary count: 2, Mask height: 180000, Mask width: 400
+2025-08-10 20:57:11,839 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Computing confusion matrix masks for 2 boundaries
+2025-08-10 20:57:11,839 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Lower bound: 200, Upper bounds: [220, 240], Mask shape: (180000, 400)
+2025-08-10 20:57:11,839 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary count: 2, Mask height: 180000, Mask width: 400
+2025-08-10 20:57:11,839 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Computing confusion matrix masks for 2 boundaries
+2025-08-10 20:57:11,840 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Confusion matrix masks computed
+2025-08-10 20:57:11,840 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Confusion matrix masks computed
+2025-08-10 20:57:11,840 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 1/2 with bounds (200, 220)
+2025-08-10 20:57:11,840 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 1/2 with bounds (200, 220)
+2025-08-10 20:57:11,858 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 1 results: TPR=0.13574323058128357, FPR=0.0005312370485626161, Precision=0.9958152770996094, Accuracy=0.58297199010849
+2025-08-10 20:57:11,858 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 1 results: TPR=0.0, FPR=0.0, Precision=0.0, Accuracy=0.5177904367446899
+2025-08-10 20:57:11,858 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:11,858 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:11,859 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 2/2 with bounds (200, 240)
+2025-08-10 20:57:11,859 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 2/2 with bounds (200, 240)
+2025-08-10 20:57:11,865 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 2 results: TPR=0.0, FPR=0.0, Precision=0.0, Accuracy=0.5177904367446899
+2025-08-10 20:57:11,865 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:11,866 - imanalysis - DEBUG - analayze_channel_roc :: YCrCb :: Computed confusion matrix for bounds starting with 200
+2025-08-10 20:57:11,866 - imanalysis - DEBUG - load_boundary_batch :: YCrCb :: Loading batch for camera DSLR and color tag YCrCb
+2025-08-10 20:57:11,866 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 2 results: TPR=0.19682587683200836, FPR=0.0007290593930520117, Precision=0.9960383772850037, Accuracy=0.6123242974281311
+2025-08-10 20:57:11,866 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:11,867 - imanalysis - DEBUG - analayze_channel_roc :: RGB :: Computed confusion matrix for bounds starting with 200
+2025-08-10 20:57:11,867 - imanalysis - DEBUG - load_boundary_batch :: RGB :: Loading batch for camera DSLR and color tag RGB
+2025-08-10 20:57:13,407 - imanalysis - DEBUG - load_boundary_batch :: RGB :: Ground truth mask is (180000, 400), Reference is (180000, 400, 3)
+2025-08-10 20:57:13,408 - imanalysis - DEBUG - load_boundary_batch :: HSV :: Ground truth mask is (180000, 400), Reference is (180000, 400, 3)
+2025-08-10 20:57:13,408 - imanalysis - DEBUG - load_boundary_batch :: YCrCb :: Ground truth mask is (180000, 400), Reference is (180000, 400, 3)
+2025-08-10 20:57:13,562 - imanalysis - DEBUG - analayze_channel_roc :: RGB :: Loaded Boundary masks for bounds starting with 220
+2025-08-10 20:57:13,563 - imanalysis - DEBUG - analayze_channel_roc :: RGB Ground truth masks ::  dtype uint8, Shape (180000, 400) || Boundary masks :: dtype uint8 Shape (180000, 400)
+2025-08-10 20:57:13,580 - imanalysis - DEBUG - analayze_channel_roc :: HSV :: Loaded Boundary masks for bounds starting with 220
+2025-08-10 20:57:13,597 - imanalysis - DEBUG - analayze_channel_roc :: HSV Ground truth masks ::  dtype uint8, Shape (180000, 400) || Boundary masks :: dtype uint8 Shape (180000, 400)
+2025-08-10 20:57:13,597 - imanalysis - DEBUG - analayze_channel_roc :: YCrCb :: Loaded Boundary masks for bounds starting with 220
+2025-08-10 20:57:13,597 - imanalysis - DEBUG - analayze_channel_roc :: Mats loaded to gpu :: Free memory :: 16368 MB
+2025-08-10 20:57:13,620 - imanalysis - DEBUG - analayze_channel_roc :: YCrCb Ground truth masks ::  dtype uint8, Shape (180000, 400) || Boundary masks :: dtype uint8 Shape (180000, 400)
+2025-08-10 20:57:13,620 - imanalysis - DEBUG - analayze_channel_roc :: Mats loaded to gpu :: Free memory :: 16368 MB
+2025-08-10 20:57:13,644 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Lower bound: 220, Upper bounds: [240], Mask shape: (180000, 400)
+2025-08-10 20:57:13,644 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Lower bound: 220, Upper bounds: [240], Mask shape: (180000, 400)
+2025-08-10 20:57:13,644 - imanalysis - DEBUG - analayze_channel_roc :: Mats loaded to gpu :: Free memory :: 16368 MB
+2025-08-10 20:57:13,645 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary count: 1, Mask height: 180000, Mask width: 400
+2025-08-10 20:57:13,645 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary count: 1, Mask height: 180000, Mask width: 400
+2025-08-10 20:57:13,645 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Computing confusion matrix masks for 1 boundaries
+2025-08-10 20:57:13,645 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Computing confusion matrix masks for 1 boundaries
+2025-08-10 20:57:13,645 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Lower bound: 220, Upper bounds: [240], Mask shape: (180000, 400)
+2025-08-10 20:57:13,645 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary count: 1, Mask height: 180000, Mask width: 400
+2025-08-10 20:57:13,645 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Computing confusion matrix masks for 1 boundaries
+2025-08-10 20:57:13,647 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Confusion matrix masks computed
+2025-08-10 20:57:13,647 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 1/1 with bounds (220, 240)
+2025-08-10 20:57:13,647 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Confusion matrix masks computed
+2025-08-10 20:57:13,647 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 1/1 with bounds (220, 240)
+2025-08-10 20:57:13,647 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Confusion matrix masks computed
+2025-08-10 20:57:13,647 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Processing boundary 1/1 with bounds (220, 240)
+2025-08-10 20:57:13,666 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 1 results: TPR=0.0, FPR=0.0, Precision=0.0, Accuracy=0.5177904367446899
+2025-08-10 20:57:13,666 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 1 results: TPR=0.0003818360564764589, FPR=0.07051697373390198, Precision=0.005017421208322048, Accuracy=0.4814615547657013
+2025-08-10 20:57:13,666 - imanalysis - DEBUG - _batch_compute_confusion_matrix :: Boundary 1 results: TPR=0.06567064672708511, FPR=0.00021861052664462477, Precision=0.996438205242157, Accuracy=0.5493442416191101
+2025-08-10 20:57:13,667 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:13,667 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:13,667 - imanalysis - DEBUG - =============================================
+2025-08-10 20:57:13,667 - imanalysis - DEBUG - analayze_channel_roc :: YCrCb :: Computed confusion matrix for bounds starting with 220
+2025-08-10 20:57:13,668 - imanalysis - DEBUG - analayze_channel_roc :: HSV :: Computed confusion matrix for bounds starting with 220
+2025-08-10 20:57:13,669 - imanalysis - DEBUG - analayze_channel_roc :: RGB :: Computed confusion matrix for bounds starting with 220
+2025-08-10 20:57:13,669 - imanalysis - DEBUG - analayze_channel_roc :: Completed channel analysis for YCrCb index 1
+2025-08-10 20:57:13,669 - imanalysis - DEBUG - analayze_channel_roc :: Completed channel analysis for HSV index 1
+2025-08-10 20:57:13,669 - imanalysis - DEBUG - analayze_channel_roc :: Completed channel analysis for RGB index 0
+2025-08-10 20:57:13,671 - imanalysis - INFO - Completed analysis for YCrCb channel Cr
+2025-08-10 20:57:13,675 - imanalysis - INFO - Completed analysis for HSV channel saturation
+2025-08-10 20:57:13,675 - imanalysis - INFO - Completed analysis for RGB channel red
+2025-08-10 20:57:13,676 - imanalysis - INFO - ROC analysis completed for camera DSLR

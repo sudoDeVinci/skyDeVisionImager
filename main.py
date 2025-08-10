@@ -2,13 +2,14 @@ from server.imageanalysis import (
     Camera,
     ColourTag,
     ROCAnalyzer,
+    AnalysisConfiguration,
     get_datasets_vstacks_sparse,
     get_masks_vstacks_sparse,
     get_reference_vstacks_sparse,
     verify_gpu_setup,
 )
 from cv2 import imshow, waitKey, ocl
-from numpy import array, uint8, zeros
+from numpy import array, uint8, zeros, uint16, float32
 from server.db import CameraModel
 from typing import no_type_check
 from json import dump
@@ -34,21 +35,34 @@ def dataset_vstack():
 @no_type_check
 def roc():
     camera = Camera(CameraModel.DSLR)
-    analyzer = ROCAnalyzer(camera=camera, config=None)
+    config = AnalysisConfiguration(
+        strata_count=uint16(20),
+        strata_size=uint16(30),
+        boundary_width=uint8(20),
+        jaccard_threshold=float32(0.25),
+        max_workers=uint8(4),
+        caching=False,
+        gpu_caching=True
+    )
+    analyzer = ROCAnalyzer(camera=camera, config=config)
     results = analyzer.analyze_roc(
         camera=camera,
-        colortags=[ColourTag.HSV, ColourTag.RGB],
+        colortags=[ColourTag.HSV, ColourTag.RGB, ColourTag.YBR],
     )
 
-    jsondict = {tagname: [] for tagname in results.keys()}
-
+    jsondict = {
+        "config": config.to_dict(),
+        "results": {}
+    }
+    jsondict["results"].update({tagname: [] for tagname in results.keys()})
+    
     for ctag, metrics in results.items():
         print(f"Color Tag: {ctag}")
         for metric in metrics:
             lower, upper = int(metric[0]), int(metric[1])
             tpr, fpr, precision, accuracy = metric[2], metric[3], metric[4], metric[5]
 
-            jsondict[ctag].append(
+            jsondict["results"][ctag].append(
                 {
                     "lower": int(lower),
                     "upper": int(upper),

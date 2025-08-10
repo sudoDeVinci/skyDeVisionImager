@@ -30,6 +30,7 @@ from .configuration import (
 from .roccurve import (
     ROCAnalyzer,
     BoundaryArray,
+    AnalysisConfiguration,
     verify_gpu_setup,
 )
 
@@ -60,4 +61,5 @@ __all__ = (
     "get_masks_vstacks_sparse",
     "get_reference_vstacks_sparse",
     "verify_gpu_setup",
+    "AnalysisConfiguration"
 )

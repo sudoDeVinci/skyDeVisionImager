@@ -184,6 +184,20 @@ class AnalysisConfiguration:
             raise ValueError("jaccard_threshold must be between 0 and 1")
         if self.max_workers is not None and self.max_workers < 1:
             raise ValueError("max_workers must be at least 1 if specified")
+        
+    def to_dict(self):
+        """
+        Convert the dataclass to a dictionary for easy serialization.
+        """
+        return {
+            "strata_count": int(self.strata_count),
+            "strata_size": int(self.strata_size),
+            "boundary_width": int(self.boundary_width),
+            "jaccard_threshold": float(self.jaccard_threshold),
+            "max_workers": int(self.max_workers),
+            "caching": self.caching,
+            "gpu_caching": self.gpu_caching,
+        }
 
 
 def generate_boundary_permutations(step_size: uint8 = BOUNDARY_WIDTH) -> BoundaryArray:
@@ -460,10 +474,10 @@ class ROCAnalyzer:
             config
             if config is not None
             else AnalysisConfiguration(
-                strata_count=uint16(10),
-                strata_size=uint16(10),
+                strata_count=uint16(15),
+                strata_size=uint16(30),
                 boundary_width=BOUNDARY_WIDTH,
-                jaccard_threshold=float32(0.25),
+                jaccard_threshold=float32(0.20),
                 max_workers=uint8(2),
                 caching=False,
                 gpu_caching=True,
