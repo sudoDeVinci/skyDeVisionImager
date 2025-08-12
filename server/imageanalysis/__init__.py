@@ -25,13 +25,13 @@ from .extraction import (
 
 from .configuration import (
     Camera,
+    verify_gpu_setup,
 )
 
 from .roccurve import (
     ROCAnalyzer,
     BoundaryArray,
-    AnalysisConfiguration,
-    verify_gpu_setup,
+    AnalysisConfiguration
 )
 
 

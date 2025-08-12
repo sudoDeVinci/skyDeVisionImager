@@ -101,64 +101,7 @@ Each record contains:
 """
 
 
-def verify_gpu_setup() -> bool:
-    """
-    Verify GPU setup and log OpenCL information.
-    Returns True if GPU is properly configured.
-
-    Returns:
-        bool: True if GPU is properly configured, False otherwise.
-    """
-    LOGGER.info("=== GPU Setup Verification ===")
-
-    opencl_available = cv2.ocl.haveOpenCL()
-    opencl_enabled = cv2.ocl.useOpenCL()
-
-    LOGGER.info(f"OpenCL available: {opencl_available}")
-    LOGGER.info(f"OpenCL enabled: {opencl_enabled}")
-
-    if not opencl_available:
-        LOGGER.warning("OpenCL not available - falling back to CPU")
-        return False
-
-    if not opencl_enabled:
-        LOGGER.warning("OpenCL not enabled - enabling now")
-        cv2.ocl.setUseOpenCL(True)
-
-    try:
-        device = cv2.ocl.Device.getDefault()
-
-        log = (
-            "\n"
-            f"\nDevice Name: {device.name()}\n"
-            f"Device Type: {device.type()}\n"
-            f"Max Compute Units: {device.maxComputeUnits()}\n"
-            f"Global Memory: {device.globalMemSize() // (1024*1024)} MB\n"
-            f"Local Memory: {device.localMemSize() // 1024} KB\n"
-            f"Max Work Group Size: {device.maxWorkGroupSize()}\n"
-        )
-
-        LOGGER.info(log)
-
-    except Exception as e:
-        LOGGER.warning(f"Could not get device info: {e}")
-
-    try:
-        test_umat = cv2.UMat(rows=1000, cols=1000, type=cv2.CV_8UC1)
-        result = cv2.blur(test_umat, (5, 5))
-
-        if isinstance(result, cv2.UMat):
-            LOGGER.info("GPU operations working correctly")
-            return True
-        else:
-            LOGGER.warning("GPU operations not working - result is not UMat")
-            return False
-
-    except Exception as e:
-        LOGGER.error(f"GPU test failed: {e}")
-        return False
-
-
+  
 @dataclass(slots=True)
 class AnalysisConfiguration:
     """

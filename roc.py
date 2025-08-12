@@ -36,10 +36,10 @@ def dataset_vstack():
 def roc():
     camera = Camera(CameraModel.DSLR)
     config = AnalysisConfiguration(
-        strata_count=uint16(20),
+        strata_count=uint16(5),
         strata_size=uint16(30),
         boundary_width=uint8(20),
-        jaccard_threshold=float32(0.25),
+        jaccard_threshold=float32(0.15),
         max_workers=uint8(4),
         caching=False,
         gpu_caching=True
@@ -347,9 +347,8 @@ def test_actual_roc_scenario():
 
 
 if __name__ == "__main__":
-    from cv2 import UMat, ocl, bitwise_not, bitwise_and
+    from cv2 import UMat
     from time import sleep
-
     # First, list all available devices
     list_opencl_devices()
 
@@ -366,3 +365,9 @@ if __name__ == "__main__":
 
     # If thread tests pass, we can try the actual ROC analysis
     roc()
+
+    #arr = zeros((100000, 1000), dtype=uint8)
+    #umat = UMat(arr)
+    #sleep(3)
+    #arrmat = umat.get()
+    #print(f"Created UMat with shape: {arrmat.shape} and dtype: {arrmat.dtype}")

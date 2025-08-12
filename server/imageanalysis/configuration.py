@@ -5,12 +5,76 @@ from os import listdir
 from pathlib import Path
 from functools import lru_cache
 from typing import Final, Generic, TypeVar, Sequence, Optional
-
+from logging import Logger, getLogger
+from cv2 import UMat, CV_8UC1, blur, ocl
 
 current_dir = Path(__file__).parent.resolve()
 
 
 ModelType = TypeVar("ModelType", bound=CameraModel)
+
+
+def verify_gpu_setup(LOGGER: Optional[Logger] = None) -> bool:
+    """
+    Verify GPU setup and log OpenCL information.
+    Returns True if GPU is properly configured.
+
+    Args:
+        LOGGER (Optional[Logger]): The logger instance to use for logging.
+
+    Returns:
+        bool: True if GPU is properly configured, False otherwise.
+    """
+
+    LOGGER: Logger = LOGGER if LOGGER else getLogger("imanalysis")
+    LOGGER.info("=== GPU Setup Verification ===")
+
+    opencl_available = ocl.haveOpenCL()
+    opencl_enabled = ocl.useOpenCL()
+
+    LOGGER.info(f"OpenCL available: {opencl_available}")
+    LOGGER.info(f"OpenCL enabled: {opencl_enabled}")
+
+    if not opencl_available:
+        LOGGER.warning("OpenCL not available - falling back to CPU")
+        return False
+
+    if not opencl_enabled:
+        LOGGER.warning("OpenCL not enabled - enabling now")
+        ocl.setUseOpenCL(True)
+
+    try:
+        device = ocl.Device.getDefault()
+
+        log = (
+            "\n"
+            f"\nDevice Name: {device.name()}\n"
+            f"Device Type: {device.type()}\n"
+            f"Max Compute Units: {device.maxComputeUnits()}\n"
+            f"Global Memory: {device.globalMemSize() // (1024*1024)} MB\n"
+            f"Local Memory: {device.localMemSize() // 1024} KB\n"
+            f"Max Work Group Size: {device.maxWorkGroupSize()}\n"
+        )
+
+        LOGGER.info(log)
+
+    except Exception as e:
+        LOGGER.warning(f"Could not get device info: {e}")
+
+    try:
+        test_umat = UMat(rows=1000, cols=1000, type=CV_8UC1)
+        result = blur(test_umat, (5, 5))
+
+        if isinstance(result, UMat):
+            LOGGER.info("GPU operations working correctly")
+            return True
+        else:
+            LOGGER.warning("GPU operations not working - result is not UMat")
+            return False
+
+    except Exception as e:
+        LOGGER.error(f"GPU test failed: {e}")
+        return False
 
 
 class Camera(Generic[ModelType]):
