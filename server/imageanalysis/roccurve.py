@@ -101,7 +101,6 @@ Each record contains:
 """
 
 
-  
 @dataclass(slots=True)
 class AnalysisConfiguration:
     """
@@ -127,7 +126,7 @@ class AnalysisConfiguration:
             raise ValueError("jaccard_threshold must be between 0 and 1")
         if self.max_workers is not None and self.max_workers < 1:
             raise ValueError("max_workers must be at least 1 if specified")
-        
+
     def to_dict(self):
         """
         Convert the dataclass to a dictionary for easy serialization.

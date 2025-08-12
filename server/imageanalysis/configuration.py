@@ -26,7 +26,7 @@ def verify_gpu_setup(LOGGER: Optional[Logger] = None) -> bool:
         bool: True if GPU is properly configured, False otherwise.
     """
 
-    LOGGER: Logger = LOGGER if LOGGER else getLogger("imanalysis")
+    LOGGER = LOGGER if LOGGER else getLogger("imanalysis")
     LOGGER.info("=== GPU Setup Verification ===")
 
     opencl_available = ocl.haveOpenCL()
@@ -35,9 +35,13 @@ def verify_gpu_setup(LOGGER: Optional[Logger] = None) -> bool:
     LOGGER.info(f"OpenCL available: {opencl_available}")
     LOGGER.info(f"OpenCL enabled: {opencl_enabled}")
 
+    setup = opencl_available and opencl_enabled
+
     if not opencl_available:
-        LOGGER.warning("OpenCL not available - falling back to CPU")
-        return False
+        LOGGER.info("OpenCL not available - falling back to CPU")
+        LOGGER.info("=== GPU Setup Verification Complete ===")
+        setup = False
+        return setup
 
     if not opencl_enabled:
         LOGGER.warning("OpenCL not enabled - enabling now")
@@ -57,9 +61,15 @@ def verify_gpu_setup(LOGGER: Optional[Logger] = None) -> bool:
         )
 
         LOGGER.info(log)
+        setup = True
 
     except Exception as e:
+        setup = False
         LOGGER.warning(f"Could not get device info: {e}")
+
+    if not setup:
+        LOGGER.error("GPU setup verification failed - using CPU only")
+        return False
 
     try:
         test_umat = UMat(rows=1000, cols=1000, type=CV_8UC1)
