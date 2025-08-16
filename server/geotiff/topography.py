@@ -2,11 +2,11 @@ from numpy import (
     array,
     arange,
     linspace,
+    zeros,
     meshgrid,
     nanmin,
     nanmax,
     isnan,
-    zeros,
     float32,
     float64,
     uint16,
@@ -16,19 +16,17 @@ from numpy import (
     max as npmax,
     min as npmin,
 )
-
-from typing import Optional
-from plotly.graph_objects import Surface, Figure  # type: ignore
-from numba import njit, types  # type: ignore
-from scipy.interpolate import griddata  # type: ignore
-from scipy.ndimage import median_filter, gaussian_filter  # type: ignore
-from pathlib import Path
-from nptyping import NDArray, Shape, Float32, Bool  # type: ignore
-from rasterio import open as rio_open, io  # type: ignore
-
-import pickle
-from hashlib import md5
+from scipy.ndimage import median_filter, gaussian_filter    # type: ignore
+from nptyping import NDArray, Shape, Float32, Bool          # type: ignore
+from plotly.graph_objects import Surface, Figure            # type: ignore
+from rasterio import open as rio_open, io                   # type: ignore
+from scipy.interpolate import griddata                      # type: ignore
+from numba import njit, types                               # type: ignore
 from io import TextIOWrapper
+from typing import Optional
+from pathlib import Path
+from hashlib import md5
+import pickle
 
 type CoordinateArray = NDArray[Shape["*, *"], Float32]
 type GeoCoordinateArray = NDArray[Shape["*, 3"], Float32]
@@ -73,8 +71,8 @@ def _vectorized_xyz_extraction(
                 valid_count += 1
 
     # Pre-allocate result array
-    xyz = array([[0.0, 0.0, 0.0]] * valid_count, dtype=float32)
-    # xyz = zeros()
+    #xyz = array([[0.0, 0.0, 0.0]] * valid_count, dtype=float32)
+    xyz = zeros((valid_count, 3), dtype=float32)
 
     idx = 0
     for y in range(height):
@@ -408,6 +406,7 @@ def graph_plotly(
 
     # Try to load from cache
     if use_cache and cache_file.exists():
+        print("USING CACHE")
         try:
             with open(cache_file, "rb") as f:
                 meshes = pickle.load(f)
