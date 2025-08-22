@@ -3,9 +3,9 @@ from flask.testing import FlaskClient
 from server.db import (
     StationStatus,
     Station,
-    StationStatusJSON,
     StatusService,
     StationService,
+    NotFoundError
 )
 from datetime import datetime, UTC
 from server.db import CameraModel, DeviceType
@@ -21,7 +21,7 @@ def test_get_status_not_found(client: FlaskClient) -> None:
 
 
 @no_type_check
-def test_insert_status_success(client: FlaskClient) -> None:
+def test_insert_and_get_status_success(client: FlaskClient) -> None:
     station = Station(
         MAC="00:1A:2B:3C:4D:5E",
         name="station",
@@ -78,6 +78,13 @@ def test_list_statuses(client: FlaskClient) -> None:
         assert isinstance(
             status, StationStatus
         ), f"Expected StationStatus instance, got {type(status)}"
+
+
+@no_type_check
+def test_list_statuses_unsuccessful(client: FlaskClient) -> None:
+    statuses = StatusService.list()
+    assert isinstance(statuses, list), "Expected a list of statuses"
+    assert len(statuses) == 0, f"Expected 0 statuses in the database, got {len(statuses)}"
 
 
 @no_type_check
@@ -150,7 +157,7 @@ def test_list_statuses_offset(client: FlaskClient) -> None:
 
 
 @no_type_check
-def test_update_status_success(client: FlaskClient) -> None:
+def test_update_status_successful(client: FlaskClient) -> None:
     station = Station(
         MAC="00:1A:2B:3C:4D:5E",
         name="station",
@@ -187,7 +194,25 @@ def test_update_status_success(client: FlaskClient) -> None:
 
 
 @no_type_check
-def test_delete_status(client: FlaskClient) -> None:
+def test_update_status_nonexistant(client: FlaskClient) -> None:
+    updated_status = StationStatus(
+        MAC="00:1A:2B:3C:4D:5E",
+        timestamp=datetime.now(tz=UTC),
+        SHT=True,
+        BMP=True,
+        CAM=True,
+        WIFI=True,
+    )
+
+    try:
+        StatusService.update(MAC=updated_status.MAC, status=updated_status)
+        raise AssertionError("This MAC doesn't exist and should've raised a NotFoundError.")
+    except NotFoundError as err:
+        pass
+
+
+@no_type_check
+def test_delete_status_successful(client: FlaskClient) -> None:
     station = Station(
         MAC="00:1A:2B:3C:4D:5E",
         name="station",
@@ -215,7 +240,20 @@ def test_delete_status(client: FlaskClient) -> None:
 
 
 @no_type_check
-def test_status_exists(client: FlaskClient) -> None:
+def test_delete_status_nonexistant(client: FlaskClient) -> None:
+    MAC = "00:1A:2B:3C:4D:5E"
+
+    try:
+        StatusService.delete(MAC=MAC)
+        AssertionError("This MAC doesn't exist and should've raised a NotFoundError.")
+    except NotFoundError as err:
+        pass
+    status = StatusService.get(MAC=MAC)
+    assert status is None, "Status should be deleted, but still exists"
+
+
+@no_type_check
+def test_status_exists_true(client: FlaskClient) -> None:
     station = Station(
         MAC="00:1A:2B:3C:4D:5E",
         name="station",
@@ -238,3 +276,41 @@ def test_status_exists(client: FlaskClient) -> None:
 
     exists = StatusService.exists(MAC=station.MAC)
     assert exists, "Status should exist for the inserted station"
+
+
+@no_type_check
+def test_status_exists_false(client: FlaskClient) -> None:
+
+    MAC="00:1A:2B:3C:4D:5E"
+    exists = StatusService.exists(MAC=MAC)
+    assert exists == False, f"Status should not exist for MAC {MAC}."
+
+@no_type_check
+def test_status_exists_after_delete(client: FlaskClient) -> None:
+    station = Station(
+        MAC="00:1A:2B:3C:4D:5E",
+        name="station",
+        device_model=DeviceType.ESP32,
+        camera_model=CameraModel.DSLR,
+        firmware_version="1.0.0",
+        altitude=400,
+        latitude=83.3323,
+        longitude=82.5546,
+        sensors=StationStatus(
+            MAC="00:1A:2B:3C:4D:5E",
+            timestamp=datetime.now(tz=UTC),
+            SHT=False,
+            BMP=False,
+            CAM=False,
+            WIFI=False,
+        ),
+    )
+    StationService.insert(station=station)
+
+    exists = StatusService.exists(MAC=station.MAC)
+    assert exists, "Status should exist for the inserted station"
+
+    StationService.delete(MAC=station.MAC)
+
+    exists = StatusService.exists(MAC=station.MAC)
+    assert exists == False, f"Status should not exist for delted MAC {MAC}"
