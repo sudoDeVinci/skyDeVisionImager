@@ -5,7 +5,7 @@ from server.db import (
     Station,
     StatusService,
     StationService,
-    NotFoundError
+    NotFoundError,
 )
 from datetime import datetime, UTC
 from server.db import CameraModel, DeviceType
@@ -84,7 +84,9 @@ def test_list_statuses(client: FlaskClient) -> None:
 def test_list_statuses_unsuccessful(client: FlaskClient) -> None:
     statuses = StatusService.list()
     assert isinstance(statuses, list), "Expected a list of statuses"
-    assert len(statuses) == 0, f"Expected 0 statuses in the database, got {len(statuses)}"
+    assert (
+        len(statuses) == 0
+    ), f"Expected 0 statuses in the database, got {len(statuses)}"
 
 
 @no_type_check
@@ -206,7 +208,9 @@ def test_update_status_nonexistant(client: FlaskClient) -> None:
 
     try:
         StatusService.update(MAC=updated_status.MAC, status=updated_status)
-        raise AssertionError("This MAC doesn't exist and should've raised a NotFoundError.")
+        raise AssertionError(
+            "This MAC doesn't exist and should've raised a NotFoundError."
+        )
     except NotFoundError as err:
         pass
 
@@ -281,9 +285,10 @@ def test_status_exists_true(client: FlaskClient) -> None:
 @no_type_check
 def test_status_exists_false(client: FlaskClient) -> None:
 
-    MAC="00:1A:2B:3C:4D:5E"
+    MAC = "00:1A:2B:3C:4D:5E"
     exists = StatusService.exists(MAC=MAC)
     assert exists == False, f"Status should not exist for MAC {MAC}."
+
 
 @no_type_check
 def test_status_exists_after_delete(client: FlaskClient) -> None:
