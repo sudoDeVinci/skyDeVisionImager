@@ -50,12 +50,7 @@ def status() -> tuple[Response, int]:
         headers = request.headers
         headercheck(headers)
 
-        # All the keys are uppercase. This is just to ensure consistency.
-        tempstatusdict: StationStatusJSON = request.get_json()
-        statusdict: StationStatusJSON = cast(
-            StationStatusJSON,
-            {k.upper(): v for k, v in tempstatusdict.items() if v is not None},
-        )
+        statusdict: StationStatusJSON = cast(StationStatusJSON, request.get_json())
 
         # Validation for update JSON
         mac: str = cast(str, headers.get(HEADERS.MACADDRESS.value))

@@ -24,7 +24,6 @@ from cv2 import (
     imread,
 )
 from .configuration import Camera
-
 from cv2.typing import MatLike
 from typing import Final, Optional, Any, cast, Annotated
 from nptyping import NDArray, Shape, UInt8, Bool, UInt16

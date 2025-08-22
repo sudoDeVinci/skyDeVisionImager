@@ -5,8 +5,16 @@ from os import listdir
 from pathlib import Path
 from functools import lru_cache
 from typing import Final, Generic, TypeVar, Sequence, Optional
-from logging import Logger, getLogger
+from logging import Logger, getLogger, basicConfig, StreamHandler, FileHandler
 from cv2 import UMat, CV_8UC1, blur, ocl
+
+basicConfig(
+    level="DEBUG",
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    handlers=[StreamHandler(), FileHandler("image_analysis.log", mode="w")],
+)
+
+LOGGER: Logger = getLogger("imanalysis")
 
 current_dir = Path(__file__).parent.resolve()
 

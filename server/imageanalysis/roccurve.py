@@ -20,11 +20,9 @@ from typing_extensions import Self
 from dataclasses import dataclass
 from typing import Annotated, Final, Optional, Any
 import cv2
-from gc import collect
 
-from .configuration import Camera
-from logging import Logger, getLogger, basicConfig, StreamHandler, FileHandler
-
+from .configuration import Camera, LOGGER
+from logging import getLogger
 from .extraction import (
     ColourTag,
     ColorImage,
@@ -42,13 +40,6 @@ from concurrent.futures import (
     ThreadPoolExecutor,  # Changed from ProcessPoolExecutor
 )
 
-basicConfig(
-    level="DEBUG",
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    handlers=[StreamHandler(), FileHandler("image_analysis.log", mode="w")],
-)
-
-LOGGER: Logger = getLogger("imanalysis")
 numbassalog = getLogger("numba.core.ssa")
 numbassalog.setLevel("WARNING")
 numbabyteflow = getLogger("numba.core.byteflow")

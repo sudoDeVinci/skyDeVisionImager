@@ -16,12 +16,12 @@ from numpy import (
     max as npmax,
     min as npmin,
 )
-from scipy.ndimage import median_filter, gaussian_filter    # type: ignore
-from nptyping import NDArray, Shape, Float32, Bool          # type: ignore
-from plotly.graph_objects import Surface, Figure            # type: ignore
-from rasterio import open as rio_open, io                   # type: ignore
-from scipy.interpolate import griddata                      # type: ignore
-from numba import njit, types                               # type: ignore
+from scipy.ndimage import median_filter, gaussian_filter  # type: ignore
+from nptyping import NDArray, Shape, Float32, Bool  # type: ignore
+from plotly.graph_objects import Surface, Figure  # type: ignore
+from rasterio import open as rio_open, io  # type: ignore
+from scipy.interpolate import griddata  # type: ignore
+from numba import njit, types  # type: ignore
 from io import TextIOWrapper
 from typing import Optional
 from pathlib import Path
@@ -71,7 +71,7 @@ def _vectorized_xyz_extraction(
                 valid_count += 1
 
     # Pre-allocate result array
-    #xyz = array([[0.0, 0.0, 0.0]] * valid_count, dtype=float32)
+    # xyz = array([[0.0, 0.0, 0.0]] * valid_count, dtype=float32)
     xyz = zeros((valid_count, 3), dtype=float32)
 
     idx = 0
