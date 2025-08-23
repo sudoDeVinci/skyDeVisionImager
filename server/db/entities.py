@@ -290,7 +290,7 @@ class ReadingJSON(TypedDict, total=False):
 
     Attributes:
         MAC (MacAddress): The MAC address of the station.
-        timestamp (str): The timestamp of the reading in string format.
+        timestamp (datetime): The timestamp of the reading.
         temperature (float): The temperature reading in degrees Celsius.
         humidity (float): The humidity reading in percentage.
         pressure (float): The pressure reading in hPa.
@@ -299,7 +299,7 @@ class ReadingJSON(TypedDict, total=False):
     """
 
     MAC: MacAddress
-    timestamp: str
+    timestamp: datetime
     temperature: float
     humidity: float
     pressure: float

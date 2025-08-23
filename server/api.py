@@ -9,6 +9,7 @@ from .db import (
     StationService,
     Reading,
     ReadingJSON,
+    ReadingService,
     Station,
     StationJSON,
     DatabaseError,
@@ -330,9 +331,20 @@ def reading() -> tuple[Response, int]:
         headers = request.headers
         headercheck(headers)
 
+        readingdict: ReadingJSON = cast(ReadingJSON, request.get_json())
+
         mac = headers.get(HEADERS.MACADDRESS.value)
-        if not StationService.exists(MAC=mac):
-            raise NotFoundError(f"Station with MAC {mac} not found.")
+        timestamp = cast(str, headers.get(HEADERS.TIMESTAMP.value))
+        readingdict.update(
+            {
+                "MAC": MacAddress(mac),
+                "timestamp": str2dt(timestamp),
+            }
+        )
+
+        reading = Reading(**readingdict)
+        ReadingService.update(MAC=mac, timestamp=timestamp, reading=reading)
+        return jsonify({"status": "success"}), 200
 
     except NotFoundError as nfe:
         return (
@@ -352,7 +364,95 @@ def reading() -> tuple[Response, int]:
             404,
         )
 
-    return jsonify({"status": "success"}), 200
+    except MissingHeadersError as mhe:
+        return (
+            jsonify(
+                ErrorResponse(
+                    errors=[
+                        ErrorDict(
+                            title="Missing Headers",
+                            details=str(mhe),
+                            code="400",
+                            source="/api/reading",
+                        )
+                    ],
+                    timestamp=datetime.now(tz=UTC).isoformat(),
+                )
+            ),
+            400,
+        )
+
+    except ValidationError as ve:
+        return (
+            jsonify(
+                ErrorResponse(
+                    errors=[
+                        ErrorDict(
+                            title="Validation Error",
+                            details=str(ve),
+                            code="422",
+                            source="/api/reading",
+                        )
+                    ],
+                    timestamp=datetime.now(tz=UTC).isoformat(),
+                )
+            ),
+            422,
+        )
+
+    except InvalidInputError as iie:
+        return (
+            jsonify(
+                ErrorResponse(
+                    errors=[
+                        ErrorDict(
+                            title="Invalid Input",
+                            details=str(iie),
+                            code="400",
+                            source="/api/reading",
+                        )
+                    ],
+                    timestamp=datetime.now(tz=UTC).isoformat(),
+                )
+            ),
+            400,
+        )
+
+    except InternalDBError as ide:
+        return (
+            jsonify(
+                ErrorResponse(
+                    errors=[
+                        ErrorDict(
+                            title="Internal Database Error",
+                            details=str(ide),
+                            code="500",
+                            source="/api/reading",
+                        )
+                    ],
+                    timestamp=datetime.now(tz=UTC).isoformat(),
+                )
+            ),
+            500,
+        )
+
+    except SQLError as e:
+        return (
+            jsonify(
+                ErrorResponse(
+                    errors=[
+                        ErrorDict(
+                            title="Database Error",
+                            details=str(e),
+                            code="500",
+                            source="/api/reading",
+                        )
+                    ],
+                    timestamp=datetime.now(tz=UTC).isoformat(),
+                )
+            ),
+            500,
+        )
 
 
 @apiRouter.route("/qnh", methods=["GET"])

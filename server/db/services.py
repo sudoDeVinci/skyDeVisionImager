@@ -8,11 +8,13 @@ from .entities import (
     StationStatus,
     StationStatusJSON,
     Reading,
+    ReadingJSON,
     Location,
     DeviceType,
     CameraModel,
     UserRole,
 )
+
 from .DBManager import Manager
 from pydantic import BaseModel, EmailStr, SecretStr
 from pydantic_extra_types.mac_address import MacAddress
@@ -975,3 +977,158 @@ class ReadingService(Service[Reading]):
                 )
 
         return results
+
+    @staticmethod
+    def insert(**kwargs) -> None:
+        """
+        Insert a reading into the database.
+        Args:
+            reading (Reading): The reading to insert.
+        Raises:
+            InvalidInputError: If no reading is provided | if the provided reading is not an instance of Reading.
+            InternalDBError: If there is an error getting the cursor for reading insertion.
+            SQLError: If there is an error executing the SQL query.
+        """
+        reading: Optional[Reading] = kwargs.get("reading", None)
+        if not reading:
+            raise InvalidInputError("No reading provided for insertion.")
+
+        if not isinstance(reading, Reading):
+            raise InvalidInputError("Provided reading is not an instance of Reading.")
+
+        query = "INSERT INTO Readings VALUES (?, ?, ?, ?, ?, ?, ?);"
+        Manager.log(f"Inserting reading :: {reading}", level=DEBUG)
+
+        with Manager.cursor() as cursor:
+            if not cursor:
+                raise InternalDBError("Failed to get cursor for reading insertion.")
+
+            cursor.execute(
+                query,
+                (
+                    reading.MAC,
+                    dt2str(reading.timestamp),
+                    reading.temperature,
+                    reading.humidity,
+                    reading.pressure,
+                    reading.dewpoint,
+                    reading.filepath,
+                ),
+            )
+
+    @staticmethod
+    def update(**kwargs) -> None:
+        """
+        Update a reading in the database.
+        Args:
+            MAC (MacAddress): The MAC address of the station the reading belongs to.
+            timestamp (datetime): The timestamp of the reading to update.
+            reading (ReadingJSON): The reading data to update.
+        Raises:
+            InvalidInputError: If MAC is not provided | if timestamp is not provided | if no reading data is provided | if the provided reading data is not an instance of ReadingJSON.
+            InternalDBError: If there is an error getting the cursor for reading update.
+            SQLError: If there is an error executing the SQL query.
+            NotFoundError: If no reading is found to update.
+        """
+        mac: Optional[MacAddress] = kwargs.get("MAC", None)
+        timestamp: Optional[datetime] = kwargs.get("timestamp", None)
+        reading: Optional[Reading] = kwargs.get("reading", None)
+
+        if not mac:
+            raise InvalidInputError("MAC must be provided to update a reading.")
+        if not timestamp:
+            raise InvalidInputError("timestamp must be provided to update a reading.")
+        if not reading:
+            raise InvalidInputError("No reading provided for update.")
+        if not isinstance(reading, Reading):
+            raise InvalidInputError("Provided reading is not an instance of Reading.")
+
+        query = "UPDATE Readings SET temperature = ?, humidity = ?, pressure = ?, dewpoint = ?, filepath = ? WHERE MAC = ? AND timestamp = ?;"
+        params = (
+            reading.temperature,
+            reading.humidity,
+            reading.pressure,
+            reading.dewpoint,
+            reading.filepath,
+            mac,
+            dt2str(timestamp),
+        )
+
+        with Manager.cursor() as cursor:
+            if not cursor:
+                raise InternalDBError("Failed to get cursor for reading update.")
+
+            cursor.execute(query, params)
+
+            if cursor.rowcount == 0:
+                raise NotFoundError("No reading found to update.")
+
+    @staticmethod
+    def delete(**kwargs) -> None:
+        """
+        Delete a reading from the database.
+        Args:
+            MAC (MacAddress): The MAC address of the station the reading belongs to.
+            timestamp (datetime): The timestamp of the reading to delete.
+        Raises:
+            InvalidInputError: If MAC is not provided | if timestamp is not provided.
+            InternalDBError: If there is an error getting the cursor for reading deletion.
+            SQLError: If there is an error executing the SQL query.
+            NotFoundError: If no reading is found to delete.
+        """
+        mac: Optional[MacAddress] = kwargs.get("MAC", None)
+        timestamp: Optional[datetime] = kwargs.get("timestamp", None)
+
+        if not mac:
+            raise InvalidInputError("MAC must be provided to delete a reading.")
+
+        if not timestamp:
+            raise InvalidInputError("timestamp must be provided to delete a reading.")
+
+        query = "DELETE FROM Readings WHERE MAC = ? AND timestamp = ?;"
+
+        with Manager.cursor() as cursor:
+            if not cursor:
+                raise InternalDBError("Failed to get cursor for reading deletion.")
+
+            cursor.execute(query, (mac, dt2str(timestamp)))
+
+            if cursor.rowcount == 0:
+                raise NotFoundError("No reading found to delete.")
+
+    @staticmethod
+    def exists(**kwargs) -> bool:
+        """
+        Check if a reading exists in the database.
+        Args:
+            MAC (MacAddress): The MAC address of the station the reading belongs to.
+            timestamp (datetime): The timestamp of the reading to check.
+        Returns:
+            bool: True if the reading exists, False otherwise.
+        Raises:
+            InvalidInputError: If MAC is not provided | if timestamp is not provided.
+            InternalDBError: If there is an error getting the cursor for reading existence check.
+            SQLError: If there is an error executing the SQL query.
+        """
+        mac: Optional[MacAddress] = kwargs.get("MAC", None)
+        timestamp: Optional[datetime] = kwargs.get("timestamp", None)
+
+        if not mac:
+            raise InvalidInputError(
+                "MAC must be provided to check if a reading exists."
+            )
+        if not timestamp:
+            raise InvalidInputError(
+                "timestamp must be provided to check if a reading exists."
+            )
+
+        query = "SELECT 1 FROM Readings WHERE MAC = ? AND timestamp = ? LIMIT 1;"
+
+        with Manager.cursor() as cursor:
+            if not cursor:
+                raise InternalDBError(
+                    "Failed to get cursor for reading existence check."
+                )
+
+            cursor.execute(query, (mac, dt2str(timestamp)))
+            return cursor.fetchone() is not None
