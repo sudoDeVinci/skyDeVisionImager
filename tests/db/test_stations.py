@@ -35,7 +35,7 @@ def test_list_stations(client: FlaskClient) -> None:
     station = Station(
         MAC="00:1A:2B:3C:4D:5E",
         name="station",
-        device_model=DeviceType.ESP32,
+        device_model=DeviceType.ESP32S3,
         camera_model=CameraModel.DSLR,
         firmware_version="1.0.0",
         altitude=400,

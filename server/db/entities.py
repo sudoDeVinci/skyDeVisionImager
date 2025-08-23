@@ -13,7 +13,7 @@ from typing import (
 from datetime import datetime, UTC
 from decimal import Decimal
 from abc import ABC
-from pydantic import BaseModel, EmailStr, SecretStr
+from pydantic import BaseModel, EmailStr, SecretStr, model_validator
 from pydantic_extra_types.mac_address import MacAddress
 from pydantic_extra_types.coordinate import Latitude, Longitude
 from enum import Enum
@@ -76,10 +76,7 @@ class CameraModel(Enum):
     @classmethod
     @lru_cache(maxsize=50)
     def match(cls, camera: str):
-        """
-        Match input string to camera model.
-        """
-        return cls[camera] if camera in cls.__members__.items() else cls.UNKNOWN
+        return cls[camera] if camera in cls.__members__ else cls.UNKNOWN  # Fixed
 
     @classmethod
     @lru_cache(maxsize=50)
@@ -127,7 +124,7 @@ class DeviceType(Enum):
     @classmethod
     @lru_cache(maxsize=50)
     def match(cls, device: str):
-        return cls[device] if device in cls.__members__.items() else cls.UNKNOWN
+        return cls[device] if device in cls.__members__ else cls.UNKNOWN
 
 
 class UserRole(Enum):
@@ -143,7 +140,7 @@ class UserRole(Enum):
         Match input string to user role.
         """
         role = role.lower()
-        return UserRole[role] if role in cls.__members__.items() else cls.UNKNOWN
+        return UserRole[role] if role in cls.__members__ else cls.UNKNOWN
 
     @classmethod
     @lru_cache(maxsize=None)
@@ -223,6 +220,12 @@ class Station(BaseModel):
     latitude: Latitude
     longitude: Longitude
     sensors: Optional[StationStatus] = None
+
+    @model_validator(mode="after")
+    def check_device_model(self):
+        if self.device_model is DeviceType.UNKNOWN:
+            raise ValueError("device_model cannot be DeviceType.UNKNOWN")
+        return self
 
 
 class StationJSON(TypedDict, total=False):

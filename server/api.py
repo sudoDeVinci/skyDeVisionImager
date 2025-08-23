@@ -7,6 +7,8 @@ from .db import (
     StationStatusJSON,
     StatusService,
     StationService,
+    Reading,
+    ReadingJSON,
     Station,
     StationJSON,
     DatabaseError,
@@ -202,6 +204,7 @@ def register() -> tuple[Response, int]:
                 ),
             }
         )
+
         station = Station(**stationdict)  # type: ignore
 
         StationService.insert(station=station)
@@ -321,6 +324,34 @@ def reading() -> tuple[Response, int]:
     """
     Endpoint to handle environmental reading updates.
     """
+
+    try:
+        
+        headers = request.headers
+        headercheck(headers)
+
+        mac = headers.get(HEADERS.MACADDRESS.value)
+        if not StationService.exists(MAC=mac):
+            raise NotFoundError(f"Station with MAC {mac} not found.")
+        
+    except NotFoundError as nfe:
+        return (
+            jsonify(
+                ErrorResponse(
+                    errors=[
+                        ErrorDict(
+                            title="Not Found",
+                            details=str(nfe),
+                            code="404",
+                            source="/api/reading",
+                        )
+                    ],
+                    timestamp=datetime.now(tz=UTC).isoformat(),
+                )
+            ),
+            404,
+        )
+
     return jsonify({"status": "success"}), 200
 
 

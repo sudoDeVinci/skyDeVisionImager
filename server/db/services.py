@@ -858,3 +858,128 @@ class StationService(Service[Station]):
 
             cursor.execute(query, (mac,))
             return cursor.fetchone() is not None
+
+
+class ReadingService(Service[Reading]):
+    """
+    Service class for managing Reading entities in the database.
+    """
+
+    @staticmethod
+    def get(**kwargs) -> Optional[Reading]:
+        """
+        Get a reading from the database.
+        Args:
+            - MAC (MacAddress): The MAC address of the station the reading belongs to.
+            - timestamp (str): The timestamp of the reading to retrieve.
+
+        Returns:
+            Optional[Reading]: The reading object if found, None otherwise.
+
+        Raises:
+            InvalidInputError: If id is not provided | if there is an error retrieving the reading.
+            InternalDBError: If there is an error getting the cursor for reading retrieval.
+            SQLError: If there is an error executing the SQL query.
+        """
+        result: Optional[Reading] = None
+        mac: Optional[MacAddress] = kwargs.get("MAC", None)
+        timestamp: Optional[datetime] = kwargs.get("timestamp", None)
+
+        if not mac:
+            raise InvalidInputError(
+                f"MAC must be provided to retrieve a reading."
+            )
+        if not timestamp:
+            raise InvalidInputError(
+                f"timestamp must be provided to retrieve a reading."
+            )
+        
+        query = f"SELECT * FROM Readings WHERE MAC = ? AND timestamp = ? LIMIT 1;"
+
+        with Manager.cursor() as cursor:
+            if not cursor:
+                raise InternalDBError("Failed to get cursor for reading retrieval.")
+
+            cursor.execute(query, (mac, dt2str(timestamp)))
+            data = cursor.fetchone()
+            if data:
+                result = Reading(
+                    MAC=data[0],
+                    timestamp=str2dt(data[1]),
+                    temperature=data[2],
+                    humidity=data[3],
+                    pressure=data[4],
+                    dewpoint=data[5],
+                    filepath=data[6]
+                )
+
+        return result
+
+
+    @staticmethod
+    def list(**kwargs) -> list[Reading]:
+        """
+        Get a slice of readings from the database for a given station.
+        Args:
+            limit (int): The maximum number of readings to retrieve.
+            page (int): The page number to retrieve (0-indexed).
+            MAC (MacAddress): The MAC address of the station to filter readings by.
+            start (datetime): The start timestamp to filter readings by.
+            end (datetime): The end timestamp to filter readings by.
+
+        Returns:
+            list[Reading]: A list of reading objects.
+        Raises:
+            InternalDBError: If there is an error getting the cursor for reading listing.
+            SQLError: If there is an error executing the SQL query.
+        """
+        results: list[Reading] = []
+        limit: int = kwargs.get("limit", 20)
+        page: int = kwargs.get("page", 0)
+        mac: Optional[MacAddress] = kwargs.get("MAC", None)
+        start: Optional[datetime] = kwargs.get("start", None)
+        end: Optional[datetime] = kwargs.get("end", None)
+        offset = page * limit
+
+        if not mac:
+            raise InvalidInputError(
+                f"MAC must be provided to list readings."
+            )
+
+        queryparam = "MAC = ?"
+        params = [mac]
+
+        if start:
+            queryparam += " AND timestamp >= ?"
+            params.append(dt2str(start))
+
+        if end:
+            queryparam += " AND timestamp <= ?"
+            params.append(dt2str(end))
+
+        query = f"SELECT * FROM Readings WHERE {queryparam} ORDER BY timestamp DESC LIMIT ? OFFSET ?;"
+        params.extend([limit, offset])
+
+        with Manager.cursor() as cursor:
+            if not cursor:
+                raise InternalDBError("Failed to get cursor for reading listing.")
+
+            cursor.execute(query, tuple(params))
+            data = cursor.fetchall()
+            for row in data:
+                results.append(
+                    Reading(
+                        MAC=row[0],
+                        timestamp=str2dt(row[1]),
+                        temperature=row[2],
+                        humidity=row[3],
+                        pressure=row[4],
+                        dewpoint=row[5],
+                        filepath=row[6]
+                    )
+                )
+
+        return results
+
+
+
