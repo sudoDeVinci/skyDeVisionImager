@@ -326,14 +326,14 @@ def reading() -> tuple[Response, int]:
     """
 
     try:
-        
+
         headers = request.headers
         headercheck(headers)
 
         mac = headers.get(HEADERS.MACADDRESS.value)
         if not StationService.exists(MAC=mac):
             raise NotFoundError(f"Station with MAC {mac} not found.")
-        
+
     except NotFoundError as nfe:
         return (
             jsonify(

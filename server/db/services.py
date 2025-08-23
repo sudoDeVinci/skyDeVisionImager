@@ -19,7 +19,7 @@ from pydantic_extra_types.mac_address import MacAddress
 from pydantic_extra_types.coordinate import Latitude, Longitude
 from sqlite3 import Error as SQLError
 from abc import ABC, abstractmethod
-from typing import Generic, TypeVar, Optional, Union
+from typing import Generic, TypeVar, Optional, Any
 from uuid import uuid4
 from logging import ERROR, DEBUG
 from datetime import datetime, UTC
@@ -886,14 +886,12 @@ class ReadingService(Service[Reading]):
         timestamp: Optional[datetime] = kwargs.get("timestamp", None)
 
         if not mac:
-            raise InvalidInputError(
-                f"MAC must be provided to retrieve a reading."
-            )
+            raise InvalidInputError(f"MAC must be provided to retrieve a reading.")
         if not timestamp:
             raise InvalidInputError(
                 f"timestamp must be provided to retrieve a reading."
             )
-        
+
         query = f"SELECT * FROM Readings WHERE MAC = ? AND timestamp = ? LIMIT 1;"
 
         with Manager.cursor() as cursor:
@@ -910,11 +908,10 @@ class ReadingService(Service[Reading]):
                     humidity=data[3],
                     pressure=data[4],
                     dewpoint=data[5],
-                    filepath=data[6]
+                    filepath=data[6],
                 )
 
         return result
-
 
     @staticmethod
     def list(**kwargs) -> list[Reading]:
@@ -942,12 +939,10 @@ class ReadingService(Service[Reading]):
         offset = page * limit
 
         if not mac:
-            raise InvalidInputError(
-                f"MAC must be provided to list readings."
-            )
+            raise InvalidInputError(f"MAC must be provided to list readings.")
 
         queryparam = "MAC = ?"
-        params = [mac]
+        params: list[Any] = [mac]
 
         if start:
             queryparam += " AND timestamp >= ?"
@@ -975,11 +970,8 @@ class ReadingService(Service[Reading]):
                         humidity=row[3],
                         pressure=row[4],
                         dewpoint=row[5],
-                        filepath=row[6]
+                        filepath=row[6],
                     )
                 )
 
         return results
-
-
-
