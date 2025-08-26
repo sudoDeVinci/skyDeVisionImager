@@ -873,7 +873,7 @@ class ReadingService(Service[Reading]):
         Get a reading from the database.
         Args:
             - MAC (MacAddress): The MAC address of the station the reading belongs to.
-            - timestamp (str): The timestamp of the reading to retrieve.
+            - timestamp (datetime): The timestamp of the reading to retrieve.
 
         Returns:
             Optional[Reading]: The reading object if found, None otherwise.
