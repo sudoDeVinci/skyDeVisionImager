@@ -303,3 +303,169 @@ def test_list_readings_multiple(client: FlaskClient) -> None:
         assert (
             newreadings[i] == readings[i]
         ), f"Inserted reading is not equivalent to extracted"
+
+
+@no_type_check
+def test_update_readings_successful(client: FlaskClient) -> None:
+    station = Station(
+        MAC="00:1A:2B:3C:4D:5E",
+        name="station",
+        device_model=DeviceType.ESP32,
+        camera_model=CameraModel.DSLR,
+        firmware_version="1.0.0",
+        altitude=400,
+        latitude=83.3323,
+        longitude=82.5546,
+        sensors=None,
+    )
+    StationService.insert(station=station)
+    newstation = StationService.get(MAC=station.MAC)
+    assert newstation is not None, "Could not retrieve newly inserted station"
+    assert newstation == station
+
+    dt = datetime.now(tz=UTC)
+    reading = Reading(
+        MAC=station.MAC,
+        timestamp=dt,
+        temperature=0.0,
+        humidity=0.0,
+        pressure=0.0,
+        dewpoint=0.0,
+    )
+    ReadingService.insert(reading=reading)
+
+    updates = {"temperature": 0.5, "humidity": 0.5, "pressure": 0.5, "dewpoint": 0.5}
+    updatedreading = reading.model_copy(update=updates, deep=True)
+
+    ReadingService.update(MAC=station.MAC, timestamp=dt, reading=updatedreading)
+
+    fetchedreading = ReadingService.get(MAC=station.MAC, timestamp=dt)
+    if fetchedreading is None:
+        raise NotFoundError("Updated reading could not be found.")
+    assert isinstance(
+        fetchedreading, Reading
+    ), f"Reading hsould be of type 'Reading', got {type(fetchedreading)}"
+
+    assert (
+        fetchedreading == updatedreading
+    ), f"Updated reading is not equivalent to extracted"
+
+
+@no_type_check
+def test_update_readings_nonexistent(client: FlaskClient) -> None:
+    reading = Reading(
+        MAC="00:1A:2B:3C:4D:5E",
+        timestamp=datetime.now(tz=UTC),
+        temperature=0.0,
+        humidity=0.0,
+        pressure=0.0,
+        dewpoint=0.0,
+    )
+
+    try:
+        ReadingService.update(
+            MAC=reading.MAC, timestamp=reading.timestamp, reading=reading
+        )
+        raise AssertionError(
+            "Updating a non-existent reading should raise NotFoundError"
+        )
+    except NotFoundError:
+        pass
+
+
+@no_type_check
+def test_delete_reading_successful(client: FlaskClient) -> None:
+
+    station = Station(
+        MAC="00:1A:2B:3C:4D:5E",
+        name="station",
+        device_model=DeviceType.ESP32,
+        camera_model=CameraModel.DSLR,
+        firmware_version="1.0.0",
+        altitude=400,
+        latitude=83.3323,
+        longitude=82.5546,
+        sensors=None,
+    )
+    StationService.insert(station=station)
+    newstation = StationService.get(MAC=station.MAC)
+    assert newstation is not None, "Could not retrieve newly inserted station"
+    assert newstation == station
+
+    dt = datetime.now(tz=UTC)
+    reading = Reading(
+        MAC=station.MAC,
+        timestamp=dt,
+        temperature=0.0,
+        humidity=0.0,
+        pressure=0.0,
+        dewpoint=0.0,
+    )
+    ReadingService.insert(reading=reading)
+
+    fetchedreading = ReadingService.get(MAC=station.MAC, timestamp=dt)
+    if fetchedreading is None:
+        raise NotFoundError("Inserted reading could not be found.")
+    assert isinstance(
+        fetchedreading, Reading
+    ), f"Reading hsould be of type 'Reading', got {type(fetchedreading)}"
+
+    assert fetchedreading == reading, f"Inserted reading is not equivalent to extracted"
+
+    ReadingService.delete(MAC=station.MAC, timestamp=dt)
+    deletedreading = ReadingService.get(MAC=station.MAC, timestamp=dt)
+    assert (
+        deletedreading is None
+    ), f"Deleted reading should be None, got {deletedreading}"
+
+
+@no_type_check
+def test_delete_reading_nonexistent(client: FlaskClient) -> None:
+    try:
+        ReadingService.delete(MAC="00:1A:2B:3C:4D:5E", timestamp=datetime.now(tz=UTC))
+        raise AssertionError(
+            "Deleting a non-existent reading should raise NotFoundError"
+        )
+    except NotFoundError:
+        pass
+
+
+@no_type_check
+def test_exist_reading_successful(client: FlaskClient) -> None:
+    station = Station(
+        MAC="00:1A:2B:3C:4D:5E",
+        name="station",
+        device_model=DeviceType.ESP32,
+        camera_model=CameraModel.DSLR,
+        firmware_version="1.0.0",
+        altitude=400,
+        latitude=83.3323,
+        longitude=82.5546,
+        sensors=None,
+    )
+    StationService.insert(station=station)
+    newstation = StationService.get(MAC=station.MAC)
+    assert newstation is not None, "Could not retrieve newly inserted station"
+    assert newstation == station
+
+    dt = datetime.now(tz=UTC)
+    reading = Reading(
+        MAC=station.MAC,
+        timestamp=dt,
+        temperature=0.0,
+        humidity=0.0,
+        pressure=0.0,
+        dewpoint=0.0,
+    )
+    ReadingService.insert(reading=reading)
+
+    exists = ReadingService.exists(MAC=station.MAC, timestamp=dt)
+    assert exists is True, f"Reading should exist, got {exists}"
+
+
+@no_type_check
+def test_exists_reading_nonexistent(client: FlaskClient) -> None:
+    exists = ReadingService.exists(
+        MAC="00:1A:2B:3C:4D:5E", timestamp=datetime.now(tz=UTC)
+    )
+    assert exists is False, f"Reading should not exist, got {exists}"
