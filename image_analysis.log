@@ -1,104 +1,107 @@
-2025-08-31 04:05:02,087 - server.db.DBManager - INFO - Database file set to: /tmp/tmpzvj_2j9b.db
-2025-08-31 04:05:02,088 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpzvj_2j9b.db
-2025-08-31 04:05:02,099 - server.db.DBManager - INFO - Database file set to: /tmp/tmp02frplph.db
-2025-08-31 04:05:02,099 - server.db.DBManager - INFO - Connecting to database: /tmp/tmp02frplph.db
-2025-08-31 04:05:02,109 - server.db.DBManager - INFO - Database file set to: /tmp/tmpz71dckdm.db
-2025-08-31 04:05:02,109 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpz71dckdm.db
-2025-08-31 04:05:02,121 - server.db.DBManager - INFO - Database file set to: /tmp/tmpyd2lupxg.db
-2025-08-31 04:05:02,121 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpyd2lupxg.db
-2025-08-31 04:05:02,132 - server.db.DBManager - INFO - Database file set to: /tmp/tmpoohvup4i.db
-2025-08-31 04:05:02,132 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpoohvup4i.db
-2025-08-31 04:05:02,140 - server.db.DBManager - INFO - Database file set to: /tmp/tmprck5ghxp.db
-2025-08-31 04:05:02,140 - server.db.DBManager - INFO - Connecting to database: /tmp/tmprck5ghxp.db
-2025-08-31 04:05:02,152 - server.db.DBManager - INFO - Database file set to: /tmp/tmptr3kprg1.db
-2025-08-31 04:05:02,152 - server.db.DBManager - INFO - Connecting to database: /tmp/tmptr3kprg1.db
-2025-08-31 04:05:02,162 - server.db.DBManager - INFO - Database file set to: /tmp/tmpm99b2wrs.db
-2025-08-31 04:05:02,162 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpm99b2wrs.db
-2025-08-31 04:05:02,172 - server.db.DBManager - INFO - Database file set to: /tmp/tmp9dt_h_9j.db
-2025-08-31 04:05:02,173 - server.db.DBManager - INFO - Connecting to database: /tmp/tmp9dt_h_9j.db
-2025-08-31 04:05:02,174 - server.db.DBManager - ERROR - No reading found to update.
-2025-08-31 04:05:02,184 - server.db.DBManager - INFO - Database file set to: /tmp/tmp5jm5_m3a.db
-2025-08-31 04:05:02,184 - server.db.DBManager - INFO - Connecting to database: /tmp/tmp5jm5_m3a.db
-2025-08-31 04:05:02,191 - server.db.DBManager - INFO - Database file set to: /tmp/tmpdwxl4_fn.db
-2025-08-31 04:05:02,192 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpdwxl4_fn.db
-2025-08-31 04:05:02,194 - server.db.DBManager - ERROR - No reading found to delete.
-2025-08-31 04:05:02,202 - server.db.DBManager - INFO - Database file set to: /tmp/tmpzhod72j4.db
-2025-08-31 04:05:02,202 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpzhod72j4.db
-2025-08-31 04:05:02,210 - server.db.DBManager - INFO - Database file set to: /tmp/tmps4tjl2pb.db
-2025-08-31 04:05:02,211 - server.db.DBManager - INFO - Connecting to database: /tmp/tmps4tjl2pb.db
-2025-08-31 04:05:02,220 - server.db.DBManager - INFO - Database file set to: /tmp/tmpjfkouugy.db
-2025-08-31 04:05:02,220 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpjfkouugy.db
-2025-08-31 04:05:02,230 - server.db.DBManager - INFO - Database file set to: /tmp/tmp_qwxxlsl.db
-2025-08-31 04:05:02,230 - server.db.DBManager - INFO - Connecting to database: /tmp/tmp_qwxxlsl.db
-2025-08-31 04:05:02,248 - server.db.DBManager - INFO - Database file set to: /tmp/tmp5717kuhl.db
-2025-08-31 04:05:02,248 - server.db.DBManager - INFO - Connecting to database: /tmp/tmp5717kuhl.db
-2025-08-31 04:05:02,263 - server.db.DBManager - INFO - Database file set to: /tmp/tmpxgz51575.db
-2025-08-31 04:05:02,263 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpxgz51575.db
-2025-08-31 04:05:02,274 - server.db.DBManager - INFO - Database file set to: /tmp/tmpoub6r_ax.db
-2025-08-31 04:05:02,274 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpoub6r_ax.db
-2025-08-31 04:05:02,290 - server.db.DBManager - INFO - Database file set to: /tmp/tmpbi0anw81.db
-2025-08-31 04:05:02,291 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpbi0anw81.db
-2025-08-31 04:05:02,308 - server.db.DBManager - INFO - Database file set to: /tmp/tmp36o47kcq.db
-2025-08-31 04:05:02,308 - server.db.DBManager - INFO - Connecting to database: /tmp/tmp36o47kcq.db
-2025-08-31 04:05:02,324 - server.db.DBManager - INFO - Database file set to: /tmp/tmpbq954wvi.db
-2025-08-31 04:05:02,324 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpbq954wvi.db
-2025-08-31 04:05:02,326 - server.db.DBManager - ERROR - No station found to update.
-2025-08-31 04:05:02,336 - server.db.DBManager - INFO - Database file set to: /tmp/tmpq7x_ts67.db
-2025-08-31 04:05:02,336 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpq7x_ts67.db
-2025-08-31 04:05:02,350 - server.db.DBManager - INFO - Database file set to: /tmp/tmpcqx10izl.db
-2025-08-31 04:05:02,350 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpcqx10izl.db
-2025-08-31 04:05:02,352 - server.db.DBManager - ERROR - No station status found to delete.
-2025-08-31 04:05:02,353 - server.db.DBManager - ERROR - No station status found to delete.
-2025-08-31 04:05:02,361 - server.db.DBManager - INFO - Database file set to: /tmp/tmpjvdcjwuz.db
-2025-08-31 04:05:02,361 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpjvdcjwuz.db
-2025-08-31 04:05:02,374 - server.db.DBManager - INFO - Database file set to: /tmp/tmpc1ydy0fk.db
-2025-08-31 04:05:02,374 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpc1ydy0fk.db
-2025-08-31 04:05:02,387 - server.db.DBManager - INFO - Database file set to: /tmp/tmprw2i53_5.db
-2025-08-31 04:05:02,387 - server.db.DBManager - INFO - Connecting to database: /tmp/tmprw2i53_5.db
-2025-08-31 04:05:02,400 - server.db.DBManager - INFO - Database file set to: /tmp/tmpcryd_492.db
-2025-08-31 04:05:02,400 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpcryd_492.db
-2025-08-31 04:05:02,411 - server.db.DBManager - INFO - Database file set to: /tmp/tmp9_bn_9kn.db
-2025-08-31 04:05:02,411 - server.db.DBManager - INFO - Connecting to database: /tmp/tmp9_bn_9kn.db
-2025-08-31 04:05:02,422 - server.db.DBManager - INFO - Database file set to: /tmp/tmpfzstxplc.db
-2025-08-31 04:05:02,422 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpfzstxplc.db
-2025-08-31 04:05:02,441 - server.db.DBManager - INFO - Database file set to: /tmp/tmp4usrwv8i.db
-2025-08-31 04:05:02,441 - server.db.DBManager - INFO - Connecting to database: /tmp/tmp4usrwv8i.db
-2025-08-31 04:05:02,453 - server.db.DBManager - INFO - Database file set to: /tmp/tmpbs5q6h72.db
-2025-08-31 04:05:02,453 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpbs5q6h72.db
-2025-08-31 04:05:02,472 - server.db.DBManager - INFO - Database file set to: /tmp/tmpvkimvppp.db
-2025-08-31 04:05:02,472 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpvkimvppp.db
-2025-08-31 04:05:02,485 - server.db.DBManager - INFO - Database file set to: /tmp/tmp58knus8z.db
-2025-08-31 04:05:02,485 - server.db.DBManager - INFO - Connecting to database: /tmp/tmp58knus8z.db
-2025-08-31 04:05:02,494 - server.db.DBManager - INFO - Database file set to: /tmp/tmp_dou7gab.db
-2025-08-31 04:05:02,495 - server.db.DBManager - INFO - Connecting to database: /tmp/tmp_dou7gab.db
-2025-08-31 04:05:02,497 - server.db.DBManager - ERROR - No station status found to update.
-2025-08-31 04:05:02,504 - server.db.DBManager - INFO - Database file set to: /tmp/tmpbp9_saso.db
-2025-08-31 04:05:02,504 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpbp9_saso.db
-2025-08-31 04:05:02,513 - server.db.DBManager - INFO - Database file set to: /tmp/tmp2osl0gwe.db
-2025-08-31 04:05:02,513 - server.db.DBManager - INFO - Connecting to database: /tmp/tmp2osl0gwe.db
-2025-08-31 04:05:02,515 - server.db.DBManager - ERROR - No station status found to delete.
-2025-08-31 04:05:02,515 - server.db.DBManager - ERROR - No station status found to delete.
-2025-08-31 04:05:02,521 - server.db.DBManager - INFO - Database file set to: /tmp/tmpbgpq94jx.db
-2025-08-31 04:05:02,521 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpbgpq94jx.db
-2025-08-31 04:05:02,533 - server.db.DBManager - INFO - Database file set to: /tmp/tmp01nvr832.db
-2025-08-31 04:05:02,533 - server.db.DBManager - INFO - Connecting to database: /tmp/tmp01nvr832.db
-2025-08-31 04:05:02,540 - server.db.DBManager - INFO - Database file set to: /tmp/tmpdrpzyxv1.db
-2025-08-31 04:05:02,540 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpdrpzyxv1.db
-2025-08-31 04:05:02,550 - server.db.DBManager - INFO - Database file set to: /tmp/tmpy4cvauey.db
-2025-08-31 04:05:02,551 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpy4cvauey.db
-2025-08-31 04:05:02,572 - server.db.DBManager - INFO - Database file set to: /tmp/tmph34nls_q.db
-2025-08-31 04:05:02,572 - server.db.DBManager - INFO - Connecting to database: /tmp/tmph34nls_q.db
-2025-08-31 04:05:02,582 - server.db.DBManager - INFO - Database file set to: /tmp/tmpr2j68wf_.db
-2025-08-31 04:05:02,582 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpr2j68wf_.db
-2025-08-31 04:05:02,591 - server.db.DBManager - INFO - Database file set to: /tmp/tmperxv_epc.db
-2025-08-31 04:05:02,591 - server.db.DBManager - INFO - Connecting to database: /tmp/tmperxv_epc.db
-2025-08-31 04:05:02,594 - server.db.DBManager - ERROR - No station status found to update.
-2025-08-31 04:05:02,602 - server.db.DBManager - INFO - Database file set to: /tmp/tmpsbq_ixyw.db
-2025-08-31 04:05:02,602 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpsbq_ixyw.db
-2025-08-31 04:05:02,612 - server.db.DBManager - INFO - Database file set to: /tmp/tmp4r2rgg_v.db
-2025-08-31 04:05:02,612 - server.db.DBManager - INFO - Connecting to database: /tmp/tmp4r2rgg_v.db
-2025-08-31 04:05:02,616 - server.db.DBManager - ERROR - Station with MAC 00:1a:2b:3c:4d:5e already exists.
-2025-08-31 04:05:02,621 - server.db.DBManager - INFO - Database file set to: /tmp/tmpy9nie1n3.db
-2025-08-31 04:05:02,622 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpy9nie1n3.db
-2025-08-31 04:05:02,630 - server.db.DBManager - INFO - Database file set to: /tmp/tmpis7e9vp0.db
-2025-08-31 04:05:02,630 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpis7e9vp0.db
+2025-08-31 05:59:37,292 - asyncio - DEBUG - Using selector: EpollSelector
+2025-08-31 05:59:37,300 - urllib3.connectionpool - DEBUG - Starting new HTTPS connection (1): api.metar-taf.com:443
+2025-08-31 05:59:37,408 - server.db.DBManager - INFO - Database file set to: /tmp/tmpo0q7b4vx.db
+2025-08-31 05:59:37,408 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpo0q7b4vx.db
+2025-08-31 05:59:37,430 - server.db.DBManager - INFO - Database file set to: /tmp/tmp9o34g_3z.db
+2025-08-31 05:59:37,430 - server.db.DBManager - INFO - Connecting to database: /tmp/tmp9o34g_3z.db
+2025-08-31 05:59:37,445 - server.db.DBManager - INFO - Database file set to: /tmp/tmpd81pf5bd.db
+2025-08-31 05:59:37,445 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpd81pf5bd.db
+2025-08-31 05:59:37,453 - urllib3.connectionpool - DEBUG - https://api.metar-taf.com:443 "GET /metar?api_key=VOeVgaTHCcmuX4vuOS47tRLPEkOfPWTT&v=2.3&locale=en-US&id=ESMX HTTP/1.1" 200 927
+2025-08-31 05:59:37,462 - server.db.DBManager - INFO - Database file set to: /tmp/tmpwr2m2t_e.db
+2025-08-31 05:59:37,463 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpwr2m2t_e.db
+2025-08-31 05:59:37,478 - server.db.DBManager - INFO - Database file set to: /tmp/tmp2psahpyk.db
+2025-08-31 05:59:37,478 - server.db.DBManager - INFO - Connecting to database: /tmp/tmp2psahpyk.db
+2025-08-31 05:59:37,496 - server.db.DBManager - INFO - Database file set to: /tmp/tmpgry_zyh_.db
+2025-08-31 05:59:37,496 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpgry_zyh_.db
+2025-08-31 05:59:37,512 - server.db.DBManager - INFO - Database file set to: /tmp/tmpbg2n75f7.db
+2025-08-31 05:59:37,512 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpbg2n75f7.db
+2025-08-31 05:59:37,527 - server.db.DBManager - INFO - Database file set to: /tmp/tmpchke7jb1.db
+2025-08-31 05:59:37,527 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpchke7jb1.db
+2025-08-31 05:59:37,542 - server.db.DBManager - INFO - Database file set to: /tmp/tmpy2jccqi5.db
+2025-08-31 05:59:37,543 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpy2jccqi5.db
+2025-08-31 05:59:37,547 - server.db.DBManager - ERROR - No reading found to update.
+2025-08-31 05:59:37,557 - server.db.DBManager - INFO - Database file set to: /tmp/tmpd0a5p958.db
+2025-08-31 05:59:37,557 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpd0a5p958.db
+2025-08-31 05:59:37,575 - server.db.DBManager - INFO - Database file set to: /tmp/tmpx2989_cs.db
+2025-08-31 05:59:37,575 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpx2989_cs.db
+2025-08-31 05:59:37,579 - server.db.DBManager - ERROR - No reading found to delete.
+2025-08-31 05:59:37,592 - server.db.DBManager - INFO - Database file set to: /tmp/tmpam9ojiiy.db
+2025-08-31 05:59:37,592 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpam9ojiiy.db
+2025-08-31 05:59:37,607 - server.db.DBManager - INFO - Database file set to: /tmp/tmpj07ks79d.db
+2025-08-31 05:59:37,607 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpj07ks79d.db
+2025-08-31 05:59:37,622 - server.db.DBManager - INFO - Database file set to: /tmp/tmpfg4ln9yr.db
+2025-08-31 05:59:37,622 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpfg4ln9yr.db
+2025-08-31 05:59:37,636 - server.db.DBManager - INFO - Database file set to: /tmp/tmpedxy1_6x.db
+2025-08-31 05:59:37,636 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpedxy1_6x.db
+2025-08-31 05:59:37,650 - server.db.DBManager - INFO - Database file set to: /tmp/tmpg499bggh.db
+2025-08-31 05:59:37,650 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpg499bggh.db
+2025-08-31 05:59:37,664 - server.db.DBManager - INFO - Database file set to: /tmp/tmpqga23u2k.db
+2025-08-31 05:59:37,664 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpqga23u2k.db
+2025-08-31 05:59:37,680 - server.db.DBManager - INFO - Database file set to: /tmp/tmp_q3hqruc.db
+2025-08-31 05:59:37,680 - server.db.DBManager - INFO - Connecting to database: /tmp/tmp_q3hqruc.db
+2025-08-31 05:59:37,695 - server.db.DBManager - INFO - Database file set to: /tmp/tmprohw8q9c.db
+2025-08-31 05:59:37,695 - server.db.DBManager - INFO - Connecting to database: /tmp/tmprohw8q9c.db
+2025-08-31 05:59:37,716 - server.db.DBManager - INFO - Database file set to: /tmp/tmp1m1m5l4d.db
+2025-08-31 05:59:37,716 - server.db.DBManager - INFO - Connecting to database: /tmp/tmp1m1m5l4d.db
+2025-08-31 05:59:37,729 - server.db.DBManager - INFO - Database file set to: /tmp/tmpko9_w1gz.db
+2025-08-31 05:59:37,730 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpko9_w1gz.db
+2025-08-31 05:59:37,732 - server.db.DBManager - ERROR - No station found to update.
+2025-08-31 05:59:37,742 - server.db.DBManager - INFO - Database file set to: /tmp/tmp7rxzymz_.db
+2025-08-31 05:59:37,742 - server.db.DBManager - INFO - Connecting to database: /tmp/tmp7rxzymz_.db
+2025-08-31 05:59:37,759 - server.db.DBManager - INFO - Database file set to: /tmp/tmp53pnk0hl.db
+2025-08-31 05:59:37,759 - server.db.DBManager - INFO - Connecting to database: /tmp/tmp53pnk0hl.db
+2025-08-31 05:59:37,763 - server.db.DBManager - ERROR - No station status found to delete.
+2025-08-31 05:59:37,763 - server.db.DBManager - ERROR - No station status found to delete.
+2025-08-31 05:59:37,773 - server.db.DBManager - INFO - Database file set to: /tmp/tmpc6mjb14_.db
+2025-08-31 05:59:37,773 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpc6mjb14_.db
+2025-08-31 05:59:37,788 - server.db.DBManager - INFO - Database file set to: /tmp/tmphcgnltrb.db
+2025-08-31 05:59:37,788 - server.db.DBManager - INFO - Connecting to database: /tmp/tmphcgnltrb.db
+2025-08-31 05:59:37,801 - server.db.DBManager - INFO - Database file set to: /tmp/tmpqbjnpet3.db
+2025-08-31 05:59:37,801 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpqbjnpet3.db
+2025-08-31 05:59:37,815 - server.db.DBManager - INFO - Database file set to: /tmp/tmpsw1pmty7.db
+2025-08-31 05:59:37,815 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpsw1pmty7.db
+2025-08-31 05:59:37,829 - server.db.DBManager - INFO - Database file set to: /tmp/tmpkfh91lf5.db
+2025-08-31 05:59:37,829 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpkfh91lf5.db
+2025-08-31 05:59:37,847 - server.db.DBManager - INFO - Database file set to: /tmp/tmpeef4vzqs.db
+2025-08-31 05:59:37,847 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpeef4vzqs.db
+2025-08-31 05:59:37,870 - server.db.DBManager - INFO - Database file set to: /tmp/tmp9vb5mrqp.db
+2025-08-31 05:59:37,870 - server.db.DBManager - INFO - Connecting to database: /tmp/tmp9vb5mrqp.db
+2025-08-31 05:59:37,883 - server.db.DBManager - INFO - Database file set to: /tmp/tmpa572zmyr.db
+2025-08-31 05:59:37,883 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpa572zmyr.db
+2025-08-31 05:59:37,899 - server.db.DBManager - INFO - Database file set to: /tmp/tmp9ofi6u4s.db
+2025-08-31 05:59:37,899 - server.db.DBManager - INFO - Connecting to database: /tmp/tmp9ofi6u4s.db
+2025-08-31 05:59:37,917 - server.db.DBManager - INFO - Database file set to: /tmp/tmp96v3cm6o.db
+2025-08-31 05:59:37,918 - server.db.DBManager - INFO - Connecting to database: /tmp/tmp96v3cm6o.db
+2025-08-31 05:59:37,934 - server.db.DBManager - INFO - Database file set to: /tmp/tmpain7gg3n.db
+2025-08-31 05:59:37,935 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpain7gg3n.db
+2025-08-31 05:59:37,938 - server.db.DBManager - ERROR - No station status found to update.
+2025-08-31 05:59:37,948 - server.db.DBManager - INFO - Database file set to: /tmp/tmphru4mq70.db
+2025-08-31 05:59:37,948 - server.db.DBManager - INFO - Connecting to database: /tmp/tmphru4mq70.db
+2025-08-31 05:59:37,963 - server.db.DBManager - INFO - Database file set to: /tmp/tmpjefhksq0.db
+2025-08-31 05:59:37,964 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpjefhksq0.db
+2025-08-31 05:59:37,967 - server.db.DBManager - ERROR - No station status found to delete.
+2025-08-31 05:59:37,967 - server.db.DBManager - ERROR - No station status found to delete.
+2025-08-31 05:59:37,979 - server.db.DBManager - INFO - Database file set to: /tmp/tmpkr706qbm.db
+2025-08-31 05:59:37,979 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpkr706qbm.db
+2025-08-31 05:59:37,992 - server.db.DBManager - INFO - Database file set to: /tmp/tmpiwz_k840.db
+2025-08-31 05:59:37,992 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpiwz_k840.db
+2025-08-31 05:59:38,006 - server.db.DBManager - INFO - Database file set to: /tmp/tmpvnsgpzot.db
+2025-08-31 05:59:38,006 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpvnsgpzot.db
+2025-08-31 05:59:38,024 - server.db.DBManager - INFO - Database file set to: /tmp/tmpe7dc4gr_.db
+2025-08-31 05:59:38,024 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpe7dc4gr_.db
+2025-08-31 05:59:38,041 - server.db.DBManager - INFO - Database file set to: /tmp/tmp0p_10h6d.db
+2025-08-31 05:59:38,041 - server.db.DBManager - INFO - Connecting to database: /tmp/tmp0p_10h6d.db
+2025-08-31 05:59:38,056 - server.db.DBManager - INFO - Database file set to: /tmp/tmp5fydianx.db
+2025-08-31 05:59:38,056 - server.db.DBManager - INFO - Connecting to database: /tmp/tmp5fydianx.db
+2025-08-31 05:59:38,079 - server.db.DBManager - INFO - Database file set to: /tmp/tmpq986d3hs.db
+2025-08-31 05:59:38,079 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpq986d3hs.db
+2025-08-31 05:59:38,083 - server.db.DBManager - ERROR - No station status found to update.
+2025-08-31 05:59:38,093 - server.db.DBManager - INFO - Database file set to: /tmp/tmp8g2niz6s.db
+2025-08-31 05:59:38,094 - server.db.DBManager - INFO - Connecting to database: /tmp/tmp8g2niz6s.db
+2025-08-31 05:59:38,111 - server.db.DBManager - INFO - Database file set to: /tmp/tmpupj3ju8r.db
+2025-08-31 05:59:38,112 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpupj3ju8r.db
+2025-08-31 05:59:38,116 - server.db.DBManager - ERROR - Station with MAC 00:1a:2b:3c:4d:5e already exists.
+2025-08-31 05:59:38,126 - server.db.DBManager - INFO - Database file set to: /tmp/tmpbc8kblb8.db
+2025-08-31 05:59:38,127 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpbc8kblb8.db
+2025-08-31 05:59:38,140 - server.db.DBManager - INFO - Database file set to: /tmp/tmpxj5wamat.db
+2025-08-31 05:59:38,140 - server.db.DBManager - INFO - Connecting to database: /tmp/tmpxj5wamat.db

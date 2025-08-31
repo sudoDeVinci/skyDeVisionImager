@@ -34,8 +34,12 @@ from ._utils import (
     HEADERS as HEADERS,
 )
 
+from ._metar import MetarResponse, MetarCacheLayer
+
 from ._types import ErrorResponse, ErrorDict
 
+
+MetarCache: MetarCacheLayer = MetarCacheLayer(airports=["ESMX"], update_interval=600)
 
 apiRouter = Blueprint("api", __name__, url_prefix="/api")
 """

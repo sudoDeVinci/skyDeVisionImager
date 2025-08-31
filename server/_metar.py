@@ -3,8 +3,7 @@ from requests import Response, get
 import asyncio
 import dotenv
 from os import environ
-from pathlib import Path
-from threading import Lock
+from threading import Lock, Thread
 from time import time, sleep
 
 dotenv.load_dotenv()
@@ -125,13 +124,17 @@ class UnregisteredAirport(Exception):
 
 class MetarCacheLayer:
 
-    __slots__ = ("_QNH_CACHE", "_CACHE_LOCK", "_updated", "_interval")
+    __slots__ = ("_QNH_CACHE", "_CACHE_LOCK", "update_thread", "_updated", "_interval")
 
     def __init__(self, airports: list[str], update_interval: int = 600) -> None:
         self._CACHE_LOCK = Lock()
         self._QNH_CACHE: dict[str, Optional[int]] = {port: None for port in airports}
         self._updated = int(time())
         self._interval = update_interval
+        self.update_thread: Optional[Thread] = Thread(
+            target=self.schedule_refresh, daemon=True
+        )
+        self.update_thread.start()
 
     async def request_metar_info(self, airport: str) -> Response:
         """

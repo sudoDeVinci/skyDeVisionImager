@@ -57,6 +57,14 @@ from .imageanalysis import (
     verify_gpu_setup,
 )
 
+from ._metar import (
+    MetarResponse,
+    Airport,
+    Metar,
+    Runway,
+    MetarCacheLayer,
+)
+
 from flask import Flask
 from .api import apiRouter
 
@@ -130,4 +138,9 @@ __all__ = (
     "get_masks_vstacks_sparse",
     "get_reference_vstacks_sparse",
     "verify_gpu_setup",
+    "MetarResponse",
+    "Airport",
+    "Metar",
+    "Runway",
+    "MetarCacheLayer",
 )
