@@ -18,6 +18,7 @@ from .db import (
     AlreadyExistsError,
 )
 
+from functools import wraps
 from pydantic import ValidationError
 from pydantic_extra_types.mac_address import MacAddress
 from pydantic_extra_types.coordinate import Latitude, Longitude
@@ -44,417 +45,129 @@ apiRouter = Blueprint("api", __name__, url_prefix="/api")
 API endpoints for handling status and environmental reading data.
 """
 
+def _create_error_response(title: str, details: str, code: str, source: str) -> Response:
+    return jsonify(ErrorResponse(
+        errors=[ErrorDict(title=title, details=details, code=code, source=source)],
+        timestamp=datetime.now(tz=UTC).isoformat()
+    ))
+
+def handle_api_db_errors(source_endpoint: str):
+    """
+    Decorator to handle common API and database errors and return appropriate HTTP responses.
+    Args:
+        source_endpoint (str): The endpoint where the error originated, used for error reporting.
+    Returns:
+        Callable: The decorated function with error handling.
+    """
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            try:
+                return func(*args, **kwargs)
+            except MissingHeadersError as e:
+                return _create_error_response("Missing Headers", str(e), "400", source_endpoint), 400
+            except ValidationError as e:
+                return _create_error_response("Validation Error", str(e), "422", source_endpoint), 422
+            except AlreadyExistsError as e:
+                return _create_error_response("Already Exists", str(e), "409", source_endpoint), 409
+            except NotFoundError as e:
+                return _create_error_response("Not Found", str(e), "404", source_endpoint), 404
+            except InvalidInputError as e:
+                return _create_error_response("Invalid Input", str(e), "400", source_endpoint), 400
+            except InternalDBError as e:
+                return _create_error_response("Internal Database Error", str(e), "500", source_endpoint), 500
+            except SQLError as e:
+                return _create_error_response("Database Error", str(e), "500", source_endpoint), 500
+        return wrapper
+    return decorator
+
 
 @apiRouter.route("/status", methods=["POST", "PUT"])
+@handle_api_db_errors("/api/status")
 def status() -> tuple[Response, int]:
     """
     Endpoint to handle status updates.
     """
 
-    try:
-        headers = request.headers
-        headercheck(headers)
+    headers = request.headers
+    headercheck(headers)
 
-        statusdict: StationStatusJSON = cast(StationStatusJSON, request.get_json())
+    statusdict: StationStatusJSON = cast(StationStatusJSON, request.get_json())
 
-        # Validation for update JSON
-        mac: str = cast(str, headers.get(HEADERS.MACADDRESS.value))
-        timestamp: str = cast(str, headers.get(HEADERS.TIMESTAMP.value))
-        statusdict.update(
-            {
-                "MAC": MacAddress(mac),
-                "timestamp": str2dt(timestamp),
-            }
-        )
-        status = StationStatus(**statusdict)
+    # Validation for update JSON
+    mac: str = cast(str, headers.get(HEADERS.MACADDRESS.value))
+    timestamp: str = cast(str, headers.get(HEADERS.TIMESTAMP.value))
+    statusdict.update(
+        {
+            "MAC": MacAddress(mac),
+            "timestamp": str2dt(timestamp),
+        }
+    )
+    status = StationStatus(**statusdict)
 
-        StatusService.update(MAC=mac, status=status)
-        return jsonify({"status": "success"}), 200
-
-    except MissingHeadersError as mhe:
-        return (
-            jsonify(
-                ErrorResponse(
-                    errors=[
-                        ErrorDict(
-                            title="Missing Headers",
-                            details=str(mhe),
-                            code="400",
-                            source="/api/status",
-                        )
-                    ],
-                    timestamp=datetime.now(tz=UTC).isoformat(),
-                )
-            ),
-            400,
-        )
-
-    except ValidationError as ve:
-        return (
-            jsonify(
-                ErrorResponse(
-                    errors=[
-                        ErrorDict(
-                            title="Validation Error",
-                            details=str(ve),
-                            code="422",
-                            source="/api/status",
-                        )
-                    ],
-                    timestamp=datetime.now(tz=UTC).isoformat(),
-                )
-            ),
-            422,
-        )
-
-    except InvalidInputError as iie:
-        return (
-            jsonify(
-                ErrorResponse(
-                    errors=[
-                        ErrorDict(
-                            title="Invalid Input",
-                            details=str(iie),
-                            code="400",
-                            source="/api/status",
-                        )
-                    ],
-                    timestamp=datetime.now(tz=UTC).isoformat(),
-                )
-            ),
-            400,
-        )
-
-    except NotFoundError as nfe:
-        return (
-            jsonify(
-                ErrorResponse(
-                    errors=[
-                        ErrorDict(
-                            title="Not Found",
-                            details=str(nfe),
-                            code="404",
-                            source="/api/status",
-                        )
-                    ],
-                    timestamp=datetime.now(tz=UTC).isoformat(),
-                )
-            ),
-            404,
-        )
-
-    except InternalDBError as ide:
-        return (
-            jsonify(
-                ErrorResponse(
-                    errors=[
-                        ErrorDict(
-                            title="Internal Database Error",
-                            details=str(ide),
-                            code="500",
-                            source="/api/status",
-                        )
-                    ],
-                    timestamp=datetime.now(tz=UTC).isoformat(),
-                )
-            ),
-            500,
-        )
-
-    except SQLError as e:
-        return (
-            jsonify(
-                ErrorResponse(
-                    errors=[
-                        ErrorDict(
-                            title="Database Error",
-                            details=str(e),
-                            code="500",
-                            source="/api/status",
-                        )
-                    ],
-                    timestamp=datetime.now(tz=UTC).isoformat(),
-                )
-            ),
-            500,
-        )
+    StatusService.update(MAC=mac, status=status)
+    return jsonify({"status": "success"}), 200
 
 
 @apiRouter.route("/register", methods=["POST", "PUT"])
+@handle_api_db_errors("/api/register")
 def register() -> tuple[Response, int]:
     """
     Endpoint to handle station registration.
     """
-    try:
-        headers = request.headers
-        headercheck(headers)
+    headers = request.headers
+    headercheck(headers)
 
-        # Inital check to see if the station already exists
-        mac = headers.get(HEADERS.MACADDRESS.value)
-        if StationService.exists(MAC=mac):
-            raise AlreadyExistsError(f"Station with MAC {mac} already exists.")
+    # Inital check to see if the station already exists
+    mac = headers.get(HEADERS.MACADDRESS.value)
+    if StationService.exists(MAC=mac):
+        raise AlreadyExistsError(f"Station with MAC {mac} already exists.")
 
-        stationdict: StationJSON = request.get_json()
-        stationdict.pop("sensors", None)
-        stationdict.update(
-            {
-                "MAC": MacAddress(mac),
-                "camera_model": CameraModel.match(
-                    stationdict.get("camera_model", "UNKNOWN")
-                ),
-                "device_model": DeviceType.match(
-                    stationdict.get("device_model", "UNKNOWN")
-                ),
-            }
-        )
-
-        station = Station(**stationdict)  # type: ignore
-
-        StationService.insert(station=station)
-        return jsonify({"status": "success"}), 200
-
-    except MissingHeadersError as mhe:
-        return (
-            jsonify(
-                ErrorResponse(
-                    errors=[
-                        ErrorDict(
-                            title="Missing Headers",
-                            details=str(mhe),
-                            code="400",
-                            source="/api/register",
-                        )
-                    ],
-                    timestamp=datetime.now(tz=UTC).isoformat(),
-                )
+    stationdict: StationJSON = request.get_json()
+    stationdict.pop("sensors", None)
+    stationdict.update(
+        {
+            "MAC": MacAddress(mac),
+            "camera_model": CameraModel.match(
+                stationdict.get("camera_model", "UNKNOWN")
             ),
-            400,
-        )
-
-    except AlreadyExistsError as aee:
-        return (
-            jsonify(
-                ErrorResponse(
-                    errors=[
-                        ErrorDict(
-                            title="Already Exists",
-                            details=str(aee),
-                            code="409",
-                            source="/api/register",
-                        )
-                    ],
-                    timestamp=datetime.now(tz=UTC).isoformat(),
-                )
+            "device_model": DeviceType.match(
+                stationdict.get("device_model", "UNKNOWN")
             ),
-            409,
-        )
+        }
+    )
 
-    except ValidationError as ve:
-        return (
-            jsonify(
-                ErrorResponse(
-                    errors=[
-                        ErrorDict(
-                            title="Validation Error",
-                            details=str(ve),
-                            code="422",
-                            source="/api/register",
-                        )
-                    ],
-                    timestamp=datetime.now(tz=UTC).isoformat(),
-                )
-            ),
-            422,
-        )
+    station = Station(**stationdict)  # type: ignore
 
-    except InvalidInputError as iie:
-        return (
-            jsonify(
-                ErrorResponse(
-                    errors=[
-                        ErrorDict(
-                            title="Invalid Input",
-                            details=str(iie),
-                            code="400",
-                            source="/api/register",
-                        )
-                    ],
-                    timestamp=datetime.now(tz=UTC).isoformat(),
-                )
-            ),
-            400,
-        )
-
-    except InternalDBError as ide:
-        return (
-            jsonify(
-                ErrorResponse(
-                    errors=[
-                        ErrorDict(
-                            title="Internal Database Error",
-                            details=str(ide),
-                            code="500",
-                            source="/api/register",
-                        )
-                    ],
-                    timestamp=datetime.now(tz=UTC).isoformat(),
-                )
-            ),
-            500,
-        )
-
-    except SQLError as e:
-        return (
-            jsonify(
-                ErrorResponse(
-                    errors=[
-                        ErrorDict(
-                            title="Database Error",
-                            details=str(e),
-                            code="500",
-                            source="/api/register",
-                        )
-                    ],
-                    timestamp=datetime.now(tz=UTC).isoformat(),
-                )
-            ),
-            500,
-        )
+    StationService.insert(station=station)
+    return jsonify({"status": "success"}), 200
 
 
 @apiRouter.route("/reading", methods=["POST", "PUT"])
+@handle_api_db_errors("/api/reading")
 def reading() -> tuple[Response, int]:
     """
     Endpoint to handle environmental reading updates.
     """
 
-    try:
 
-        headers = request.headers
-        headercheck(headers)
+    headers = request.headers
+    headercheck(headers)
 
-        readingdict: ReadingJSON = cast(ReadingJSON, request.get_json())
+    readingdict: ReadingJSON = cast(ReadingJSON, request.get_json())
 
-        mac = headers.get(HEADERS.MACADDRESS.value)
-        timestamp = cast(str, headers.get(HEADERS.TIMESTAMP.value))
-        readingdict.update(
-            {
-                "MAC": MacAddress(mac),
-                "timestamp": str2dt(timestamp),
-            }
-        )
+    mac = headers.get(HEADERS.MACADDRESS.value)
+    timestamp = cast(str, headers.get(HEADERS.TIMESTAMP.value))
+    readingdict.update(
+        {
+            "MAC": MacAddress(mac),
+            "timestamp": str2dt(timestamp),
+        }
+    )
 
-        reading = Reading(**readingdict)
-        ReadingService.update(MAC=mac, timestamp=timestamp, reading=reading)
-        return jsonify({"status": "success"}), 200
-
-    except NotFoundError as nfe:
-        return (
-            jsonify(
-                ErrorResponse(
-                    errors=[
-                        ErrorDict(
-                            title="Not Found",
-                            details=str(nfe),
-                            code="404",
-                            source="/api/reading",
-                        )
-                    ],
-                    timestamp=datetime.now(tz=UTC).isoformat(),
-                )
-            ),
-            404,
-        )
-
-    except MissingHeadersError as mhe:
-        return (
-            jsonify(
-                ErrorResponse(
-                    errors=[
-                        ErrorDict(
-                            title="Missing Headers",
-                            details=str(mhe),
-                            code="400",
-                            source="/api/reading",
-                        )
-                    ],
-                    timestamp=datetime.now(tz=UTC).isoformat(),
-                )
-            ),
-            400,
-        )
-
-    except ValidationError as ve:
-        return (
-            jsonify(
-                ErrorResponse(
-                    errors=[
-                        ErrorDict(
-                            title="Validation Error",
-                            details=str(ve),
-                            code="422",
-                            source="/api/reading",
-                        )
-                    ],
-                    timestamp=datetime.now(tz=UTC).isoformat(),
-                )
-            ),
-            422,
-        )
-
-    except InvalidInputError as iie:
-        return (
-            jsonify(
-                ErrorResponse(
-                    errors=[
-                        ErrorDict(
-                            title="Invalid Input",
-                            details=str(iie),
-                            code="400",
-                            source="/api/reading",
-                        )
-                    ],
-                    timestamp=datetime.now(tz=UTC).isoformat(),
-                )
-            ),
-            400,
-        )
-
-    except InternalDBError as ide:
-        return (
-            jsonify(
-                ErrorResponse(
-                    errors=[
-                        ErrorDict(
-                            title="Internal Database Error",
-                            details=str(ide),
-                            code="500",
-                            source="/api/reading",
-                        )
-                    ],
-                    timestamp=datetime.now(tz=UTC).isoformat(),
-                )
-            ),
-            500,
-        )
-
-    except SQLError as e:
-        return (
-            jsonify(
-                ErrorResponse(
-                    errors=[
-                        ErrorDict(
-                            title="Database Error",
-                            details=str(e),
-                            code="500",
-                            source="/api/reading",
-                        )
-                    ],
-                    timestamp=datetime.now(tz=UTC).isoformat(),
-                )
-            ),
-            500,
-        )
+    reading = Reading(**readingdict)
+    ReadingService.update(MAC=mac, timestamp=timestamp, reading=reading)
+    return jsonify({"status": "success"}), 200
 
 
 @apiRouter.route("/qnh", methods=["GET"])
