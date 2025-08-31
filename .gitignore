@@ -7,3 +7,4 @@ venv/
 topo.html
 *.pkl
 *.log
+metar_response.json
