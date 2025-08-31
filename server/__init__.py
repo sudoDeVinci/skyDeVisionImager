@@ -57,7 +57,7 @@ from .imageanalysis import (
     verify_gpu_setup,
 )
 
-from ._metar import (
+from .metar._metar import (
     MetarResponse,
     Airport,
     Metar,

@@ -12,7 +12,6 @@ from .db import (
     ReadingService,
     Station,
     StationJSON,
-    DatabaseError,
     InternalDBError,
     InvalidInputError,
     NotFoundError,
@@ -24,7 +23,7 @@ from pydantic_extra_types.mac_address import MacAddress
 from pydantic_extra_types.coordinate import Latitude, Longitude
 from typing import cast
 
-from flask import Flask, Blueprint, Response, request, jsonify
+from flask import Blueprint, Response, request, jsonify
 
 from datetime import datetime, UTC
 
@@ -34,12 +33,11 @@ from ._utils import (
     HEADERS as HEADERS,
 )
 
-from ._metar import MetarResponse, MetarCacheLayer
-
+from .metar._metar import MetarCacheLayer
 from ._types import ErrorResponse, ErrorDict
 
 
-MetarCache: MetarCacheLayer = MetarCacheLayer(airports=["ESMX"], update_interval=600)
+MetarCache: MetarCacheLayer = MetarCacheLayer(airports=["ESMX"])
 
 apiRouter = Blueprint("api", __name__, url_prefix="/api")
 """
@@ -464,7 +462,27 @@ def qnh() -> tuple[Response, int]:
     """
     Endpoint to handle QNH updates.
     """
-    return jsonify({"status": "success"}), 200
+
+    qnh = MetarCache.get_qnh("ESMX")
+    if qnh is None:
+        return (
+            jsonify(
+                ErrorResponse(
+                    errors=[
+                        ErrorDict(
+                            title="QNH Not Available",
+                            details="QNH data is currently not available.",
+                            code="503",
+                            source="/api/qnh",
+                        )
+                    ],
+                    timestamp=datetime.now(tz=UTC).isoformat(),
+                )
+            ),
+            503,
+        )
+
+    return jsonify({"qnh": qnh}), 200
 
 
 @apiRouter.route("/version", methods=["GET"])

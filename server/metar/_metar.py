@@ -5,6 +5,7 @@ import dotenv
 from os import environ
 from threading import Lock, Thread
 from time import time, sleep
+from pathlib import Path
 
 dotenv.load_dotenv()
 METAR_KEY: Final[Optional[str]] = environ.get("METAR-TAF", None)
@@ -124,19 +125,33 @@ class UnregisteredAirport(Exception):
 
 class MetarCacheLayer:
 
-    __slots__ = ("_QNH_CACHE", "_CACHE_LOCK", "update_thread", "_updated", "_interval")
+    __slots__ = (
+        "_QNH_CACHE",
+        "_CACHE_LOCK",
+        "_airports",
+        "_update_thread",
+        "_updated",
+        "_interval",
+        "_cache_path",
+    )
 
     def __init__(self, airports: list[str], update_interval: int = 600) -> None:
         self._CACHE_LOCK = Lock()
         self._QNH_CACHE: dict[str, Optional[int]] = {port: None for port in airports}
         self._updated = int(time())
+        self._airports = airports
         self._interval = update_interval
-        self.update_thread: Optional[Thread] = Thread(
+        self._update_thread: Optional[Thread] = Thread(
             target=self.schedule_refresh, daemon=True
         )
-        self.update_thread.start()
+        self._update_thread.start()
 
-    async def request_metar_info(self, airport: str) -> Response:
+        self._cache_path = (
+            Path(__file__).parent.resolve() / "__metar_cache__" / "airports.json"
+        )
+        self._cache_path.parent.mkdir(parents=True, exist_ok=True)
+
+    async def _request_metar_info(self, airport: str) -> Response:
         """
         Asynchronously makes a request to the Metar-Taf API using the provided function and URL.
         Args:
@@ -165,7 +180,7 @@ class MetarCacheLayer:
         await asyncio.sleep(0.10)
         return r
 
-    async def fetch_qnh(self, airport: str) -> Optional[int]:
+    async def _fetch_qnh(self, airport: str) -> Optional[int]:
         """
         Fetches the QNH from the METAR data in hPa
         Args:
@@ -174,7 +189,7 @@ class MetarCacheLayer:
             Optional[int]: The QNH value in hPa if available, otherwise None.
         """
         try:
-            response = await self.request_metar_info(airport)
+            response = await self._request_metar_info(airport)
             if response.status_code != 200:
                 print(f"Error fetching METAR data: {response.status_code}")
                 return None
@@ -195,18 +210,19 @@ class MetarCacheLayer:
         Returns:
             None
         """
-        awaitables = [self.fetch_qnh(airport) for airport in self._QNH_CACHE.keys()]
+        awaitables = [self._fetch_qnh(airport) for airport in self._airports]
         responses = await asyncio.gather(*awaitables)
+        resdict = {
+            airport: qnh
+            for airport, qnh in zip(self._airports, responses)
+            if qnh is not None
+        }
 
-        for airport, response in zip(self._QNH_CACHE.keys(), responses):
-            if response is None:
-                continue
+        with self._CACHE_LOCK:
+            self._QNH_CACHE.update(resdict)
+            self._updated = int(time())
 
-            self._QNH_CACHE[airport] = response
-
-        self._updated = int(time())
-
-    async def get_qnh(self, airport: str) -> Optional[int]:
+    def get_qnh(self, airport: str) -> Optional[int]:
         """
         Retrieves the QNH value for the specified airport from the cache.
         If the airport is not in the cache, it initializes it with a default value of 1013 hPa.
@@ -221,12 +237,13 @@ class MetarCacheLayer:
             UnregisteredAirport: If the airport is not registered in the cache.
         """
 
-        if airport not in self._QNH_CACHE:
+        if airport not in self._airports:
             raise UnregisteredAirport(
                 f"Airport {airport} is not registered in the cache."
             )
 
-        return self._QNH_CACHE.get(airport, None)
+        with self._CACHE_LOCK:
+            return self._QNH_CACHE.get(airport, None)
 
     def schedule_refresh(self) -> None:
         print(
