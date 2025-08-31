@@ -6,6 +6,7 @@ from os import environ
 from threading import Lock, Thread
 from time import time, sleep
 from pathlib import Path
+from json import load, dump
 
 dotenv.load_dotenv()
 METAR_KEY: Final[Optional[str]] = environ.get("METAR-TAF", None)
@@ -150,6 +151,23 @@ class MetarCacheLayer:
             Path(__file__).parent.resolve() / "__metar_cache__" / "airports.json"
         )
         self._cache_path.parent.mkdir(parents=True, exist_ok=True)
+        self._load_cache()
+
+        # This is wrong, but I'm very tired.
+        # TODO: Saved updated time to cache file and load it on startup.
+        self._updated = int(time())
+
+    def _load_cache(self) -> None:
+        if self._cache_path.exists():
+            try:
+                with self._cache_path.open("r", encoding="utf-8") as f:
+                    data = load(f)
+                    if data and isinstance(data, dict):
+                        self._QNH_CACHE = {
+                            k: v for k, v in data.items() if k in self._airports
+                        }
+            except Exception as e:
+                print(f"Error loading cache: {e}")
 
     async def _request_metar_info(self, airport: str) -> Response:
         """

@@ -494,7 +494,7 @@ def version() -> tuple[Response, int]:
 
 
 @apiRouter.route("/check", methods=["GET"])
-def index() -> tuple[Response, int]:
+def check() -> tuple[Response, int]:
     """
     Endpoint to check if the API is running.
     """
