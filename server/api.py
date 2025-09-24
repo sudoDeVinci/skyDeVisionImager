@@ -187,6 +187,7 @@ def qnh() -> tuple[Response, int]:
     
     return jsonify({"qnh": qnh}), 200
 
+
 @apiRouter.route("/version", methods=["GET"])
 def version() -> tuple[Response, int]:
     """

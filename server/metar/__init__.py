@@ -1,9 +1,9 @@
-from ._metar import Airport, Metar, MetarResponse, UnregisteredAirport, MetarCacheLayer
+from ._metar import Airport, Metar, MetarResponse, UnregisteredAirportException, MetarCacheLayer
 
 __all__ = [
     "Airport",
     "Metar",
     "MetarResponse",
-    "UnregisteredAirport",
+    "UnregisteredAirportException",
     "MetarCacheLayer",
 ]
