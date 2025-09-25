@@ -95,11 +95,4 @@ if __name__ == "__main__":
 
     verify_gpu_setup()
 
-    # If thread tests pass, we can try the actual ROC analysis
-    # roc()
-
-    # arr = zeros((100000, 1000), dtype=uint8)
-    # umat = UMat(arr)
-    # sleep(3)
-    # arrmat = umat.get()
-    # print(f"Created UMat with shape: {arrmat.shape} and dtype: {arrmat.dtype}")
+    roc()
