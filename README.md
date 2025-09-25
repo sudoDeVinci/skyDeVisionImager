@@ -14,33 +14,26 @@ A comprehensive environmental monitoring and computer vision platform that combi
 
 ![Image recognition thumbnail](thumbnail.png)
 
-## 🌟 Key Features
+## Key Features
 
-### 🔬 Advanced Computer Vision
-- **Multi-Camera Support**: Compatible with OV2640, OV5640, DSLR, and mobile cameras
-- **Intelligent Cloud Detection**: HSV/YCrCb color space analysis with morphological operations
-- **Statistical Validation**: ROC curve analysis with Jaccard similarity metrics
-- **Camera Calibration**: Comprehensive distortion correction and matrix calibration
-- **Panoramic Stitching**: Automated image stitching with size optimization
+### Computer Vision
+- **Multi-Camera Support**: Compatible with OV2640, OV5640 and most DSLR, and mobile cameras
+- **Intelligent Cloud Detection**: HSV/YCrCb/RGB color space analysis with morphological operations
 
-### 🌍 Geospatial Intelligence
-- **GeoTIFF Processing**: Advanced coordinate transformation and elevation data handling
-- **3D Terrain Visualization**: Interactive plots using both Matplotlib and Plotly
-- **Mesh Generation**: Configurable interpolation with smoothing and outlier detection
 
-### 📊 Data Science & Analytics
-- **Multi-Color Space Analysis**: RGB, HSV, and YCrCb processing pipelines
-- **Bootstrap Sampling**: Statistical validation with configurable strata
-- **Performance Optimization**: Numba JIT compilation for computationally intensive operations
-- **Frequency Distribution Analysis**: Comprehensive histogram generation and comparison
+### Geospatial Intelligence
+- **3D Terrain Visualization**: Low-compute interactive data visualizations using both Matplotlib and Plotly.
 
-### 🏗️ Production-Ready Architecture
-- **Modular Design**: Clean separation of concerns with well-defined interfaces
-- **Database Management**: SQLite with connection pooling and thread safety
-- **Web Interface**: Flask-based dashboard with user authentication
-- **Caching System**: LRU cache and pickle-based persistence for expensive operations
 
-## 🚀 Quick Start
+### Data Science & Analytics
+- **Performance Optimization**: Numba JIT compilation, and optional GPU offload through OpenCV.
+
+
+### Uptime-Focused Design
+- **Modular Design**: Separation of concerns with interfaces defined for ease of use.
+- **Simplified Database Management**: SQLite3 with connection pooling and thread safety built in.
+
+## Quick Start
 
 ### Installation
 ```bash
@@ -48,18 +41,3 @@ git clone https://github.com/sudoDeVinci/skyDeVisionImager.git
 cd revamp
 pip install -r requirements.txt
 ```
-## 🧪 Methods
-
-### Cloud Detection Pipeline
-1. **Color Space Conversion**: BGR → HSV/YCrCb
-2. **Threshold Masking**: Adaptive range-based segmentation
-3. **Morphological Operations**: Erosion and dilation for noise reduction
-4. **Contour Detection**: Hierarchical boundary identification
-5. **Statistical Validation**: Bootstrap sampling with ROC analysis
-
-### Terrain Processing
-1. **Coordinate Transformation**: World file (.tfw) to XYZ mapping
-2. **Outlier Detection**: IQR-based filtering
-3. **Mesh Interpolation**: Configurable griddata interpolation
-4. **Smoothing**: Gaussian and median filtering
-5. **3D Rendering**: Surface plots with contour overlays

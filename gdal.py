@@ -12,7 +12,7 @@ figure = graph_plotly(
     tfwfile=TFWFILE,
     tifffile=TIFFFILE,
     points=100,  # type: ignore
-    use_cache=True,  # Enable caching
+    use_cache=False,  # Enable caching
     downsample_factor=1,  # No downsampling
 )
 

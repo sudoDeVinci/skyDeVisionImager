@@ -193,12 +193,12 @@ def meshify(
         z_min, z_max = npmin(z), npmax(z)
 
         # Get aspect ratio for scaling grid
-        x_range = x_max - x_min
-        y_range = y_max - y_min
-        z_range = z_max - z_min
-        aspect_ratio = mean(array([x_range, y_range], dtype=float32)) / (
-            z_range + 1e-15
-        )
+        #x_range = x_max - x_min
+        #y_range = y_max - y_min
+        #z_range = z_max - z_min
+        #aspect_ratio = mean(array([x_range, y_range], dtype=float32)) / (
+        #    z_range + 1e-15
+        #)
 
         # Apply log scaling to z values to preserve detail
         z_shifted = z - z_min
@@ -207,7 +207,7 @@ def meshify(
         z_normalized = (z_log - z_log_min) / (z_log_max - z_log_min + 1e-15)
 
         # Scale height with aspect ratio
-        z_scaled = z_normalized * scalar * aspect_ratio
+        z_scaled = z_normalized * scalar
 
         # Create a grid for interpolation
         x_grid = linspace(x_min, x_max, points)
