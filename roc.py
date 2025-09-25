@@ -1,3 +1,9 @@
+"""
+Example script to run a ROC analysis on a camera model.
+This script also tests loading batches and boundary batches, 
+as well as verifying the ability to use GPU acceleration via OpenCL.
+"""
+
 from server.imageanalysis import (
     Camera,
     ColourTag,
