@@ -1,9 +1,7 @@
 from werkzeug.datastructures import Headers
-from flask import Request
 from enum import Enum
 from functools import lru_cache
-from re import compile
-from typing_extensions import Self, Iterable, Any, Optional
+from typing_extensions import Self, Iterable, Any, Optional, Final
 
 
 class MissingHeadersError(Exception):
@@ -53,6 +51,13 @@ class HEADERS(Enum):
         return cls.UNKNOWN
 
 
+REQUIRED: Final[str, str, str] = tuple(
+    HEADERS.MACADDRESS.value,
+    HEADERS.TIMESTAMP.value,
+    HEADERS.FIRMWAREVERSION.value,
+)
+
+
 def headercheck(headers: Headers, required: Optional[Iterable[str]] = None) -> None:
     """
     Check if all required headers are present in the request.
@@ -64,11 +69,7 @@ def headercheck(headers: Headers, required: Optional[Iterable[str]] = None) -> N
         MissingHeadersError: If any required headers are missing.
     """
     if required is None:
-        required = [
-            HEADERS.MACADDRESS.value,
-            HEADERS.TIMESTAMP.value,
-            HEADERS.FIRMWAREVERSION.value,
-        ]
+        required = REQUIRED
     missing = [head for head in required if head not in headers]
     if missing:
         raise MissingHeadersError(missing)
