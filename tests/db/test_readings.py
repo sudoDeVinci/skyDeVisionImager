@@ -15,9 +15,9 @@ from server.db import (
 @no_type_check
 def test_get_reading_not_found(client: FlaskClient) -> None:
     result = ReadingService.get(MAC="00:1A:2B:3C:4D:5E", timestamp=datetime.now())
-    assert (
-        result is None
-    ), f"MAC address is not registered, should be None but got {result}"
+    assert result is None, (
+        f"MAC address is not registered, should be None but got {result}"
+    )
 
 
 @no_type_check
@@ -52,11 +52,11 @@ def test_insert_and_get_reading(client: FlaskClient) -> None:
     newreading = ReadingService.get(MAC=reading.MAC, timestamp=reading.timestamp)
 
     assert newreading is not None, "Could not retrieve inserted reading."
-    assert isinstance(
-        newreading, Reading
-    ), f"Reading hsould be of type 'Reading', got {type(newreading)}"
+    assert isinstance(newreading, Reading), (
+        f"Reading hsould be of type 'Reading', got {type(newreading)}"
+    )
 
-    assert newreading == reading, f"Inserted reading is not equivalent to extracted"
+    assert newreading == reading, "Inserted reading is not equivalent to extracted"
 
 
 @no_type_check
@@ -89,11 +89,11 @@ def test_list_readings(client: FlaskClient) -> None:
     ReadingService.insert(reading=reading)
 
     readings = ReadingService.list(MAC=station.MAC)
-    assert isinstance(
-        readings, list
-    ), f"Expected readings to be list, got {type(readings)}"
+    assert isinstance(readings, list), (
+        f"Expected readings to be list, got {type(readings)}"
+    )
     assert len(readings) == 1, f"Readings should be length 1, got {len(readings)}"
-    assert readings[0] == reading, f"Inserted reading is not equivalent to extracted"
+    assert readings[0] == reading, "Inserted reading is not equivalent to extracted"
 
 
 @no_type_check
@@ -140,13 +140,13 @@ def test_list_readings_startdate(client: FlaskClient) -> None:
     ReadingService.insert(reading=readingvalid)
 
     readings = ReadingService.list(MAC=station.MAC, start=startdatetime)
-    assert isinstance(
-        readings, list
-    ), f"Expected readings to be list, got {type(readings)}"
+    assert isinstance(readings, list), (
+        f"Expected readings to be list, got {type(readings)}"
+    )
     assert len(readings) == 1, f"Readings should be length 1, got {len(readings)}"
-    assert (
-        readings[0] == readingvalid
-    ), f"Inserted reading is not equivalent to extracted"
+    assert readings[0] == readingvalid, (
+        "Inserted reading is not equivalent to extracted"
+    )
 
 
 @no_type_check
@@ -193,13 +193,13 @@ def test_list_readings_enddate(client: FlaskClient) -> None:
     ReadingService.insert(reading=readingvalid)
 
     readings = ReadingService.list(MAC=station.MAC, end=enddatetime)
-    assert isinstance(
-        readings, list
-    ), f"Expected readings to be list, got {type(readings)}"
+    assert isinstance(readings, list), (
+        f"Expected readings to be list, got {type(readings)}"
+    )
     assert len(readings) == 1, f"Readings should be length 1, got {len(readings)}"
-    assert (
-        readings[0] == readingvalid
-    ), f"Inserted reading is not equivalent to extracted"
+    assert readings[0] == readingvalid, (
+        "Inserted reading is not equivalent to extracted"
+    )
 
 
 @no_type_check
@@ -249,13 +249,13 @@ def test_list_readings_startdate_and_enddate(client: FlaskClient) -> None:
     readings = ReadingService.list(
         MAC=station.MAC, start=startdatetime, end=enddatetime
     )
-    assert isinstance(
-        readings, list
-    ), f"Expected readings to be list, got {type(readings)}"
+    assert isinstance(readings, list), (
+        f"Expected readings to be list, got {type(readings)}"
+    )
     assert len(readings) == 1, f"Readings should be length 1, got {len(readings)}"
-    assert (
-        readings[0] == readingvalid
-    ), f"Inserted reading is not equivalent to extracted"
+    assert readings[0] == readingvalid, (
+        "Inserted reading is not equivalent to extracted"
+    )
 
 
 @no_type_check
@@ -295,14 +295,14 @@ def test_list_readings_multiple(client: FlaskClient) -> None:
     newreadings = ReadingService.list(MAC=station.MAC)
     newreadings.sort(key=lambda r: r.timestamp)
 
-    assert isinstance(
-        readings, list
-    ), f"Expected readings to be list, got {type(readings)}"
+    assert isinstance(readings, list), (
+        f"Expected readings to be list, got {type(readings)}"
+    )
     assert len(readings) == 5, f"Readings should be length 5, got {len(readings)}"
     for i in range(5):
-        assert (
-            newreadings[i] == readings[i]
-        ), f"Inserted reading is not equivalent to extracted"
+        assert newreadings[i] == readings[i], (
+            "Inserted reading is not equivalent to extracted"
+        )
 
 
 @no_type_check
@@ -342,13 +342,13 @@ def test_update_readings_successful(client: FlaskClient) -> None:
     fetchedreading = ReadingService.get(MAC=station.MAC, timestamp=dt)
     if fetchedreading is None:
         raise NotFoundError("Updated reading could not be found.")
-    assert isinstance(
-        fetchedreading, Reading
-    ), f"Reading hsould be of type 'Reading', got {type(fetchedreading)}"
+    assert isinstance(fetchedreading, Reading), (
+        f"Reading hsould be of type 'Reading', got {type(fetchedreading)}"
+    )
 
-    assert (
-        fetchedreading == updatedreading
-    ), f"Updated reading is not equivalent to extracted"
+    assert fetchedreading == updatedreading, (
+        "Updated reading is not equivalent to extracted"
+    )
 
 
 @no_type_check
@@ -375,7 +375,6 @@ def test_update_readings_nonexistent(client: FlaskClient) -> None:
 
 @no_type_check
 def test_delete_reading_successful(client: FlaskClient) -> None:
-
     station = Station(
         MAC="00:1A:2B:3C:4D:5E",
         name="station",
@@ -406,17 +405,17 @@ def test_delete_reading_successful(client: FlaskClient) -> None:
     fetchedreading = ReadingService.get(MAC=station.MAC, timestamp=dt)
     if fetchedreading is None:
         raise NotFoundError("Inserted reading could not be found.")
-    assert isinstance(
-        fetchedreading, Reading
-    ), f"Reading hsould be of type 'Reading', got {type(fetchedreading)}"
+    assert isinstance(fetchedreading, Reading), (
+        f"Reading hsould be of type 'Reading', got {type(fetchedreading)}"
+    )
 
-    assert fetchedreading == reading, f"Inserted reading is not equivalent to extracted"
+    assert fetchedreading == reading, "Inserted reading is not equivalent to extracted"
 
     ReadingService.delete(MAC=station.MAC, timestamp=dt)
     deletedreading = ReadingService.get(MAC=station.MAC, timestamp=dt)
-    assert (
-        deletedreading is None
-    ), f"Deleted reading should be None, got {deletedreading}"
+    assert deletedreading is None, (
+        f"Deleted reading should be None, got {deletedreading}"
+    )
 
 
 @no_type_check

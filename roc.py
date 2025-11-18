@@ -1,6 +1,6 @@
 """
 Example script to run a ROC analysis on a camera model.
-This script also tests loading batches and boundary batches, 
+This script also tests loading batches and boundary batches,
 as well as verifying the ability to use GPU acceleration via OpenCL.
 """
 
@@ -12,11 +12,10 @@ from server.imageanalysis import (
     verify_gpu_setup,
 )
 from cv2 import imshow, waitKey, ocl
-from numpy import array, uint8, zeros, uint16, float32
+from numpy import array, uint8, uint16, float32
 from server.db import CameraModel
 from typing import no_type_check
 from json import dump
-from logging import getLogger, Logger
 
 ocl.setUseOpenCL(True)
 
@@ -97,8 +96,6 @@ def roc_load_batches():
 
 
 if __name__ == "__main__":
-    from cv2 import UMat
-
-    verify_gpu_setup()
+    _ = verify_gpu_setup()
 
     roc()

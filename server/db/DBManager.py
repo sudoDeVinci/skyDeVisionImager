@@ -12,7 +12,6 @@ from logging import (
     basicConfig,
     getLogger,
     ERROR,
-    DEBUG,
 )
 from contextlib import contextmanager
 from .schema import apply_schema

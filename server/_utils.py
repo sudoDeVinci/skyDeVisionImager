@@ -51,7 +51,7 @@ class HEADERS(Enum):
         return cls.UNKNOWN
 
 
-REQUIRED: Final[str, str, str] = tuple(
+REQUIRED: Final[tuple[str, str, str]] = (
     HEADERS.MACADDRESS.value,
     HEADERS.TIMESTAMP.value,
     HEADERS.FIRMWAREVERSION.value,

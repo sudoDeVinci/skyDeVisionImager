@@ -1,23 +1,15 @@
-from typing import (
-    TypeVar,
-    TypedDict,
-    Optional,
-    Any,
-    Generic,
-    List,
-    Mapping,
-    NotRequired,
-    Self,
-    Sequence,
-)
-from datetime import datetime, UTC
-from decimal import Decimal
-from abc import ABC
-from pydantic import BaseModel, EmailStr, SecretStr, model_validator
-from pydantic_extra_types.mac_address import MacAddress
-from pydantic_extra_types.coordinate import Latitude, Longitude
 from enum import Enum
+from decimal import Decimal
 from functools import lru_cache
+from datetime import datetime, UTC
+from collections.abc import Mapping, Sequence
+from pydantic_extra_types.mac_address import MacAddress
+from typing import TypeVar, TypedDict, NotRequired, Self, override
+from pydantic_extra_types.coordinate import Latitude, Longitude
+from pydantic import BaseModel, EmailStr, SecretStr, model_validator
+
+
+ArbitraryStringMapping = Mapping[str, object]
 
 
 def dt2str(dt: datetime | None) -> str:
@@ -54,8 +46,8 @@ AnyDict = TypeVar(
         | set[str]
         | set[bytes]
         | set[bytearray]
-        | Sequence[Any]
-        | Mapping[str, Any]
+        | Sequence[object]
+        | Mapping[str, object]
         | None,
     ],
 )
@@ -86,8 +78,9 @@ class CameraModel(Enum):
         """
         return cls.match(camera) != cls.UNKNOWN
 
+    @override
     @classmethod
-    def _missing_(cls, value: Any):
+    def _missing_(cls, value: object):
         """
         Handle missing camera models.
         """
@@ -166,7 +159,7 @@ class StationStatus(BaseModel):
     """
 
     MAC: MacAddress
-    timestamp: Optional[datetime] = None
+    timestamp: datetime | None = None
     SHT: bool = False
     BMP: bool = False
     CAM: bool = False
@@ -188,7 +181,7 @@ class StationStatusJSON(TypedDict, total=False):
     """
 
     MAC: MacAddress
-    timestamp: Optional[datetime]
+    timestamp: datetime | None
     SHT: bool
     BMP: bool
     CAM: bool
@@ -219,7 +212,7 @@ class Station(BaseModel):
     altitude: float
     latitude: Latitude
     longitude: Longitude
-    sensors: Optional[StationStatus] = None
+    sensors: StationStatus | None = None
 
     @model_validator(mode="after")
     def check_device_model(self):
@@ -255,7 +248,7 @@ class StationJSON(TypedDict, total=False):
     altitude: float
     latitude: Latitude
     longitude: Longitude
-    sensors: NotRequired[Optional[StationStatusJSON]]
+    sensors: NotRequired[StationStatusJSON | None]
 
 
 class Reading(BaseModel):
@@ -278,7 +271,7 @@ class Reading(BaseModel):
     humidity: float
     pressure: float
     dewpoint: float
-    filepath: Optional[str] = None
+    filepath: str | None = None
 
 
 class ReadingJSON(TypedDict, total=False):
@@ -304,7 +297,7 @@ class ReadingJSON(TypedDict, total=False):
     humidity: float
     pressure: float
     dewpoint: float
-    filepath: Optional[str]
+    filepath: str | None
 
 
 class Location(BaseModel):
