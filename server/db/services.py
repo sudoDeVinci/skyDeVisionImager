@@ -810,6 +810,39 @@ class StatusService(Service[StationStatus]):
                 Manager.log("No station status found to delete.", level=ERROR)
                 raise NotFoundError("No station status found to delete.")
 
+    @staticmethod
+    def delete_batch() -> None:
+        """
+        Delete a list of station statuses from the database.
+        Args:
+            MACS (ListMacAddress]): The MAC addresses of the station statuses to delete.
+        Raises:
+            InvalidInputError: If MAC is not provided.
+            InternalDBError: If there is an error getting the cursor for station status deletion.
+            SQLError: If there is an error executing the SQL query.
+            NotFoundError: If no station status is found to delete.
+        """
+
+        macs: List[MacAddress] = kwargs.get("MACS", [])
+
+        if not macs:
+            raise InvalidInputError("MAC must be provided to delete a station status.")
+
+        query = "DELETE FROM Status WHERE MAC = ?;"
+
+        with Manager.cursor() as cursor:
+            if not cursor:
+                logcursorfailure()
+                raise InternalDBError(
+                    "Failed to get cursor for station status batch-deletion."
+                )
+
+            _ = cursor.executemany(query, macs)
+
+            if cursor.rowcount == 0:
+                Manager.log("No station status found to delete.", level=ERROR)
+                raise NotFoundError("No station status found to delete.")
+
     @override
     @staticmethod
     def exists(**kwargs: ArbitraryStringMapping) -> bool:
@@ -840,6 +873,40 @@ class StatusService(Service[StationStatus]):
 
             _ = cursor.execute(query, (mac,))
             return cursor.fetchone() is not None
+
+    @staticmethod
+    def exists_batch(**kwargs) -> None:
+        """
+        Check if a set of station statuses exist in the database.
+        Args:
+            MACS (MacAddress): The MAC address of the station status to check.
+        Returns:
+            bool: True if the station status exists, False otherwise.
+        Raises:
+            InvalidInputError: If MAC is not provided.
+            InternalDBError: If there is an error getting the cursor for existence check.
+            SQLError: If there is an error executing the SQL query.
+        """
+        macs: List[StationStatus] = kwargs.get("MACS", [])
+
+        if not macs:
+            raise InvalidInputError(
+                "MAC must be provided to check station status existence."
+            )
+
+        length = len(macs)
+        placeholders: str = ",".join(["?"] * length)
+        query = f"SELECT MAC FROM Status WHERE MAC IN ({placeholders});"
+
+        with Manager.cursor as cursor:
+            if not cursor:
+                logcursorfailure()
+                raise InternalDBError("Failed to get cursor for existence check.")
+
+            cursor.execute(query, macs)
+            found = set(cursor.fetchall())
+            results: List[bool] = [(item in found) for item in macs]
+            return results
 
 
 class StationService(Service[Station]):
